@@ -3,40 +3,58 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Moon, Clock, Sparkles } from "lucide-react";
+import { Moon, Clock, Sparkles, Sunrise, Sunset } from "lucide-react";
 
 const Sleep = () => {
-  const [wakeTime, setWakeTime] = useState("");
-  const [sleepTimes, setSleepTimes] = useState<string[]>([]);
+  const [mode, setMode] = useState<"wake" | "sleep">("wake");
+  const [time, setTime] = useState("");
+  const [calculatedTimes, setCalculatedTimes] = useState<string[]>([]);
 
-  const calculateSleepTimes = () => {
-    if (!wakeTime) return;
+  const calculateTimes = () => {
+    if (!time) return;
 
-    const [hours, minutes] = wakeTime.split(":").map(Number);
-    const wakeDate = new Date();
-    wakeDate.setHours(hours, minutes, 0);
+    const [hours, minutes] = time.split(":").map(Number);
+    const referenceDate = new Date();
+    referenceDate.setHours(hours, minutes, 0);
 
     const times: string[] = [];
     const cycleMinutes = 90;
-    const fallAsleepTime = 15; // Tempo para adormecer
+    const fallAsleepTime = 15;
 
-    // Calcula 6 ciclos (9h, 7.5h, 6h, 4.5h, 3h, 1.5h antes do despertar)
-    for (let cycles = 6; cycles >= 1; cycles--) {
-      const sleepTime = new Date(wakeDate);
-      sleepTime.setMinutes(sleepTime.getMinutes() - (cycles * cycleMinutes + fallAsleepTime));
+    if (mode === "wake") {
+      // Calcula horários para dormir baseado na hora de acordar
+      for (let cycles = 6; cycles >= 1; cycles--) {
+        const sleepTime = new Date(referenceDate);
+        sleepTime.setMinutes(sleepTime.getMinutes() - (cycles * cycleMinutes + fallAsleepTime));
+        
+        const timeString = sleepTime.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        times.push(timeString);
+      }
+    } else {
+      // Calcula horários para acordar baseado na hora de dormir
+      const bedTime = new Date(referenceDate);
+      bedTime.setMinutes(bedTime.getMinutes() + fallAsleepTime);
       
-      const timeString = sleepTime.toLocaleTimeString("pt-BR", {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      times.push(timeString);
+      for (let cycles = 1; cycles <= 6; cycles++) {
+        const wakeTime = new Date(bedTime);
+        wakeTime.setMinutes(wakeTime.getMinutes() + (cycles * cycleMinutes));
+        
+        const timeString = wakeTime.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        times.push(timeString);
+      }
     }
 
-    setSleepTimes(times);
+    setCalculatedTimes(times);
   };
 
   const getCycleLabel = (index: number) => {
-    const cycles = 6 - index;
+    const cycles = mode === "wake" ? 6 - index : index + 1;
     const hours = (cycles * 1.5).toFixed(1);
     return `${cycles} ciclos (${hours}h)`;
   };
@@ -55,30 +73,63 @@ const Sleep = () => {
 
       <Card className="p-6 mb-6">
         <div className="space-y-4">
+          <div className="flex gap-2 p-1 bg-muted rounded-lg">
+            <Button
+              variant={mode === "wake" ? "default" : "ghost"}
+              className="flex-1"
+              onClick={() => {
+                setMode("wake");
+                setCalculatedTimes([]);
+              }}
+            >
+              <Sunrise className="mr-2 h-4 w-4" />
+              Acordar
+            </Button>
+            <Button
+              variant={mode === "sleep" ? "default" : "ghost"}
+              className="flex-1"
+              onClick={() => {
+                setMode("sleep");
+                setCalculatedTimes([]);
+              }}
+            >
+              <Sunset className="mr-2 h-4 w-4" />
+              Dormir
+            </Button>
+          </div>
+          
           <div className="space-y-2">
-            <Label htmlFor="wake-time">Que horas você precisa acordar?</Label>
+            <Label htmlFor="time">
+              {mode === "wake" 
+                ? "Que horas você precisa acordar?" 
+                : "Que horas você está indo dormir?"}
+            </Label>
             <Input
-              id="wake-time"
+              id="time"
               type="time"
-              value={wakeTime}
-              onChange={(e) => setWakeTime(e.target.value)}
+              value={time}
+              onChange={(e) => setTime(e.target.value)}
               className="text-lg"
             />
           </div>
-          <Button onClick={calculateSleepTimes} className="w-full" size="lg">
+          <Button onClick={calculateTimes} className="w-full" size="lg">
             <Clock className="mr-2 h-4 w-4" />
             Calcular Horários
           </Button>
         </div>
       </Card>
 
-      {sleepTimes.length > 0 && (
+      {calculatedTimes.length > 0 && (
         <div className="space-y-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Sparkles className="h-4 w-4" />
-            <span>Horários recomendados para dormir:</span>
+            <span>
+              {mode === "wake" 
+                ? "Horários recomendados para dormir:" 
+                : "Horários recomendados para acordar:"}
+            </span>
           </div>
-          {sleepTimes.map((time, index) => (
+          {calculatedTimes.map((timeStr, index) => (
             <Card
               key={index}
               className={`p-4 transition-all hover:shadow-md ${
@@ -89,7 +140,7 @@ const Sleep = () => {
             >
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-2xl font-medium">{time}</div>
+                  <div className="text-2xl font-medium">{timeStr}</div>
                   <div className="text-sm text-muted-foreground">
                     {getCycleLabel(index)}
                   </div>

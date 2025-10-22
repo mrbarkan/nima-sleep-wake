@@ -12,16 +12,17 @@ type Tile = {
 };
 
 const colors = [
-  "hsl(180, 60%, 60%)", // teal
-  "hsl(150, 60%, 60%)", // green
-  "hsl(210, 60%, 60%)", // blue
-  "hsl(270, 60%, 60%)", // purple
-  "hsl(330, 60%, 60%)", // pink
+  "hsl(200, 18%, 71%)", // AAB7BF - light blue grey
+  "hsl(27, 14%, 39%)",  // 736356 - brown
+  "hsl(23, 18%, 70%)",  // BFB1A8 - beige
+  "hsl(0, 71%, 40%)",   // AD1D1D - red
+  "hsl(28, 95%, 8%)",   // 261201 - dark brown
 ];
 
 const Relax = () => {
   const [grid, setGrid] = useState<Tile[][]>([]);
   const [selected, setSelected] = useState<{ x: number; y: number } | null>(null);
+  const [dragging, setDragging] = useState<{ x: number; y: number } | null>(null);
   const [score, setScore] = useState(0);
 
   const initializeGrid = () => {
@@ -120,52 +121,62 @@ const Relax = () => {
     return newGrid;
   };
 
-  const handleTileClick = (x: number, y: number) => {
+  const handleMouseDown = (x: number, y: number) => {
     if (grid[y][x].matched) return;
+    setDragging({ x, y });
+    setSelected({ x, y });
+  };
 
-    if (!selected) {
-      setSelected({ x, y });
-      return;
-    }
+  const handleMouseEnter = (x: number, y: number) => {
+    if (!dragging || grid[y][x].matched) return;
 
-    const dx = Math.abs(selected.x - x);
-    const dy = Math.abs(selected.y - y);
+    const dx = Math.abs(dragging.x - x);
+    const dy = Math.abs(dragging.y - y);
 
+    // Check if adjacent
     if ((dx === 1 && dy === 0) || (dx === 0 && dy === 1)) {
-      // Valid adjacent swap
-      const newGrid = grid.map(row => [...row]);
-      const temp = newGrid[selected.y][selected.x];
-      newGrid[selected.y][selected.x] = { ...newGrid[y][x], x: selected.x, y: selected.y };
-      newGrid[y][x] = { ...temp, x, y };
-
-      let gridWithMatches = checkMatches(newGrid);
-      
-      if (gridWithMatches.some(row => row.some(tile => tile.matched))) {
-        setTimeout(() => {
-          const clearedGrid = removeMatched(gridWithMatches);
-          setGrid(clearedGrid);
-          
-          // Check for cascading matches
-          setTimeout(() => {
-            const cascadeMatches = checkMatches(clearedGrid);
-            if (cascadeMatches.some(row => row.some(tile => tile.matched))) {
-              setTimeout(() => {
-                setGrid(removeMatched(cascadeMatches));
-              }, 300);
-            }
-          }, 300);
-        }, 400);
-        setGrid(gridWithMatches);
-      } else {
-        // No match, swap back
-        setGrid(newGrid);
-        setTimeout(() => {
-          setGrid(grid);
-        }, 300);
-      }
+      performSwap(dragging.x, dragging.y, x, y);
+      setDragging(null);
+      setSelected(null);
     }
+  };
 
+  const handleMouseUp = () => {
+    setDragging(null);
     setSelected(null);
+  };
+
+  const performSwap = (x1: number, y1: number, x2: number, y2: number) => {
+    const newGrid = grid.map(row => [...row]);
+    const temp = newGrid[y1][x1];
+    newGrid[y1][x1] = { ...newGrid[y2][x2], x: x1, y: y1 };
+    newGrid[y2][x2] = { ...temp, x: x2, y: y2 };
+
+    let gridWithMatches = checkMatches(newGrid);
+    
+    if (gridWithMatches.some(row => row.some(tile => tile.matched))) {
+      setTimeout(() => {
+        const clearedGrid = removeMatched(gridWithMatches);
+        setGrid(clearedGrid);
+        
+        // Check for cascading matches
+        setTimeout(() => {
+          const cascadeMatches = checkMatches(clearedGrid);
+          if (cascadeMatches.some(row => row.some(tile => tile.matched))) {
+            setTimeout(() => {
+              setGrid(removeMatched(cascadeMatches));
+            }, 300);
+          }
+        }, 300);
+      }, 400);
+      setGrid(gridWithMatches);
+    } else {
+      // No match, swap back
+      setGrid(newGrid);
+      setTimeout(() => {
+        setGrid(grid);
+      }, 300);
+    }
   };
 
   return (
@@ -201,21 +212,29 @@ const Relax = () => {
       </Card>
 
       <div className="bg-card rounded-lg p-4 border">
-        <div className="grid gap-1" style={{ gridTemplateColumns: "repeat(8, 1fr)" }}>
+        <div 
+          className="grid gap-1" 
+          style={{ gridTemplateColumns: "repeat(8, 1fr)" }}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+        >
           {grid.map((row, y) =>
             row.map((tile, x) => (
               <button
                 key={tile.id}
-                onClick={() => handleTileClick(x, y)}
-                className={`aspect-square rounded transition-all duration-300 ${
-                  tile.matched ? "opacity-0 scale-50" : "opacity-100 scale-100"
+                onMouseDown={() => handleMouseDown(x, y)}
+                onMouseEnter={() => handleMouseEnter(x, y)}
+                onTouchStart={() => handleMouseDown(x, y)}
+                className={`aspect-square rounded-full transition-all duration-500 ease-out cursor-grab active:cursor-grabbing ${
+                  tile.matched ? "opacity-0 scale-0" : "opacity-100 scale-100"
                 } ${
                   selected?.x === x && selected?.y === y
-                    ? "ring-2 ring-accent ring-offset-2"
+                    ? "ring-2 ring-accent ring-offset-2 scale-110"
                     : ""
-                } hover:scale-105 active:scale-95`}
+                } hover:scale-110 hover:shadow-lg active:scale-95`}
                 style={{
                   backgroundColor: tile.color,
+                  transform: tile.matched ? 'scale(0) rotate(180deg)' : undefined,
                 }}
               />
             ))

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +6,21 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ListTodo, Trash2, Plus, Info } from "lucide-react";
 import { toast } from "sonner";
+import { z } from "zod";
+
+// Schema de validação para garantir segurança dos dados
+const taskSchema = z.object({
+  id: z.string().max(50),
+  text: z.string().trim().min(1).max(500),
+  completed: z.boolean(),
+  priority: z.number().optional(),
+  category: z.string().max(100).optional(),
+});
+
+const todoDataSchema = z.object({
+  method: z.enum(["ivy-lee", "1-3-5", "eat-frog", "eisenhower"]),
+  tasks: z.array(taskSchema).max(20),
+});
 
 interface Task {
   id: string;
@@ -15,10 +30,46 @@ interface Task {
   category?: string;
 }
 
+const STORAGE_KEY = "sleepflow-todo-data";
+
 const Todo = () => {
   const [method, setMethod] = useState("ivy-lee");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Carregar dados do localStorage ao montar o componente
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem(STORAGE_KEY);
+      if (savedData) {
+        const parsed = JSON.parse(savedData);
+        const validated = todoDataSchema.parse(parsed);
+        setMethod(validated.method);
+        setTasks(validated.tasks as Task[]);
+      }
+    } catch (error) {
+      console.error("Erro ao carregar tarefas:", error);
+      // Se houver erro de validação, limpa os dados corrompidos
+      localStorage.removeItem(STORAGE_KEY);
+    } finally {
+      setIsLoaded(true);
+    }
+  }, []);
+
+  // Salvar dados no localStorage quando mudarem
+  useEffect(() => {
+    if (!isLoaded) return; // Não salvar durante o carregamento inicial
+    
+    try {
+      const dataToSave = { method, tasks };
+      const validated = todoDataSchema.parse(dataToSave);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(validated));
+    } catch (error) {
+      console.error("Erro ao salvar tarefas:", error);
+      toast.error("Erro ao salvar tarefas");
+    }
+  }, [method, tasks, isLoaded]);
 
   const methodInfo = {
     "ivy-lee": {
@@ -50,7 +101,15 @@ const Todo = () => {
   const currentMethod = methodInfo[method as keyof typeof methodInfo];
 
   const addTask = () => {
-    if (!newTask.trim()) return;
+    const trimmedTask = newTask.trim();
+    if (!trimmedTask) return;
+    
+    // Validação de tamanho
+    if (trimmedTask.length > 500) {
+      toast.error("Tarefa muito longa (máximo 500 caracteres)");
+      return;
+    }
+    
     if (tasks.length >= currentMethod.maxTasks) {
       toast.error(`Máximo de ${currentMethod.maxTasks} tarefas para este método`);
       return;
@@ -58,7 +117,7 @@ const Todo = () => {
 
     const task: Task = {
       id: Date.now().toString(),
-      text: newTask,
+      text: trimmedTask,
       completed: false,
       priority: tasks.length + 1,
     };

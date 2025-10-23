@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ListTodo, Trash2, Plus, Info } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
+import InfoPopup from "@/components/InfoPopup";
 
 // Schema de validação para garantir segurança dos dados
 const taskSchema = z.object({
@@ -156,13 +157,31 @@ const Todo = () => {
   return (
     <div className="container max-w-3xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-3">
           <ListTodo className="h-8 w-8 text-accent" />
-          <h1 className="text-3xl font-semibold">Sistema To-Do</h1>
+          <div>
+            <div className="flex items-center">
+              <h1 className="text-3xl font-semibold">Sistema To-Do</h1>
+              <InfoPopup
+                title="Métodos de Produtividade"
+                content="Cada método tem sua filosofia. O Ivy Lee foca em priorização rigorosa, o 1-3-5 equilibra volume, o Eat Frog destaca a tarefa mais difícil, e o Eisenhower separa urgente do importante."
+                sources={[
+                  {
+                    label: "The Muse - Productivity Methods",
+                    url: "https://www.themuse.com/advice/a-better-todo-list-the-135-rule",
+                  },
+                  {
+                    label: "James Clear - Ivy Lee Method",
+                    url: "https://jamesclear.com/ivy-lee",
+                  },
+                ]}
+              />
+            </div>
+            <p className="text-muted-foreground text-sm">
+              Escolha um método e experimente por 21 dias
+            </p>
+          </div>
         </div>
-        <p className="text-muted-foreground">
-          Escolha um método e experimente por pelo menos 21 dias
-        </p>
       </div>
 
       <Tabs value={method} onValueChange={(v) => { setMethod(v); setTasks([]); }}>

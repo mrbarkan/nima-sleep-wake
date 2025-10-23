@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Moon, Clock, Sparkles, Sunrise, Sunset } from "lucide-react";
+import InfoPopup from "@/components/InfoPopup";
 
 const Sleep = () => {
   const [mode, setMode] = useState<"wake" | "sleep">("wake");
@@ -62,13 +63,31 @@ const Sleep = () => {
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-3">
           <Moon className="h-8 w-8 text-accent" />
-          <h1 className="text-3xl font-semibold">Calculadora de Sono</h1>
+          <div>
+            <div className="flex items-center">
+              <h1 className="text-3xl font-semibold">Calculadora do Sono</h1>
+              <InfoPopup
+                title="Ciclos do Sono"
+                content="O sono é organizado em ciclos de aproximadamente 90 minutos. Cada ciclo passa por diferentes estágios: sono leve, sono profundo e REM. Acordar ao final de um ciclo completo nos faz sentir mais descansados."
+                sources={[
+                  {
+                    label: "Sleep Foundation - Sleep Stages",
+                    url: "https://www.sleepfoundation.org/stages-of-sleep",
+                  },
+                  {
+                    label: "NIH - Sleep Science",
+                    url: "https://www.nhlbi.nih.gov/health/sleep",
+                  },
+                ]}
+              />
+            </div>
+            <p className="text-muted-foreground text-sm">
+              Baseado em ciclos de 90 minutos
+            </p>
+          </div>
         </div>
-        <p className="text-muted-foreground">
-          Baseado em ciclos de 90 minutos para um despertar mais natural
-        </p>
       </div>
 
       <Card className="p-6 mb-6">

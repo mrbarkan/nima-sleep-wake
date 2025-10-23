@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Coffee, Clock, AlertCircle } from "lucide-react";
+import InfoPopup from "@/components/InfoPopup";
 
 interface CaffeineSchedule {
   time: string;
@@ -62,13 +63,31 @@ const Caffeine = () => {
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
+        <div className="flex items-center gap-3">
           <Coffee className="h-8 w-8 text-accent" />
-          <h1 className="text-3xl font-semibold">Planner de Cafeína</h1>
+          <div>
+            <div className="flex items-center">
+              <h1 className="text-3xl font-semibold">Planejador de Cafeína</h1>
+              <InfoPopup
+                title="Timing da Cafeína"
+                content="A cafeína tem meia-vida de 5-6 horas no organismo. Consumir após 15h pode interferir no sono. O momento ideal para a primeira dose é 90-120 minutos após acordar, quando o cortisol natural começa a declinar."
+                sources={[
+                  {
+                    label: "Sleep Foundation - Caffeine and Sleep",
+                    url: "https://www.sleepfoundation.org/nutrition/caffeine-and-sleep",
+                  },
+                  {
+                    label: "Huberman Lab - Caffeine Timing",
+                    url: "https://hubermanlab.com/using-caffeine-to-optimize-mental-and-physical-performance/",
+                  },
+                ]}
+              />
+            </div>
+            <p className="text-muted-foreground text-sm">
+              Doses estratégicas ao longo do dia
+            </p>
+          </div>
         </div>
-        <p className="text-muted-foreground">
-          Alterne fontes de cafeína para manter energia constante
-        </p>
       </div>
 
       <Card className="p-6 mb-6">

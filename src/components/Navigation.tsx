@@ -1,12 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { Moon, Coffee, ListTodo, Sparkles } from "lucide-react";
+import { Moon, Coffee, ListTodo, BookOpen, BarChart3 } from "lucide-react";
 
 const Navigation = () => {
   const navItems = [
     { to: "/", icon: Moon, label: "Sono" },
     { to: "/caffeine", icon: Coffee, label: "Cafeína" },
     { to: "/todo", icon: ListTodo, label: "To-Do" },
-    { to: "/relax", icon: Sparkles, label: "Relaxar" },
+    { to: "/relax", icon: BookOpen, label: "Blog" },
+    { to: "/dashboard", icon: BarChart3, label: "Dashboard" },
   ];
 
   return (

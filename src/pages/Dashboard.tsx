@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { BarChart3, Heart, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ArticleStats {
   id: string;
@@ -11,13 +13,41 @@ interface ArticleStats {
 }
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const { user, loading: authLoading, checkIsAdmin } = useAuth();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [checking, setChecking] = useState(true);
   const [stats, setStats] = useState<ArticleStats[]>([]);
   const [totalLikes, setTotalLikes] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchStats();
-  }, []);
+    const checkAccess = async () => {
+      if (authLoading) return;
+      
+      if (!user) {
+        navigate('/auth');
+        return;
+      }
+
+      const adminStatus = await checkIsAdmin(user.id);
+      setIsAdmin(adminStatus);
+      
+      if (!adminStatus) {
+        navigate('/');
+      }
+      
+      setChecking(false);
+    };
+
+    checkAccess();
+  }, [user, authLoading, navigate, checkIsAdmin]);
+
+  useEffect(() => {
+    if (isAdmin) {
+      fetchStats();
+    }
+  }, [isAdmin]);
 
   const fetchStats = async () => {
     try {
@@ -59,12 +89,16 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) {
+  if (authLoading || checking || loading) {
     return (
       <div className="container max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
         <div className="text-center">Carregando...</div>
       </div>
     );
+  }
+
+  if (!isAdmin) {
+    return null;
   }
 
   return (

@@ -85,19 +85,19 @@ export default function Auth() {
             <Alert className="mb-4 border-primary/20 bg-primary/5">
               <Shield className="h-4 w-4 text-primary" />
               <AlertDescription className="text-sm">
-                <strong>100% Privado e Seguro</strong>
+                <strong>Seguro e Privado</strong>
                 <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
                   <li className="flex items-start gap-2">
                     <Lock className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                    <span>Suas senhas são criptografadas com bcrypt e nunca armazenadas em texto plano</span>
+                    <span>Suas senhas são criptografadas e protegidas por sistemas de segurança modernos</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Database className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                    <span>Todos os dados ficam armazenados localmente no seu dispositivo</span>
+                    <span>Seus dados de autenticação são armazenados com segurança em servidores criptografados</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Shield className="h-3 w-3 mt-0.5 flex-shrink-0" />
-                    <span>Não coletamos, vendemos ou compartilhamos suas informações pessoais</span>
+                    <span>Não vendemos ou compartilhamos suas informações pessoais com terceiros</span>
                   </li>
                 </ul>
               </AlertDescription>
@@ -148,9 +148,9 @@ export default function Auth() {
             <div className="text-xs text-muted-foreground text-center space-y-2">
               <p className="font-medium">🔒 Compromisso com sua Privacidade</p>
               <p>
-                Esta autenticação serve apenas para sincronizar suas preferências e tarefas 
-                entre dispositivos. Seus dados de sono, café e to-dos ficam salvos localmente 
-                e são criptografados de ponta a ponta.
+                Esta autenticação permite sincronizar suas preferências e tarefas entre dispositivos. 
+                Seus dados de login são armazenados com segurança no backend, enquanto dados da 
+                aplicação podem ser salvos localmente no seu navegador.
               </p>
               <p className="text-[10px] italic">
                 Não vendemos, compartilhamos ou analisamos suas informações. 

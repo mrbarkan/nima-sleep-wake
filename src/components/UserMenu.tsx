@@ -80,11 +80,9 @@ export const UserMenu = () => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          size="sm"
-          className="flex flex-col md:flex-row items-center gap-1 md:gap-2 h-auto py-2 px-3"
+          size="icon"
         >
           <MoreVertical className="h-5 w-5" />
-          <span className="text-xs md:text-sm">Menu</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72">

@@ -38,6 +38,11 @@ All colors MUST be HSL.
 
     --radius: 0.25rem;
 
+    --icon-sleep: 204 16% 70%;
+    --icon-caffeine: 30 13% 39%;
+    --icon-todo: 0 71% 40%;
+    --icon-blog: 30 13% 39%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 10%;
     --sidebar-primary: 0 0% 10%;
@@ -84,6 +89,11 @@ All colors MUST be HSL.
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 0 0% 20%;
     --sidebar-ring: 180 25% 55%;
+
+    --icon-sleep: 204 16% 70%;
+    --icon-caffeine: 30 13% 39%;
+    --icon-todo: 0 71% 40%;
+    --icon-blog: 30 13% 39%;
   }
 }
 

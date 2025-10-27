@@ -4,10 +4,10 @@ import { UserMenu } from "./UserMenu";
 
 const Navigation = () => {
   const navItems = [
-    { to: "/", icon: Moon, label: "Sono" },
-    { to: "/caffeine", icon: Coffee, label: "Cafeína" },
-    { to: "/todo", icon: ListTodo, label: "To-Do" },
-    { to: "/relax", icon: BookOpen, label: "Blog" },
+    { to: "/", icon: Moon, label: "Sono", colorClass: "text-[hsl(var(--icon-sleep))]" },
+    { to: "/caffeine", icon: Coffee, label: "Cafeína", colorClass: "text-[hsl(var(--icon-caffeine))]" },
+    { to: "/todo", icon: ListTodo, label: "To-Do", colorClass: "text-[hsl(var(--icon-todo))]" },
+    { to: "/relax", icon: BookOpen, label: "Blog", colorClass: "text-[hsl(var(--icon-blog))]" },
   ];
 
   return (
@@ -21,14 +21,18 @@ const Navigation = () => {
                 to={item.to}
                 className={({ isActive }) =>
                   `flex flex-col md:flex-row items-center gap-1 md:gap-2 transition-all duration-200 ${
-                    isActive
-                      ? "text-foreground font-medium"
-                      : "text-muted-foreground hover:text-foreground"
+                    isActive ? "" : "hover:opacity-80"
                   }`
                 }
               >
-                <item.icon className="h-5 w-5 md:h-4 md:w-4" />
-                <span className="text-xs md:text-sm">{item.label}</span>
+                {({ isActive }) => (
+                  <>
+                    <item.icon className={`h-5 w-5 md:h-4 md:w-4 ${item.colorClass}`} />
+                    <span className={`text-xs md:text-sm ${isActive ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                      {item.label}
+                    </span>
+                  </>
+                )}
               </NavLink>
             ))}
           </div>

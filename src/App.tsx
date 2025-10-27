@@ -8,8 +8,6 @@ import Sleep from "./pages/Sleep";
 import Caffeine from "./pages/Caffeine";
 import Todo from "./pages/Todo";
 import Relax from "./pages/Relax";
-import Dashboard from "./pages/Dashboard";
-import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,8 +26,6 @@ const App = () => (
               <Route path="/caffeine" element={<Caffeine />} />
               <Route path="/todo" element={<Todo />} />
               <Route path="/relax" element={<Relax />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

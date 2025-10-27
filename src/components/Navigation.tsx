@@ -1,35 +1,13 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import { Moon, Coffee, ListTodo, BookOpen, BarChart3, LogOut } from "lucide-react";
-import { Button } from "./ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { toast } from "@/hooks/use-toast";
+import { NavLink } from "react-router-dom";
+import { Moon, Coffee, ListTodo, BookOpen } from "lucide-react";
+import { UserMenu } from "./UserMenu";
 
 const Navigation = () => {
-  const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-
-  const handleLogout = async () => {
-    const { error } = await signOut();
-    if (error) {
-      toast({
-        variant: 'destructive',
-        title: 'Erro ao sair',
-        description: error.message
-      });
-    } else {
-      toast({
-        title: 'Logout realizado',
-        description: 'Até logo!'
-      });
-      navigate('/');
-    }
-  };
   const navItems = [
     { to: "/", icon: Moon, label: "Sono" },
     { to: "/caffeine", icon: Coffee, label: "Cafeína" },
     { to: "/todo", icon: ListTodo, label: "To-Do" },
     { to: "/relax", icon: BookOpen, label: "Blog" },
-    { to: "/dashboard", icon: BarChart3, label: "Dashboard" },
   ];
 
   return (
@@ -52,17 +30,7 @@ const Navigation = () => {
               <span className="text-xs md:text-sm">{item.label}</span>
             </NavLink>
           ))}
-          {user && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleLogout}
-              className="flex flex-col md:flex-row items-center gap-1 md:gap-2 h-auto py-2 px-3"
-            >
-              <LogOut className="h-5 w-5" />
-              <span className="text-xs md:text-sm">Sair</span>
-            </Button>
-          )}
+          <UserMenu />
         </div>
       </div>
     </nav>

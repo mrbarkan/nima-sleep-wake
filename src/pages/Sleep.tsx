@@ -69,16 +69,16 @@ const Sleep = () => {
             <div className="flex items-center">
               <h1 className="text-3xl font-semibold">Calculadora do Sono</h1>
               <InfoPopup
-                title="Ciclos do Sono"
-                content="O sono é organizado em ciclos de aproximadamente 90 minutos. Cada ciclo passa por diferentes estágios: sono leve, sono profundo e REM. Acordar ao final de um ciclo completo nos faz sentir mais descansados."
+                title="Recomendações Clínicas"
+                content="Adultos saudáveis precisam de 7-9 horas de sono por noite, segundo a American Academy of Sleep Medicine. O sono é organizado em ciclos de 90 minutos. Acordar ao final de um ciclo completo nos faz sentir mais descansados. Esta calculadora ajuda você a encontrar horários que se alinham com esses ciclos naturais."
                 sources={[
                   {
-                    label: "Sleep Foundation - Sleep Stages",
-                    url: "https://www.sleepfoundation.org/stages-of-sleep",
+                    label: "Sleep Foundation - Recommended Sleep Hours",
+                    url: "https://www.sleepfoundation.org/how-sleep-works/how-much-sleep-do-we-really-need",
                   },
                   {
-                    label: "NIH - Sleep Science",
-                    url: "https://www.nhlbi.nih.gov/health/sleep",
+                    label: "American Academy of Sleep Medicine",
+                    url: "https://aasm.org/clinical-resources/practice-standards/practice-guidelines/",
                   },
                 ]}
               />
@@ -150,8 +150,8 @@ const Sleep = () => {
           </div>
           {calculatedTimes.map((timeStr, index) => {
             const cycles = mode === "wake" ? 6 - index : index + 1;
-            const isMinimum = cycles === 4;
-            const isIdeal = cycles === 5;
+            const isMinimum = cycles === 5; // 7.5h - mínimo recomendado
+            const isIdeal = cycles === 6; // 9h - ideal
             const isHighlighted = isMinimum || isIdeal;
             
             return (
@@ -185,7 +185,7 @@ const Sleep = () => {
             );
           })}
           <p className="text-xs text-muted-foreground mt-4 p-4 bg-muted/50 rounded">
-            <strong>Dica:</strong> Adicione 15 minutos ao horário escolhido para considerar o tempo de adormecer. Os ciclos de 4-6 (6-9 horas) são ideais para a maioria dos adultos.
+            <strong>Baseado em Recomendações Médicas:</strong> Adultos precisam de 7-9 horas de sono por noite (5-6 ciclos). Menos de 7 horas está associado a problemas de saúde. Adicione 15 minutos ao horário escolhido para considerar o tempo de adormecer.
           </p>
         </div>
       )}

@@ -78,11 +78,12 @@ export const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
+        <Button 
+          variant="ghost" 
           size="icon"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground transition-colors"
         >
-          <MoreVertical className="h-5 w-5" />
+          <MoreVertical className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72">

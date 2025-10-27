@@ -51,7 +51,7 @@ const WelcomeModal = ({ isLoggedIn = false }: WelcomeModalProps) => {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {isUpdate ? "Novidades no FlowDay! 🎉" : "Bem-vindo ao FlowDay! 👋"}
+            {isUpdate ? "Novidades no Nima! 🎉" : "Bem-vindo ao Nima! 👋"}
           </DialogTitle>
           <DialogDescription className="space-y-3 pt-4">
             {isUpdate ? (
@@ -66,7 +66,7 @@ const WelcomeModal = ({ isLoggedIn = false }: WelcomeModalProps) => {
             ) : (
               <>
                 <p>
-                  O FlowDay é seu assistente de produtividade e bem-estar, 
+                  O Nima é seu assistente de produtividade e bem-estar, 
                   combinando ferramentas para melhorar seu sono, gerenciar 
                   cafeína, organizar tarefas e relaxar.
                 </p>

@@ -14,33 +14,27 @@ export const AboutSection = () => {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex gap-2">
         <Button
           variant="outline"
-          size="sm"
-          className="text-xs"
-          onClick={() => window.open("https://instagram.com/barkan", "_blank")}
+          size="icon"
+          onClick={() => window.open("https://instagram.com/mrbarkan", "_blank")}
         >
-          <Instagram className="h-3 w-3 mr-1" />
-          Instagram
+          <Instagram className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
-          size="sm"
-          className="text-xs"
-          onClick={() => window.open("https://linkedin.com/in/barkan", "_blank")}
+          size="icon"
+          onClick={() => window.open("https://linkedin.com/in/mrbarkan", "_blank")}
         >
-          <Linkedin className="h-3 w-3 mr-1" />
-          LinkedIn
+          <Linkedin className="h-4 w-4" />
         </Button>
         <Button
           variant="outline"
-          size="sm"
-          className="text-xs"
-          onClick={() => window.open("https://barkan.com", "_blank")}
+          size="icon"
+          onClick={() => window.open("https://davidbarkan.com", "_blank")}
         >
-          <Globe className="h-3 w-3 mr-1" />
-          Site
+          <Globe className="h-4 w-4" />
         </Button>
       </div>
 

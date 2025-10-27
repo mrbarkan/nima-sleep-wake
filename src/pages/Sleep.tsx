@@ -148,30 +148,42 @@ const Sleep = () => {
                 : "Horários recomendados para acordar:"}
             </span>
           </div>
-          {calculatedTimes.map((timeStr, index) => (
-            <Card
-              key={index}
-              className={`p-4 transition-all hover:shadow-md ${
-                index === 2 || index === 3
-                  ? "border-accent bg-accent/5"
-                  : ""
-              }`}
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <div className="text-2xl font-medium">{timeStr}</div>
-                  <div className="text-sm text-muted-foreground">
-                    {getCycleLabel(index)}
+          {calculatedTimes.map((timeStr, index) => {
+            const cycles = mode === "wake" ? 6 - index : index + 1;
+            const isMinimum = cycles === 4;
+            const isIdeal = cycles === 5;
+            const isHighlighted = isMinimum || isIdeal;
+            
+            return (
+              <Card
+                key={index}
+                className={`p-4 transition-all hover:shadow-md ${
+                  isHighlighted
+                    ? "border-accent bg-accent/5"
+                    : ""
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="text-2xl font-medium">{timeStr}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {getCycleLabel(index)}
+                    </div>
                   </div>
+                  {isMinimum && (
+                    <div className="text-xs font-medium text-accent">
+                      Mínimo
+                    </div>
+                  )}
+                  {isIdeal && (
+                    <div className="text-xs font-medium text-accent">
+                      Ideal
+                    </div>
+                  )}
                 </div>
-                {(index === 2 || index === 3) && (
-                  <div className="text-xs font-medium text-accent">
-                    Recomendado
-                  </div>
-                )}
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
           <p className="text-xs text-muted-foreground mt-4 p-4 bg-muted/50 rounded">
             <strong>Dica:</strong> Adicione 15 minutos ao horário escolhido para considerar o tempo de adormecer. Os ciclos de 4-6 (6-9 horas) são ideais para a maioria dos adultos.
           </p>

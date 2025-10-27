@@ -158,10 +158,10 @@ const Todo = () => {
     <div className="container max-w-3xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <ListTodo className="h-8 w-8 text-[hsl(var(--icon-todo))]" />
+          <ListTodo className="h-6 w-6 md:h-8 md:w-8 text-[hsl(var(--icon-todo))]" />
           <div>
             <div className="flex items-center">
-              <h1 className="text-3xl font-semibold">Sistema To-Do</h1>
+              <h1 className="text-xl md:text-3xl font-semibold">To-Do</h1>
               <InfoPopup
                 title="Métodos de Produtividade"
                 content="Cada método tem sua filosofia. O Ivy Lee foca em priorização rigorosa, o 1-3-5 equilibra volume, o Eat Frog destaca a tarefa mais difícil, e o Eisenhower separa urgente do importante."
@@ -177,7 +177,7 @@ const Todo = () => {
                 ]}
               />
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Escolha um método e experimente por 21 dias
             </p>
           </div>
@@ -185,11 +185,11 @@ const Todo = () => {
       </div>
 
       <Tabs value={method} onValueChange={(v) => { setMethod(v); setTasks([]); }}>
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-6">
-          <TabsTrigger value="ivy-lee">Ivy Lee</TabsTrigger>
-          <TabsTrigger value="1-3-5">1-3-5</TabsTrigger>
-          <TabsTrigger value="eat-frog">Eat Frog</TabsTrigger>
-          <TabsTrigger value="eisenhower">Eisenhower</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4 mb-6 h-auto">
+          <TabsTrigger value="ivy-lee" className="text-xs md:text-sm">Ivy Lee</TabsTrigger>
+          <TabsTrigger value="1-3-5" className="text-xs md:text-sm">1-3-5</TabsTrigger>
+          <TabsTrigger value="eat-frog" className="text-xs md:text-sm">Eat Frog</TabsTrigger>
+          <TabsTrigger value="eisenhower" className="text-xs md:text-sm">Eisenhower</TabsTrigger>
         </TabsList>
 
         <Card className="p-6 mb-6 bg-accent/5 border-accent/20">

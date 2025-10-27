@@ -64,10 +64,10 @@ const Caffeine = () => {
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <Coffee className="h-8 w-8 text-[hsl(var(--icon-caffeine))]" />
+          <Coffee className="h-6 w-6 md:h-8 md:w-8 text-[hsl(var(--icon-caffeine))]" />
           <div>
             <div className="flex items-center">
-              <h1 className="text-3xl font-semibold">Planejador de Cafeína</h1>
+              <h1 className="text-xl md:text-3xl font-semibold">Cafeína</h1>
               <InfoPopup
                 title="Timing da Cafeína"
                 content="A cafeína tem meia-vida de 5-6 horas no organismo. Consumir após 15h pode interferir no sono. O momento ideal para a primeira dose é 90-120 minutos após acordar, quando o cortisol natural começa a declinar."
@@ -83,7 +83,7 @@ const Caffeine = () => {
                 ]}
               />
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-xs md:text-sm">
               Doses estratégicas ao longo do dia
             </p>
           </div>

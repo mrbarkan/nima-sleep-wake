@@ -4,6 +4,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navigation from "./components/Navigation";
+import Header from "./components/Header";
+import WelcomeModal from "./components/WelcomeModal";
 import Sleep from "./pages/Sleep";
 import Caffeine from "./pages/Caffeine";
 import Todo from "./pages/Todo";
@@ -17,8 +19,10 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <WelcomeModal />
       <BrowserRouter>
         <div className="min-h-screen flex flex-col">
+          <Header />
           <Navigation />
           <main className="flex-1">
             <Routes>

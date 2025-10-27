@@ -13,30 +13,30 @@ const Navigation = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 md:static md:border-t-0 md:border-b">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-3 md:py-4">
-          <div className="flex items-center gap-6 md:gap-8">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                className={({ isActive }) =>
-                  `flex flex-col md:flex-row items-center gap-1 md:gap-2 transition-all duration-200 ${
-                    isActive ? "" : "hover:opacity-80"
-                  }`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <item.icon className={`h-5 w-5 md:h-4 md:w-4 ${item.colorClass}`} />
-                    <span className={`text-xs md:text-sm ${isActive ? "text-foreground font-medium" : "text-muted-foreground"}`}>
-                      {item.label}
-                    </span>
-                  </>
-                )}
-              </NavLink>
-            ))}
+        <div className="flex items-center py-3 md:py-4 md:justify-between justify-evenly md:gap-0 gap-4">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `flex flex-col md:flex-row items-center gap-1 md:gap-2 transition-all duration-200 ${
+                  isActive ? "" : "hover:opacity-80"
+                }`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <item.icon className={`h-5 w-5 md:h-4 md:w-4 ${item.colorClass}`} />
+                  <span className={`text-xs md:text-sm ${isActive ? "text-foreground font-medium" : "text-muted-foreground"}`}>
+                    {item.label}
+                  </span>
+                </>
+              )}
+            </NavLink>
+          ))}
+          <div className="md:ml-0">
+            <UserMenu />
           </div>
-          <UserMenu />
         </div>
       </div>
     </nav>

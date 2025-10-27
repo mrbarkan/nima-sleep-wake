@@ -162,7 +162,7 @@ const Relax = () => {
     <div className="container max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <BookOpen className="h-8 w-8 text-accent" />
+          <BookOpen className="h-8 w-8 text-[hsl(var(--icon-blog))]" />
           <div>
             <div className="flex items-center">
               <h1 className="text-3xl font-semibold">Blog de Saúde</h1>

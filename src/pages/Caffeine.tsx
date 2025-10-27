@@ -64,7 +64,7 @@ const Caffeine = () => {
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <Coffee className="h-8 w-8 text-accent" />
+          <Coffee className="h-8 w-8 text-[hsl(var(--icon-caffeine))]" />
           <div>
             <div className="flex items-center">
               <h1 className="text-3xl font-semibold">Planejador de Cafeína</h1>
@@ -116,7 +116,7 @@ const Caffeine = () => {
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
                   <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Coffee className="h-6 w-6 text-accent" />
+                    <Coffee className="h-6 w-6 text-[hsl(var(--icon-caffeine))]" />
                   </div>
                 </div>
                 <div className="flex-1">

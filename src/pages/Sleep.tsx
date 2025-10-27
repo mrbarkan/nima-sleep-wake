@@ -64,7 +64,7 @@ const Sleep = () => {
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <div className="mb-8">
         <div className="flex items-center gap-3">
-          <Moon className="h-8 w-8 text-accent" />
+          <Moon className="h-8 w-8 text-[hsl(var(--icon-sleep))]" />
           <div>
             <div className="flex items-center">
               <h1 className="text-3xl font-semibold">Calculadora do Sono</h1>

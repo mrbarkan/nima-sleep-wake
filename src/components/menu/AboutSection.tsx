@@ -46,10 +46,7 @@ export const AboutSection = () => {
           variant="secondary"
           size="sm"
           className="w-full text-xs"
-          onClick={() => {
-            // TODO: Show QR Code popup
-            alert("Por favor, faça upload do QR Code do Pix para ativar esta funcionalidade.");
-          }}
+          onClick={() => window.open("https://nubank.com.br/cobrar/4jija/68ff69c3-5e34-429b-87b2-e9c85c10d8d1", "_blank")}
         >
           <Coffee className="h-3 w-3 mr-1" />
           Considere uma gorjeta via Pix

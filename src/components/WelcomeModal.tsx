@@ -67,12 +67,11 @@ const WelcomeModal = ({ isLoggedIn = false }: WelcomeModalProps) => {
               <>
                 <p>
                   O Nima é seu assistente de produtividade e bem-estar, 
-                  combinando ferramentas para melhorar seu sono, gerenciar 
-                  cafeína, organizar tarefas e relaxar.
+                  ajudando você a otimizar seu sono, controlar sua cafeína 
+                  e organizar suas tarefas diárias.
                 </p>
                 <p className="text-sm">
-                  Explore as funcionalidades e comece sua jornada para dias 
-                  mais produtivos e equilibrados! ✨
+                  Comece sua jornada para dias mais produtivos e equilibrados! ✨
                 </p>
               </>
             )}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,10 +8,30 @@ import InfoPopup from "@/components/InfoPopup";
 import { NotificationToggle } from "@/components/NotificationToggle";
 
 const Sleep = () => {
-  const [mode, setMode] = useState<"wake" | "sleep">("wake");
-  const [time, setTime] = useState("");
-  const [calculatedTimes, setCalculatedTimes] = useState<string[]>([]);
+  const [mode, setMode] = useState<"wake" | "sleep">(() => {
+    const saved = localStorage.getItem("sleep-mode");
+    return (saved as "wake" | "sleep") || "wake";
+  });
+  const [time, setTime] = useState(() => {
+    return localStorage.getItem("sleep-time") || "";
+  });
+  const [calculatedTimes, setCalculatedTimes] = useState<string[]>(() => {
+    const saved = localStorage.getItem("sleep-calculatedTimes");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [selectedTime, setSelectedTime] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("sleep-mode", mode);
+  }, [mode]);
+
+  useEffect(() => {
+    localStorage.setItem("sleep-time", time);
+  }, [time]);
+
+  useEffect(() => {
+    localStorage.setItem("sleep-calculatedTimes", JSON.stringify(calculatedTimes));
+  }, [calculatedTimes]);
 
   const calculateTimes = () => {
     if (!time) return;

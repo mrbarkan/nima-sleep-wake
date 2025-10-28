@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Coffee, Clock, AlertCircle } from "lucide-react";
+import { Coffee, Clock, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import InfoPopup from "@/components/InfoPopup";
 import { NotificationToggle } from "@/components/NotificationToggle";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 interface CaffeineSchedule {
   time: string;
@@ -14,8 +19,22 @@ interface CaffeineSchedule {
 }
 
 const Caffeine = () => {
-  const [wakeTime, setWakeTime] = useState("");
-  const [schedule, setSchedule] = useState<CaffeineSchedule[]>([]);
+  const [wakeTime, setWakeTime] = useState(() => {
+    return localStorage.getItem("caffeine-wakeTime") || "";
+  });
+  const [schedule, setSchedule] = useState<CaffeineSchedule[]>(() => {
+    const saved = localStorage.getItem("caffeine-schedule");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [openNotifications, setOpenNotifications] = useState<{ [key: number]: boolean }>({});
+
+  useEffect(() => {
+    localStorage.setItem("caffeine-wakeTime", wakeTime);
+  }, [wakeTime]);
+
+  useEffect(() => {
+    localStorage.setItem("caffeine-schedule", JSON.stringify(schedule));
+  }, [schedule]);
 
   const caffeineRotation = [
     { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
@@ -134,12 +153,40 @@ const Caffeine = () => {
                   </div>
                 </div>
               </Card>
-              <NotificationToggle
-                type={`caffeine-${item.time}` as any}
-                time={item.time}
-                title="Hora da cafeína!"
-                body={`Está na hora de tomar seu ${item.source}. ${item.description}`}
-              />
+              <Collapsible 
+                open={openNotifications[index]} 
+                onOpenChange={(open) => 
+                  setOpenNotifications(prev => ({ ...prev, [index]: open }))
+                }
+              >
+                <CollapsibleTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground"
+                  >
+                    {openNotifications[index] ? (
+                      <>
+                        <ChevronUp className="h-3 w-3" />
+                        Ocultar notificação
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-3 w-3" />
+                        Configurar notificação
+                      </>
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2">
+                  <NotificationToggle
+                    type={`caffeine-${item.time}` as any}
+                    time={item.time}
+                    title="Hora da cafeína!"
+                    body={`Está na hora de tomar seu ${item.source}. ${item.description}`}
+                  />
+                </CollapsibleContent>
+              </Collapsible>
             </div>
           ))}
           

@@ -54,7 +54,7 @@ export const AboutSection = () => {
       </div>
 
       <div className="pt-2 text-center">
-        <p className="text-[10px] text-muted-foreground/60">v0.9.0 beta</p>
+        <p className="text-[10px] text-muted-foreground/60">v0.9.0.1 beta</p>
       </div>
     </div>
   );

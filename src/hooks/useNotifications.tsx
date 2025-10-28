@@ -88,8 +88,6 @@ export const useNotifications = () => {
       scheduledTime.setDate(scheduledTime.getDate() + 1);
     }
 
-    const delay = scheduledTime.getTime() - now.getTime();
-
     // Salva no localStorage
     const notificationId = `notification_${type}_${Date.now()}`;
     const notificationData = {
@@ -110,25 +108,38 @@ export const useNotifications = () => {
       JSON.stringify(storedNotifications)
     );
 
-    // Agenda a notificação
-    setTimeout(() => {
-      if (permission.granted) {
-        new Notification(title, {
-          body,
-          icon: "/placeholder.svg",
-          badge: "/placeholder.svg",
-        });
-      }
+    // Envia mensagem para o Service Worker agendar a notificação
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.controller.postMessage({
+        type: 'SCHEDULE_NOTIFICATION',
+        id: notificationId,
+        title,
+        body,
+        icon: '/placeholder.svg',
+        scheduledTime: scheduledTime.toISOString(),
+      });
+    } else {
+      // Fallback para navegadores sem Service Worker
+      const delay = scheduledTime.getTime() - now.getTime();
+      setTimeout(() => {
+        if (permission.granted) {
+          new Notification(title, {
+            body,
+            icon: "/placeholder.svg",
+            badge: "/placeholder.svg",
+          });
+        }
 
-      // Remove do localStorage após disparar
-      const notifications = JSON.parse(
-        localStorage.getItem("scheduledNotifications") || "[]"
-      );
-      const filtered = notifications.filter(
-        (n: any) => n.id !== notificationId
-      );
-      localStorage.setItem("scheduledNotifications", JSON.stringify(filtered));
-    }, delay);
+        // Remove do localStorage após disparar
+        const notifications = JSON.parse(
+          localStorage.getItem("scheduledNotifications") || "[]"
+        );
+        const filtered = notifications.filter(
+          (n: any) => n.id !== notificationId
+        );
+        localStorage.setItem("scheduledNotifications", JSON.stringify(filtered));
+      }, delay);
+    }
 
     toast({
       title: "Notificação agendada!",
@@ -176,24 +187,37 @@ export const useNotifications = () => {
 
     // Função para agendar o próximo lembrete
     const scheduleNext = () => {
-      const timeoutId = setTimeout(() => {
-        if (permission.granted) {
-          new Notification("Lembrete de Tarefas", {
-            body: "Hora de checar sua lista de tarefas! 📝",
-            icon: "/placeholder.svg",
-            badge: "/placeholder.svg",
-          });
-        }
+      const nextTime = new Date(Date.now() + intervalMinutes * 60 * 1000);
+      
+      // Envia para o Service Worker
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'SCHEDULE_NOTIFICATION',
+          id: `recurring_${Date.now()}`,
+          title: 'Lembrete de Tarefas',
+          body: 'Hora de checar sua lista de tarefas! 📝',
+          icon: '/placeholder.svg',
+          scheduledTime: nextTime.toISOString(),
+        });
+      } else {
+        // Fallback
+        const timeoutId = setTimeout(() => {
+          if (permission.granted) {
+            new Notification("Lembrete de Tarefas", {
+              body: "Hora de checar sua lista de tarefas! 📝",
+              icon: "/placeholder.svg",
+              badge: "/placeholder.svg",
+            });
+          }
 
-        // Agenda o próximo lembrete
-        const currentInterval = localStorage.getItem("recurringReminderInterval");
-        if (currentInterval) {
-          scheduleNext();
-        }
-      }, intervalMinutes * 60 * 1000);
+          const currentInterval = localStorage.getItem("recurringReminderInterval");
+          if (currentInterval) {
+            scheduleNext();
+          }
+        }, intervalMinutes * 60 * 1000);
 
-      // Salva o ID do timeout para poder cancelar depois
-      localStorage.setItem("recurringReminderTimeoutId", timeoutId.toString());
+        localStorage.setItem("recurringReminderTimeoutId", timeoutId.toString());
+      }
     };
 
     // Cancela qualquer lembrete anterior

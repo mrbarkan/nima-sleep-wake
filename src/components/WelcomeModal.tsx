@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const WELCOME_KEY = "flowday-welcome-shown";
 const LAST_UPDATE_KEY = "flowday-last-update";
-const CURRENT_VERSION = "1.1.1"; // Atualize isso quando houver mudanças importantes
+const CURRENT_VERSION = "1.1.2"; // Atualize isso quando houver mudanças importantes
 
 interface WelcomeModalProps {
   isLoggedIn?: boolean;
@@ -57,11 +57,11 @@ const WelcomeModal = ({ isLoggedIn = false }: WelcomeModalProps) => {
             {isUpdate ? (
               <>
                 <p>Confira as últimas melhorias:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Interface mais limpa nas notificações de cafeína</li>
-                  <li>Clique na caixa de horário para expandir/recolher notificações</li>
-                  <li>Persistência de cálculos ao navegar entre abas</li>
-                  <li>Melhorias na experiência de uso</li>
+                <ul className="list-disc list-inside space-y-1.5 text-sm">
+                  <li><strong>Notificações Android corrigidas:</strong> Agora as notificações funcionam em background no Android graças ao Service Worker</li>
+                  <li><strong>Notificações individuais de cafeína:</strong> Ative lembretes para cada horário separadamente</li>
+                  <li><strong>Persistência de dados:</strong> Seus cálculos são salvos ao trocar de aba</li>
+                  <li><strong>Lembretes de tarefas personalizáveis:</strong> Configure intervalos de 30min, 1h ou 3h</li>
                 </ul>
               </>
             ) : (

@@ -43,6 +43,33 @@ All colors MUST be HSL.
     --icon-todo: 8 73% 40%;
     --icon-blog: 23 70% 47%;
 
+    /* Todo method colors - Ivy Lee (gradient style) */
+    --todo-ivy-1: 8 90% 55%;
+    --todo-ivy-2: 18 85% 50%;
+    --todo-ivy-3: 28 80% 45%;
+    --todo-ivy-4: 38 75% 40%;
+    --todo-ivy-5: 48 70% 35%;
+    --todo-ivy-6: 58 65% 30%;
+
+    /* Todo method colors - 1-3-5 */
+    --todo-135-big: 0 70% 50%;
+    --todo-135-medium: 35 80% 50%;
+    --todo-135-small: 210 80% 50%;
+
+    /* Todo method colors - Eat Frog (green tones) */
+    --todo-frog-1: 145 70% 35%;
+    --todo-frog-2: 145 60% 40%;
+    --todo-frog-3: 145 50% 45%;
+    --todo-frog-4: 145 40% 50%;
+    --todo-frog-5: 145 30% 55%;
+    --todo-frog-6: 145 20% 60%;
+
+    /* Todo method colors - Eisenhower */
+    --todo-eisenhower-urgent-important: 0 70% 50%;
+    --todo-eisenhower-urgent-not: 35 75% 50%;
+    --todo-eisenhower-not-urgent-important: 210 70% 50%;
+    --todo-eisenhower-not-urgent-not: 0 0% 60%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 10%;
     --sidebar-primary: 0 0% 10%;
@@ -94,6 +121,33 @@ All colors MUST be HSL.
     --icon-caffeine: 27 14% 39%;
     --icon-todo: 8 73% 40%;
     --icon-blog: 23 70% 47%;
+
+    /* Todo method colors - Ivy Lee (gradient style) */
+    --todo-ivy-1: 8 90% 55%;
+    --todo-ivy-2: 18 85% 50%;
+    --todo-ivy-3: 28 80% 45%;
+    --todo-ivy-4: 38 75% 40%;
+    --todo-ivy-5: 48 70% 35%;
+    --todo-ivy-6: 58 65% 30%;
+
+    /* Todo method colors - 1-3-5 */
+    --todo-135-big: 0 70% 50%;
+    --todo-135-medium: 35 80% 50%;
+    --todo-135-small: 210 80% 50%;
+
+    /* Todo method colors - Eat Frog (green tones) */
+    --todo-frog-1: 145 70% 35%;
+    --todo-frog-2: 145 60% 40%;
+    --todo-frog-3: 145 50% 45%;
+    --todo-frog-4: 145 40% 50%;
+    --todo-frog-5: 145 30% 55%;
+    --todo-frog-6: 145 20% 60%;
+
+    /* Todo method colors - Eisenhower */
+    --todo-eisenhower-urgent-important: 0 70% 50%;
+    --todo-eisenhower-urgent-not: 35 75% 50%;
+    --todo-eisenhower-not-urgent-important: 210 70% 50%;
+    --todo-eisenhower-not-urgent-not: 0 0% 60%;
   }
 }
 

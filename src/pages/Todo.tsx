@@ -9,6 +9,13 @@ import { toast } from "sonner";
 import { z } from "zod";
 import InfoPopup from "@/components/InfoPopup";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   DndContext,
   closestCenter,
   KeyboardSensor,
@@ -45,7 +52,7 @@ interface Task {
   text: string;
   completed: boolean;
   priority?: number;
-  category?: string;
+  category?: "urgent-important" | "urgent-not" | "not-urgent-important" | "not-urgent-not";
 }
 
 interface SortableTaskItemProps {
@@ -53,9 +60,12 @@ interface SortableTaskItemProps {
   index: number;
   toggleTask: (id: string) => void;
   deleteTask: (id: string) => void;
+  method: string;
+  totalTasks: number;
+  updateTaskCategory: (id: string, category: Task["category"]) => void;
 }
 
-const SortableTaskItem = ({ task, toggleTask, deleteTask }: SortableTaskItemProps) => {
+const SortableTaskItem = ({ task, index, toggleTask, deleteTask, method, totalTasks, updateTaskCategory }: SortableTaskItemProps) => {
   const {
     attributes,
     listeners,
@@ -71,31 +81,88 @@ const SortableTaskItem = ({ task, toggleTask, deleteTask }: SortableTaskItemProp
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Calculate color based on method and priority
+  const getTaskColor = () => {
+    if (method === "ivy-lee") {
+      return `hsl(var(--todo-ivy-${index + 1}))`;
+    } else if (method === "1-3-5") {
+      if (index === 0) return "hsl(var(--todo-135-big))";
+      if (index <= 3) return "hsl(var(--todo-135-medium))";
+      return "hsl(var(--todo-135-small))";
+    } else if (method === "eat-frog") {
+      return `hsl(var(--todo-frog-${index + 1}))`;
+    } else if (method === "eisenhower" && task.category) {
+      return `hsl(var(--todo-eisenhower-${task.category}))`;
+    }
+    return "transparent";
+  };
+
+  const categoryLabels = {
+    "urgent-important": "Urgente e Importante",
+    "urgent-not": "Urgente, não Importante",
+    "not-urgent-important": "Importante, não Urgente",
+    "not-urgent-not": "Não Urgente, não Importante",
+  };
+
   return (
     <Card
       ref={setNodeRef}
       style={style}
       className={`p-4 transition-all ${
         task.completed ? "opacity-60" : ""
-      } ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+      } ${isDragging ? "cursor-grabbing" : ""} touch-none`}
     >
       <div className="flex items-center gap-3">
-        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+        <div 
+          {...attributes} 
+          {...listeners} 
+          className="cursor-grab active:cursor-grabbing touch-none"
+          style={{ touchAction: "none" }}
+        >
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
+        <div 
+          className="w-1 h-12 rounded-full transition-colors flex-shrink-0"
+          style={{ backgroundColor: getTaskColor() }}
+        />
         <Checkbox
           checked={task.completed}
           onCheckedChange={() => toggleTask(task.id)}
         />
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <div className={task.completed ? "line-through text-muted-foreground" : ""}>
             {task.text}
           </div>
+          {method === "eisenhower" && (
+            <Select
+              value={task.category}
+              onValueChange={(value) => updateTaskCategory(task.id, value as Task["category"])}
+            >
+              <SelectTrigger className="w-full mt-2 h-8 text-xs">
+                <SelectValue placeholder="Selecione a categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="urgent-important">
+                  {categoryLabels["urgent-important"]}
+                </SelectItem>
+                <SelectItem value="urgent-not">
+                  {categoryLabels["urgent-not"]}
+                </SelectItem>
+                <SelectItem value="not-urgent-important">
+                  {categoryLabels["not-urgent-important"]}
+                </SelectItem>
+                <SelectItem value="not-urgent-not">
+                  {categoryLabels["not-urgent-not"]}
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          )}
         </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => deleteTask(task.id)}
+          className="flex-shrink-0"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -212,6 +279,12 @@ const Todo = () => {
     toast("Tarefa removida");
   };
 
+  const updateTaskCategory = (id: string, category: Task["category"]) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, category } : task
+    ));
+  };
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -319,6 +392,9 @@ const Todo = () => {
                   index={index}
                   toggleTask={toggleTask}
                   deleteTask={deleteTask}
+                  method={method}
+                  totalTasks={tasks.length}
+                  updateTaskCategory={updateTaskCategory}
                 />
               ))}
             </div>

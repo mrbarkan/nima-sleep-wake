@@ -16,7 +16,6 @@ interface CaffeineSchedule {
 const Caffeine = () => {
   const [wakeTime, setWakeTime] = useState("");
   const [schedule, setSchedule] = useState<CaffeineSchedule[]>([]);
-  const [selectedTime, setSelectedTime] = useState("");
 
   const caffeineRotation = [
     { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
@@ -115,12 +114,7 @@ const Caffeine = () => {
         <div className="space-y-3">
           {schedule.map((item, index) => (
             <div key={index} className="space-y-2">
-              <Card 
-                className={`p-4 hover:shadow-md transition-all cursor-pointer ${
-                  selectedTime === item.time ? "ring-2 ring-accent" : ""
-                }`}
-                onClick={() => setSelectedTime(item.time)}
-              >
+              <Card className="p-4">
                 <div className="flex items-start gap-4">
                   <div className="flex-shrink-0">
                     <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center">
@@ -140,14 +134,12 @@ const Caffeine = () => {
                   </div>
                 </div>
               </Card>
-              {selectedTime === item.time && (
-                <NotificationToggle
-                  type="caffeine"
-                  time={item.time}
-                  title="Hora da cafeína!"
-                  body={`Está na hora de tomar seu ${item.source}. ${item.description}`}
-                />
-              )}
+              <NotificationToggle
+                type={`caffeine-${item.time}` as any}
+                time={item.time}
+                title="Hora da cafeína!"
+                body={`Está na hora de tomar seu ${item.source}. ${item.description}`}
+              />
             </div>
           ))}
           

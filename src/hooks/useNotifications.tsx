@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { toast } from "@/hooks/use-toast";
 
-export type NotificationType = "sleep" | "wake" | "caffeine";
+export type NotificationType = "sleep" | "wake" | "caffeine" | string;
 
 interface NotificationPermission {
   granted: boolean;

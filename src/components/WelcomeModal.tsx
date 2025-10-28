@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const WELCOME_KEY = "flowday-welcome-shown";
 const LAST_UPDATE_KEY = "flowday-last-update";
-const CURRENT_VERSION = "1.0.0"; // Atualize isso quando houver mudanças importantes
+const CURRENT_VERSION = "1.1.0"; // Atualize isso quando houver mudanças importantes
 
 interface WelcomeModalProps {
   isLoggedIn?: boolean;
@@ -58,9 +58,10 @@ const WelcomeModal = ({ isLoggedIn = false }: WelcomeModalProps) => {
               <>
                 <p>Confira as últimas melhorias:</p>
                 <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Nova paleta de cores</li>
-                  <li>Interface otimizada para mobile</li>
-                  <li>Melhorias de navegação</li>
+                  <li>Notificações individuais para cada horário de cafeína</li>
+                  <li>Escolha quais horários deseja ser notificado</li>
+                  <li>Lembretes recorrentes personalizáveis para tarefas</li>
+                  <li>Melhorias no sistema de notificações</li>
                 </ul>
               </>
             ) : (

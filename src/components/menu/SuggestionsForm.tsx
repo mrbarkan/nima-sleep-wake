@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SuggestionsFormProps {
   onClose: () => void;
@@ -28,16 +29,34 @@ export const SuggestionsForm = ({ onClose }: SuggestionsFormProps) => {
 
     setIsLoading(true);
 
-    // TODO: Implement actual submission to backend
-    setTimeout(() => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { error } = await supabase
+        .from('suggestions')
+        .insert({
+          suggestion: suggestion.trim(),
+          user_id: user?.id || null
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Sugestão enviada!",
         description: "Obrigado pelo seu feedback. Vamos analisar com carinho! 💙",
       });
       setSuggestion("");
-      setIsLoading(false);
       onClose();
-    }, 1000);
+    } catch (error) {
+      console.error('Error submitting suggestion:', error);
+      toast({
+        variant: "destructive",
+        title: "Erro ao enviar",
+        description: "Não foi possível enviar sua sugestão. Tente novamente.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

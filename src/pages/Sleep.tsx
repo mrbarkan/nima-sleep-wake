@@ -5,11 +5,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Moon, Clock, Sparkles, Sunrise, Sunset } from "lucide-react";
 import InfoPopup from "@/components/InfoPopup";
+import { NotificationToggle } from "@/components/NotificationToggle";
 
 const Sleep = () => {
   const [mode, setMode] = useState<"wake" | "sleep">("wake");
   const [time, setTime] = useState("");
   const [calculatedTimes, setCalculatedTimes] = useState<string[]>([]);
+  const [selectedTime, setSelectedTime] = useState("");
 
   const calculateTimes = () => {
     if (!time) return;
@@ -155,33 +157,46 @@ const Sleep = () => {
             const isHighlighted = isMinimum || isIdeal;
             
             return (
-              <Card
-                key={index}
-                className={`p-4 transition-all hover:shadow-md ${
-                  isHighlighted
-                    ? "border-accent bg-accent/5"
-                    : ""
-                }`}
-              >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <div className="text-2xl font-medium">{timeStr}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {getCycleLabel(index)}
+              <div key={index} className="space-y-2">
+                <Card
+                  className={`p-4 transition-all hover:shadow-md cursor-pointer ${
+                    isHighlighted
+                      ? "border-accent bg-accent/5"
+                      : ""
+                  } ${selectedTime === timeStr ? "ring-2 ring-accent" : ""}`}
+                  onClick={() => setSelectedTime(timeStr)}
+                >
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <div className="text-2xl font-medium">{timeStr}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {getCycleLabel(index)}
+                      </div>
                     </div>
+                    {isMinimum && (
+                      <div className="text-xs font-medium text-accent">
+                        Mínimo
+                      </div>
+                    )}
+                    {isIdeal && (
+                      <div className="text-xs font-medium text-accent">
+                        Ideal
+                      </div>
+                    )}
                   </div>
-                  {isMinimum && (
-                    <div className="text-xs font-medium text-accent">
-                      Mínimo
-                    </div>
-                  )}
-                  {isIdeal && (
-                    <div className="text-xs font-medium text-accent">
-                      Ideal
-                    </div>
-                  )}
-                </div>
-              </Card>
+                </Card>
+                {selectedTime === timeStr && (
+                  <NotificationToggle
+                    type={mode === "wake" ? "sleep" : "wake"}
+                    time={timeStr}
+                    title={mode === "wake" ? "Hora de dormir!" : "Hora de acordar!"}
+                    body={mode === "wake" 
+                      ? `Está na hora de se preparar para dormir. Horário ideal: ${timeStr}`
+                      : `Bom dia! Hora de acordar para começar o dia bem. Horário: ${timeStr}`
+                    }
+                  />
+                )}
+              </div>
             );
           })}
           <p className="text-xs text-muted-foreground mt-4 p-4 bg-muted/50 rounded">

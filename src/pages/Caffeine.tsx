@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Coffee, Clock, AlertCircle } from "lucide-react";
 import InfoPopup from "@/components/InfoPopup";
+import { NotificationToggle } from "@/components/NotificationToggle";
 
 interface CaffeineSchedule {
   time: string;
@@ -15,6 +16,7 @@ interface CaffeineSchedule {
 const Caffeine = () => {
   const [wakeTime, setWakeTime] = useState("");
   const [schedule, setSchedule] = useState<CaffeineSchedule[]>([]);
+  const [selectedTime, setSelectedTime] = useState("");
 
   const caffeineRotation = [
     { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
@@ -112,26 +114,41 @@ const Caffeine = () => {
       {schedule.length > 0 && (
         <div className="space-y-3">
           {schedule.map((item, index) => (
-            <Card key={index} className="p-4 hover:shadow-md transition-all">
-              <div className="flex items-start gap-4">
-                <div className="flex-shrink-0">
-                  <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Coffee className="h-6 w-6 text-[hsl(var(--icon-caffeine))]" />
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex justify-between items-start mb-1">
-                    <div className="text-xl font-medium">{item.time}</div>
-                    <div className="text-sm font-medium text-accent">
-                      {item.source}
+            <div key={index} className="space-y-2">
+              <Card 
+                className={`p-4 hover:shadow-md transition-all cursor-pointer ${
+                  selectedTime === item.time ? "ring-2 ring-accent" : ""
+                }`}
+                onClick={() => setSelectedTime(item.time)}
+              >
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
+                    <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center">
+                      <Coffee className="h-6 w-6 text-[hsl(var(--icon-caffeine))]" />
                     </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {item.description}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-start mb-1">
+                      <div className="text-xl font-medium">{item.time}</div>
+                      <div className="text-sm font-medium text-accent">
+                        {item.source}
+                      </div>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {item.description}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+              {selectedTime === item.time && (
+                <NotificationToggle
+                  type="caffeine"
+                  time={item.time}
+                  title="Hora da cafeína!"
+                  body={`Está na hora de tomar seu ${item.source}. ${item.description}`}
+                />
+              )}
+            </div>
           ))}
           
           <Card className="p-4 bg-muted/50 border-muted">

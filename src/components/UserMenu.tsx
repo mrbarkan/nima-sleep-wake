@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MoreVertical, Share2, MessageSquare, Info, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MoreVertical, Share2, MessageSquare, Info, LogOut, Moon, Sun } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,12 +15,39 @@ import { useNavigate } from "react-router-dom";
 import { AuthMenuContent } from "./menu/AuthMenuContent";
 import { AboutSection } from "./menu/AboutSection";
 import { SuggestionsForm } from "./menu/SuggestionsForm";
+import { Switch } from "@/components/ui/switch";
 
 export const UserMenu = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [showAuth, setShowAuth] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Verifica se há preferência salva
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    
+    const shouldBeDark = savedTheme === "dark" || (!savedTheme && prefersDark);
+    setIsDarkMode(shouldBeDark);
+    
+    if (shouldBeDark) {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  const toggleDarkMode = (checked: boolean) => {
+    setIsDarkMode(checked);
+    
+    if (checked) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
 
   const handleLogout = async () => {
     const { error } = await signOut();
@@ -87,6 +114,23 @@ export const UserMenu = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-72">
+        <div className="px-2 py-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-sm">
+              {isDarkMode ? (
+                <Moon className="h-4 w-4" />
+              ) : (
+                <Sun className="h-4 w-4" />
+              )}
+              <span>Modo Escuro</span>
+            </div>
+            <Switch
+              checked={isDarkMode}
+              onCheckedChange={toggleDarkMode}
+            />
+          </div>
+        </div>
+        <DropdownMenuSeparator />
         {user ? (
           <>
             <DropdownMenuLabel>

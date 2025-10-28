@@ -4,10 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ListTodo, Trash2, Plus, Info } from "lucide-react";
+import { ListTodo, Trash2, Plus, Info, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import InfoPopup from "@/components/InfoPopup";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 // Schema de validação para garantir segurança dos dados
 const taskSchema = z.object({
@@ -30,6 +47,62 @@ interface Task {
   priority?: number;
   category?: string;
 }
+
+interface SortableTaskItemProps {
+  task: Task;
+  index: number;
+  toggleTask: (id: string) => void;
+  deleteTask: (id: string) => void;
+}
+
+const SortableTaskItem = ({ task, toggleTask, deleteTask }: SortableTaskItemProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: task.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <Card
+      ref={setNodeRef}
+      style={style}
+      className={`p-4 transition-all ${
+        task.completed ? "opacity-60" : ""
+      } ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+    >
+      <div className="flex items-center gap-3">
+        <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+          <GripVertical className="h-5 w-5 text-muted-foreground" />
+        </div>
+        <Checkbox
+          checked={task.completed}
+          onCheckedChange={() => toggleTask(task.id)}
+        />
+        <div className="flex-1">
+          <div className={task.completed ? "line-through text-muted-foreground" : ""}>
+            {task.text}
+          </div>
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => deleteTask(task.id)}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
+    </Card>
+  );
+};
 
 const STORAGE_KEY = "sleepflow-todo-data";
 
@@ -139,19 +212,24 @@ const Todo = () => {
     toast("Tarefa removida");
   };
 
-  const movePriority = (id: string, direction: "up" | "down") => {
-    const index = tasks.findIndex(t => t.id === id);
-    if (
-      (direction === "up" && index === 0) ||
-      (direction === "down" && index === tasks.length - 1)
-    )
-      return;
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
-    const newTasks = [...tasks];
-    const swapIndex = direction === "up" ? index - 1 : index + 1;
-    [newTasks[index], newTasks[swapIndex]] = [newTasks[swapIndex], newTasks[index]];
-    
-    setTasks(newTasks.map((task, i) => ({ ...task, priority: i + 1 })));
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setTasks((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over.id);
+        const newTasks = arrayMove(items, oldIndex, newIndex);
+        return newTasks.map((task, i) => ({ ...task, priority: i + 1 }));
+      });
+    }
   };
 
   return (
@@ -184,7 +262,7 @@ const Todo = () => {
         </div>
       </div>
 
-      <Tabs value={method} onValueChange={(v) => { setMethod(v); setTasks([]); }}>
+      <Tabs value={method} onValueChange={setMethod}>
         <TabsList className="grid w-full grid-cols-4 mb-6 h-auto">
           <TabsTrigger value="ivy-lee" className="text-xs md:text-sm">Ivy Lee</TabsTrigger>
           <TabsTrigger value="1-3-5" className="text-xs md:text-sm">1-3-5</TabsTrigger>
@@ -224,57 +302,28 @@ const Todo = () => {
           </div>
         </Card>
 
-        <div className="space-y-2">
-          {tasks.map((task, index) => (
-            <Card
-              key={task.id}
-              className={`p-4 transition-all ${
-                task.completed ? "opacity-60" : ""
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <Checkbox
-                  checked={task.completed}
-                  onCheckedChange={() => toggleTask(task.id)}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={tasks.map((t) => t.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-2">
+              {tasks.map((task, index) => (
+                <SortableTaskItem
+                  key={task.id}
+                  task={task}
+                  index={index}
+                  toggleTask={toggleTask}
+                  deleteTask={deleteTask}
                 />
-                <div className="flex-1">
-                  <div className={task.completed ? "line-through text-muted-foreground" : ""}>
-                    {task.text}
-                  </div>
-                </div>
-                <div className="flex gap-1">
-                  {method === "ivy-lee" && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => movePriority(task.id, "up")}
-                        disabled={index === 0}
-                      >
-                        ↑
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => movePriority(task.id, "down")}
-                        disabled={index === tasks.length - 1}
-                      >
-                        ↓
-                      </Button>
-                    </>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => deleteTask(task.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
 
         {tasks.length === 0 && (
           <Card className="p-8 text-center text-muted-foreground">

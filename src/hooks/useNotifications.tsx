@@ -161,11 +161,92 @@ export const useNotifications = () => {
     return notifications;
   };
 
+  const scheduleRecurringReminder = (intervalMinutes: number) => {
+    if (!permission.granted) {
+      toast({
+        variant: "destructive",
+        title: "Permissão necessária",
+        description: "Primeiro permita as notificações.",
+      });
+      return;
+    }
+
+    // Salva a preferência no localStorage
+    localStorage.setItem("recurringReminderInterval", intervalMinutes.toString());
+
+    // Função para agendar o próximo lembrete
+    const scheduleNext = () => {
+      const timeoutId = setTimeout(() => {
+        if (permission.granted) {
+          new Notification("Lembrete de Tarefas", {
+            body: "Hora de checar sua lista de tarefas! 📝",
+            icon: "/placeholder.svg",
+            badge: "/placeholder.svg",
+          });
+        }
+
+        // Agenda o próximo lembrete
+        const currentInterval = localStorage.getItem("recurringReminderInterval");
+        if (currentInterval) {
+          scheduleNext();
+        }
+      }, intervalMinutes * 60 * 1000);
+
+      // Salva o ID do timeout para poder cancelar depois
+      localStorage.setItem("recurringReminderTimeoutId", timeoutId.toString());
+    };
+
+    // Cancela qualquer lembrete anterior
+    const oldTimeoutId = localStorage.getItem("recurringReminderTimeoutId");
+    if (oldTimeoutId) {
+      clearTimeout(Number(oldTimeoutId));
+    }
+
+    scheduleNext();
+
+    const hours = Math.floor(intervalMinutes / 60);
+    const minutes = intervalMinutes % 60;
+    let intervalText = "";
+    if (hours > 0) {
+      intervalText = `${hours}h`;
+      if (minutes > 0) intervalText += ` ${minutes}min`;
+    } else {
+      intervalText = `${minutes}min`;
+    }
+
+    toast({
+      title: "Lembretes ativados!",
+      description: `Você receberá um lembrete a cada ${intervalText}.`,
+    });
+  };
+
+  const cancelRecurringReminder = () => {
+    const timeoutId = localStorage.getItem("recurringReminderTimeoutId");
+    if (timeoutId) {
+      clearTimeout(Number(timeoutId));
+      localStorage.removeItem("recurringReminderTimeoutId");
+    }
+    localStorage.removeItem("recurringReminderInterval");
+
+    toast({
+      title: "Lembretes desativados",
+      description: "Os lembretes recorrentes foram cancelados.",
+    });
+  };
+
+  const getRecurringReminderInterval = (): number | null => {
+    const interval = localStorage.getItem("recurringReminderInterval");
+    return interval ? Number(interval) : null;
+  };
+
   return {
     permission,
     requestPermission,
     scheduleNotification,
     cancelNotification,
     getScheduledNotifications,
+    scheduleRecurringReminder,
+    cancelRecurringReminder,
+    getRecurringReminderInterval,
   };
 };

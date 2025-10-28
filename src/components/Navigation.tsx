@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
 import { Moon, Coffee, ListTodo, BookOpen } from "lucide-react";
-import { UserMenu } from "./UserMenu";
 
 const Navigation = () => {
   const navItems = [
@@ -13,7 +12,7 @@ const Navigation = () => {
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 md:static md:border-t-0 md:border-b">
       <div className="container mx-auto px-4">
-        <div className="flex items-center py-3 md:py-4 md:justify-between justify-evenly md:gap-0 gap-4">
+        <div className="flex items-center py-3 md:py-4 justify-evenly md:justify-start md:gap-8">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -34,9 +33,6 @@ const Navigation = () => {
               )}
             </NavLink>
           ))}
-          <div className="md:ml-0">
-            <UserMenu />
-          </div>
         </div>
       </div>
     </nav>

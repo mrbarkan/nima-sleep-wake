@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MoreVertical, Share2, MessageSquare, Info, LogOut, Moon, Sun } from "lucide-react";
+import { MoreVertical, Share2, MessageSquare, Info, LogOut, Moon, Sun, Bell } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +16,14 @@ import { AuthMenuContent } from "./menu/AuthMenuContent";
 import { AboutSection } from "./menu/AboutSection";
 import { SuggestionsForm } from "./menu/SuggestionsForm";
 import { Switch } from "@/components/ui/switch";
+import { NotificationManager } from "./NotificationManager";
 
 export const UserMenu = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [showAuth, setShowAuth] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -102,6 +104,28 @@ export const UserMenu = () => {
     return <SuggestionsForm onClose={() => setShowSuggestions(false)} />;
   }
 
+  if (showNotifications) {
+    return (
+      <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:relative md:bg-transparent md:backdrop-blur-none">
+        <div className="fixed inset-x-4 top-20 z-50 md:absolute md:right-0 md:top-0 md:left-auto md:w-96">
+          <div className="bg-card border rounded-lg shadow-lg p-4">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold">Notificações</h2>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowNotifications(false)}
+              >
+                Fechar
+              </Button>
+            </div>
+            <NotificationManager />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -140,6 +164,10 @@ export const UserMenu = () => {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setShowNotifications(true)}>
+              <Bell className="mr-2 h-4 w-4" />
+              Notificações
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleShare}>
               <Share2 className="mr-2 h-4 w-4" />
               Gostou? Compartilhe

@@ -56,13 +56,13 @@ All colors MUST be HSL.
     --todo-135-medium: 35 80% 50%;
     --todo-135-small: 210 80% 50%;
 
-    /* Todo method colors - Eat Frog (green tones) */
-    --todo-frog-1: 145 70% 35%;
-    --todo-frog-2: 145 60% 40%;
-    --todo-frog-3: 145 50% 45%;
-    --todo-frog-4: 145 40% 50%;
-    --todo-frog-5: 145 30% 55%;
-    --todo-frog-6: 145 20% 60%;
+    /* Todo method colors - Eat Frog (green tones - darkest to lightest) */
+    --todo-frog-1: 145 80% 25%;
+    --todo-frog-2: 145 70% 32%;
+    --todo-frog-3: 145 60% 40%;
+    --todo-frog-4: 145 50% 48%;
+    --todo-frog-5: 145 40% 56%;
+    --todo-frog-6: 145 30% 64%;
 
     /* Todo method colors - Eisenhower */
     --todo-eisenhower-urgent-important: 0 70% 50%;
@@ -135,13 +135,13 @@ All colors MUST be HSL.
     --todo-135-medium: 35 80% 50%;
     --todo-135-small: 210 80% 50%;
 
-    /* Todo method colors - Eat Frog (green tones) */
-    --todo-frog-1: 145 70% 35%;
-    --todo-frog-2: 145 60% 40%;
-    --todo-frog-3: 145 50% 45%;
-    --todo-frog-4: 145 40% 50%;
-    --todo-frog-5: 145 30% 55%;
-    --todo-frog-6: 145 20% 60%;
+    /* Todo method colors - Eat Frog (green tones - darkest to lightest) */
+    --todo-frog-1: 145 80% 25%;
+    --todo-frog-2: 145 70% 32%;
+    --todo-frog-3: 145 60% 40%;
+    --todo-frog-4: 145 50% 48%;
+    --todo-frog-5: 145 40% 56%;
+    --todo-frog-6: 145 30% 64%;
 
     /* Todo method colors - Eisenhower */
     --todo-eisenhower-urgent-important: 0 70% 50%;

@@ -7,12 +7,14 @@ import { storageService } from "./storage.service";
 import { STORAGE_KEYS } from "@/config/constants";
 
 class NotificationService {
-  private scheduledNotifications: Map<string, number> = new Map();
+  private scheduledNotifications: Map<string, { timeoutId: number; config: NotificationConfig }> = new Map();
   private recurringInterval: number | null = null;
   private registration: ServiceWorkerRegistration | null = null;
 
   constructor() {
     this.initServiceWorker();
+    this.restoreScheduledNotifications();
+    this.restoreRecurringReminder();
   }
 
   /**
@@ -123,8 +125,8 @@ class NotificationService {
       this.saveScheduledNotifications();
     }, delay);
 
-    // Store the scheduled notification
-    this.scheduledNotifications.set(type, timeoutId);
+    // Store the scheduled notification with full config
+    this.scheduledNotifications.set(type, { timeoutId, config });
     this.saveScheduledNotifications();
   }
 
@@ -132,9 +134,9 @@ class NotificationService {
    * Cancel a scheduled notification
    */
   cancelNotification(type: NotificationType): void {
-    const timeoutId = this.scheduledNotifications.get(type);
-    if (timeoutId) {
-      window.clearTimeout(timeoutId);
+    const scheduled = this.scheduledNotifications.get(type);
+    if (scheduled) {
+      window.clearTimeout(scheduled.timeoutId);
       this.scheduledNotifications.delete(type);
       this.saveScheduledNotifications();
     }
@@ -235,14 +237,13 @@ class NotificationService {
   private saveScheduledNotifications(): void {
     const notifications: ScheduledNotification[] = [];
     
-    this.scheduledNotifications.forEach((_, type) => {
-      // We can't store the actual timeout ID, so we just store metadata
+    this.scheduledNotifications.forEach(({ config }, type) => {
       notifications.push({
         id: type as string,
-        type: type as NotificationType,
-        time: "", // Time would need to be passed from the config
-        title: "",
-        body: "",
+        type: config.type,
+        time: config.time,
+        title: config.title,
+        body: config.body,
       });
     });
 
@@ -250,11 +251,52 @@ class NotificationService {
   }
 
   /**
+   * Restore scheduled notifications from localStorage
+   */
+  private restoreScheduledNotifications(): void {
+    const stored = storageService.getItem<ScheduledNotification[]>(
+      STORAGE_KEYS.SCHEDULED_NOTIFICATIONS
+    );
+
+    if (!stored || stored.length === 0) return;
+
+    console.log("🔄 Restaurando notificações agendadas:", stored);
+
+    stored.forEach((notification) => {
+      // Re-schedule each notification
+      this.scheduleNotification({
+        type: notification.type,
+        time: notification.time,
+        title: notification.title,
+        body: notification.body,
+      }).catch((error) => {
+        console.error("Erro ao restaurar notificação:", error);
+      });
+    });
+  }
+
+  /**
+   * Restore recurring reminder from localStorage
+   */
+  private restoreRecurringReminder(): void {
+    const interval = this.getRecurringReminderInterval();
+    
+    if (interval && this.isGranted()) {
+      console.log("🔄 Restaurando lembrete recorrente:", interval);
+      this.scheduleRecurringReminder(
+        interval,
+        "Lembrete de Tarefas",
+        "Hora de checar sua lista de tarefas! 📝"
+      );
+    }
+  }
+
+  /**
    * Clear all notifications and scheduled timers
    */
   clearAll(): void {
     // Cancel all scheduled notifications
-    this.scheduledNotifications.forEach((timeoutId) => {
+    this.scheduledNotifications.forEach(({ timeoutId }) => {
       window.clearTimeout(timeoutId);
     });
     this.scheduledNotifications.clear();

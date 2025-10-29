@@ -178,6 +178,28 @@ export const useNotifications = () => {
     return notificationService.getRecurringReminderInterval();
   };
 
+  const showNotification = async (title: string, body: string, icon?: string) => {
+    if (!permission.granted) {
+      toast({
+        variant: "destructive",
+        title: "Permissão necessária",
+        description: "Primeiro permita as notificações.",
+      });
+      return;
+    }
+
+    try {
+      await notificationService.showNotification(title, body, icon);
+    } catch (error) {
+      console.error("Erro ao mostrar notificação:", error);
+      toast({
+        variant: "destructive",
+        title: "Erro",
+        description: "Não foi possível mostrar a notificação.",
+      });
+    }
+  };
+
   return {
     permission,
     requestPermission,
@@ -187,5 +209,6 @@ export const useNotifications = () => {
     scheduleRecurringReminder,
     cancelRecurringReminder,
     getRecurringReminderInterval,
+    showNotification,
   };
 };

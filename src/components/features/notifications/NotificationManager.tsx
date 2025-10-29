@@ -7,29 +7,20 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 
 export const NotificationManager = () => {
-  const { permission, requestPermission, getScheduledNotifications, cancelNotification, scheduleNotification } = useNotifications();
+  const { permission, requestPermission, getScheduledNotifications, cancelNotification, showNotification } = useNotifications();
   const { toast } = useToast();
 
   const allNotifications = getScheduledNotifications();
 
   const handleTestNotification = async () => {
-    const testTime = new Date();
-    testTime.setSeconds(testTime.getSeconds() + 5);
-    const timeString = testTime.toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
-    await scheduleNotification(
-      "test",
-      timeString,
+    await showNotification(
       "Notificação de Teste 🔔",
       "Tudo funcionando perfeitamente! Suas notificações estão configuradas."
     );
 
     toast({
-      title: "Teste agendado!",
-      description: "Você receberá uma notificação de teste em 5 segundos.",
+      title: "Teste enviado!",
+      description: "A notificação deve aparecer agora.",
     });
   };
 

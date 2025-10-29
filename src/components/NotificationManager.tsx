@@ -1,14 +1,37 @@
-import { Bell } from "lucide-react";
+import { Bell, TestTube } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { RecurringReminders } from "./RecurringReminders";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
 
 export const NotificationManager = () => {
-  const { permission, requestPermission, getScheduledNotifications, cancelNotification } = useNotifications();
+  const { permission, requestPermission, getScheduledNotifications, cancelNotification, scheduleNotification } = useNotifications();
+  const { toast } = useToast();
 
   const allNotifications = getScheduledNotifications();
+
+  const handleTestNotification = async () => {
+    const testTime = new Date();
+    testTime.setSeconds(testTime.getSeconds() + 5);
+    const timeString = testTime.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    await scheduleNotification(
+      "test",
+      timeString,
+      "Notificação de Teste 🔔",
+      "Tudo funcionando perfeitamente! Suas notificações estão configuradas."
+    );
+
+    toast({
+      title: "Teste agendado!",
+      description: "Você receberá uma notificação de teste em 5 segundos.",
+    });
+  };
 
   if (!permission.supported) {
     return (
@@ -42,6 +65,24 @@ export const NotificationManager = () => {
   return (
     <div className="space-y-6">
       <RecurringReminders />
+      
+      <Separator />
+
+      <Card className="p-4 bg-accent/5">
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            <p className="text-sm font-medium">Testar Notificações</p>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Envie uma notificação de teste para verificar se está tudo funcionando.
+          </p>
+          <Button onClick={handleTestNotification} size="sm" variant="secondary" className="w-full">
+            <TestTube className="mr-2 h-4 w-4" />
+            Enviar Teste
+          </Button>
+        </div>
+      </Card>
       
       <Separator />
       

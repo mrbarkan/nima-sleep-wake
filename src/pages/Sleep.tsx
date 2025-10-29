@@ -61,7 +61,7 @@ const Sleep = () => {
       const bedTime = new Date(referenceDate);
       bedTime.setMinutes(bedTime.getMinutes() + fallAsleepTime);
       
-      for (let cycles = 1; cycles <= 6; cycles++) {
+      for (let cycles = 6; cycles >= 1; cycles--) {
         const wakeTime = new Date(bedTime);
         wakeTime.setMinutes(wakeTime.getMinutes() + (cycles * cycleMinutes));
         
@@ -77,7 +77,7 @@ const Sleep = () => {
   };
 
   const getCycleLabel = (index: number) => {
-    const cycles = mode === "wake" ? 6 - index : index + 1;
+    const cycles = 6 - index;
     const hours = (cycles * 1.5).toFixed(1);
     return `${cycles} ciclos (${hours}h)`;
   };
@@ -171,7 +171,7 @@ const Sleep = () => {
             </span>
           </div>
           {calculatedTimes.map((timeStr, index) => {
-            const cycles = mode === "wake" ? 6 - index : index + 1;
+            const cycles = 6 - index;
             const isMinimum = cycles === 5; // 7.5h - mínimo recomendado
             const isIdeal = cycles === 6; // 9h - ideal
             const isHighlighted = isMinimum || isIdeal;

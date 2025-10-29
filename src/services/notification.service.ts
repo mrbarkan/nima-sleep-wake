@@ -9,6 +9,46 @@ import { STORAGE_KEYS } from "@/config/constants";
 class NotificationService {
   private scheduledNotifications: Map<string, number> = new Map();
   private recurringInterval: number | null = null;
+  private registration: ServiceWorkerRegistration | null = null;
+
+  constructor() {
+    this.initServiceWorker();
+  }
+
+  /**
+   * Initialize Service Worker
+   */
+  private async initServiceWorker(): Promise<void> {
+    if ("serviceWorker" in navigator) {
+      try {
+        this.registration = await navigator.serviceWorker.register("/sw.js");
+        console.log("Service Worker registered successfully");
+      } catch (error) {
+        console.error("Service Worker registration failed:", error);
+      }
+    }
+  }
+
+  /**
+   * Get Service Worker registration
+   */
+  private async getRegistration(): Promise<ServiceWorkerRegistration | null> {
+    if (this.registration) {
+      return this.registration;
+    }
+
+    if ("serviceWorker" in navigator) {
+      try {
+        this.registration = await navigator.serviceWorker.ready;
+        return this.registration;
+      } catch (error) {
+        console.error("Failed to get Service Worker registration:", error);
+        return null;
+      }
+    }
+
+    return null;
+  }
 
   /**
    * Check if notifications are supported
@@ -43,7 +83,7 @@ class NotificationService {
   /**
    * Schedule a notification for a specific time
    */
-  scheduleNotification(config: NotificationConfig): void {
+  async scheduleNotification(config: NotificationConfig): Promise<void> {
     if (!this.isGranted()) {
       throw new Error("Notification permission not granted");
     }
@@ -67,8 +107,8 @@ class NotificationService {
     const delay = scheduledTime.getTime() - now.getTime();
 
     // Schedule the notification
-    const timeoutId = window.setTimeout(() => {
-      this.showNotification(title, body);
+    const timeoutId = window.setTimeout(async () => {
+      await this.showNotification(title, body);
       this.scheduledNotifications.delete(type);
       this.saveScheduledNotifications();
     }, delay);
@@ -108,16 +148,32 @@ class NotificationService {
   /**
    * Show a notification immediately
    */
-  showNotification(title: string, body: string, icon?: string): void {
+  async showNotification(title: string, body: string, icon?: string): Promise<void> {
     if (!this.isGranted()) {
       throw new Error("Notification permission not granted");
     }
 
-    new Notification(title, {
+    const registration = await this.getRegistration();
+    
+    if (!registration) {
+      console.error("Service Worker not available, falling back to basic notification");
+      // Fallback for environments where SW is not available
+      new Notification(title, {
+        body,
+        icon: icon || "/favicon.ico",
+        badge: "/favicon.ico",
+      });
+      return;
+    }
+
+    // Use Service Worker notification for better mobile support
+    await registration.showNotification(title, {
       body,
       icon: icon || "/favicon.ico",
       badge: "/favicon.ico",
-    });
+      tag: `notification-${Date.now()}`,
+      requireInteraction: false,
+    } as NotificationOptions);
   }
 
   /**
@@ -132,8 +188,8 @@ class NotificationService {
     this.cancelRecurringReminder();
 
     // Set up new recurring reminder
-    this.recurringInterval = window.setInterval(() => {
-      this.showNotification(title, body);
+    this.recurringInterval = window.setInterval(async () => {
+      await this.showNotification(title, body);
     }, intervalMinutes * 60 * 1000);
 
     // Store interval setting

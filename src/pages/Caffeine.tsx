@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Coffee, Clock, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
-import InfoPopup from "@/components/InfoPopup";
-import { NotificationToggle } from "@/components/NotificationToggle";
+import InfoPopup from "@/components/common/InfoPopup";
+import { NotificationToggle } from "@/components/features/notifications/NotificationToggle";
 import {
   Collapsible,
   CollapsibleContent,

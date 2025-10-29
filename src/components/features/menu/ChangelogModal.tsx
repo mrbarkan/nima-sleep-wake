@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { APP_VERSION } from "@/config/constants";
 
 interface ChangelogModalProps {
   open: boolean;
@@ -14,6 +15,17 @@ interface ChangelogModalProps {
 }
 
 const changelog = [
+  {
+    version: APP_VERSION,
+    date: "2025-01-30",
+    changes: [
+      "Refatoração completa da arquitetura do código",
+      "Criação de camada de serviços para operações de backend",
+      "Reorganização de componentes por domínio (layout, features, common)",
+      "Centralização de constantes e rotas em arquivos de configuração",
+      "Melhoria na manutenibilidade e escalabilidade do código",
+    ],
+  },
   {
     version: "0.9.0.104",
     date: "2025-01-29",

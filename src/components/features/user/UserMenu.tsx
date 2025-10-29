@@ -12,11 +12,11 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { AuthMenuContent } from "./menu/AuthMenuContent";
-import { AboutSection } from "./menu/AboutSection";
-import { SuggestionsForm } from "./menu/SuggestionsForm";
+import { AuthMenuContent } from "@/components/features/menu/AuthMenuContent";
+import { AboutSection } from "@/components/features/menu/AboutSection";
+import { SuggestionsForm } from "@/components/features/menu/SuggestionsForm";
 import { Switch } from "@/components/ui/switch";
-import { NotificationManager } from "./NotificationManager";
+import { NotificationManager } from "@/components/features/notifications/NotificationManager";
 
 export const UserMenu = () => {
   const { user, signOut } = useAuth();

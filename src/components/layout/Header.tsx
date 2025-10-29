@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { UserMenu } from "@/components/UserMenu";
+import { UserMenu } from "@/components/features/user/UserMenu";
 
 const Header = () => {
   return (

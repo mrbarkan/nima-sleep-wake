@@ -2,74 +2,22 @@ import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Heart, Share2, ExternalLink } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import InfoPopup from "@/components/InfoPopup";
-
-interface Article {
-  id: string;
-  title: string;
-  excerpt: string | null;
-  content: string;
-  external_url: string | null;
-  image_url: string | null;
-  published_at: string;
-  likes?: number;
-  isLiked?: boolean;
-}
+import InfoPopup from "@/components/common/InfoPopup";
+import { blogService, Article } from "@/services/blog.service";
 
 const Relax = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getUserIdentifier = () => {
-    let identifier = localStorage.getItem("user_identifier");
-    if (!identifier) {
-      identifier = `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      localStorage.setItem("user_identifier", identifier);
-    }
-    return identifier;
-  };
-
   useEffect(() => {
-    fetchArticles();
+    loadArticles();
   }, []);
 
-  const fetchArticles = async () => {
+  const loadArticles = async () => {
     try {
-      const { data: articlesData, error: articlesError } = await supabase
-        .from("blog_articles")
-        .select("*")
-        .order("published_at", { ascending: false });
-
-      if (articlesError) throw articlesError;
-
-      const { data: likesData, error: likesError } = await supabase
-        .from("article_likes")
-        .select("article_id");
-
-      if (likesError) throw likesError;
-
-      const userIdentifier = getUserIdentifier();
-      const { data: userLikesData } = await supabase
-        .from("article_likes")
-        .select("article_id")
-        .eq("user_identifier", userIdentifier);
-
-      const likeCounts = likesData.reduce((acc: Record<string, number>, like) => {
-        acc[like.article_id] = (acc[like.article_id] || 0) + 1;
-        return acc;
-      }, {});
-
-      const userLikedIds = new Set(userLikesData?.map((l) => l.article_id) || []);
-
-      const articlesWithLikes = articlesData.map((article) => ({
-        ...article,
-        likes: likeCounts[article.id] || 0,
-        isLiked: userLikedIds.has(article.id),
-      }));
-
-      setArticles(articlesWithLikes);
+      const data = await blogService.fetchArticles();
+      setArticles(data);
     } catch (error) {
       console.error("Error fetching articles:", error);
       toast({
@@ -83,43 +31,23 @@ const Relax = () => {
   };
 
   const handleLike = async (articleId: string) => {
-    const userIdentifier = getUserIdentifier();
     const article = articles.find((a) => a.id === articleId);
-
     if (!article) return;
 
     try {
-      if (article.isLiked) {
-        const { error } = await supabase
-          .from("article_likes")
-          .delete()
-          .eq("article_id", articleId)
-          .eq("user_identifier", userIdentifier);
-
-        if (error) throw error;
-
-        setArticles(
-          articles.map((a) =>
-            a.id === articleId
-              ? { ...a, likes: (a.likes || 0) - 1, isLiked: false }
-              : a
-          )
-        );
-      } else {
-        const { error } = await supabase
-          .from("article_likes")
-          .insert({ article_id: articleId, user_identifier: userIdentifier });
-
-        if (error) throw error;
-
-        setArticles(
-          articles.map((a) =>
-            a.id === articleId
-              ? { ...a, likes: (a.likes || 0) + 1, isLiked: true }
-              : a
-          )
-        );
-      }
+      await blogService.toggleLike(articleId, article.isLiked || false);
+      
+      setArticles(
+        articles.map((a) =>
+          a.id === articleId
+            ? { 
+                ...a, 
+                likes: (a.likes || 0) + (a.isLiked ? -1 : 1), 
+                isLiked: !a.isLiked 
+              }
+            : a
+        )
+      );
     } catch (error) {
       console.error("Error toggling like:", error);
       toast({

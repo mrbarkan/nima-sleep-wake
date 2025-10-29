@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useNotifications } from "@/hooks/useNotifications";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import InfoPopup from "./InfoPopup";
+import InfoPopup from "@/components/common/InfoPopup";
 
 export const RecurringReminders = () => {
   const { 

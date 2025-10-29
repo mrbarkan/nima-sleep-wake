@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ListTodo, Trash2, Plus, Info, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
-import InfoPopup from "@/components/InfoPopup";
+import InfoPopup from "@/components/common/InfoPopup";
 import {
   Select,
   SelectContent,

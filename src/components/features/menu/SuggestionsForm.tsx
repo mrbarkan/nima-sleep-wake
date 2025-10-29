@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { suggestionsService } from "@/services/suggestions.service";
 
 interface SuggestionsFormProps {
   onClose: () => void;
@@ -30,16 +30,7 @@ export const SuggestionsForm = ({ onClose }: SuggestionsFormProps) => {
     setIsLoading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      const { error } = await supabase
-        .from('suggestions')
-        .insert({
-          suggestion: suggestion.trim(),
-          user_id: user?.id || null
-        });
-
-      if (error) throw error;
+      await suggestionsService.submitSuggestion(suggestion);
 
       toast({
         title: "Sugestão enviada!",

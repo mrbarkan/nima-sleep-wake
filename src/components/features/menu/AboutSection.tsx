@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ChangelogModal } from "./ChangelogModal";
 
+import { APP_VERSION, APP_BETA } from "@/config/constants";
+
 export const AboutSection = () => {
   const [showChangelog, setShowChangelog] = useState(false);
 
@@ -62,7 +64,7 @@ export const AboutSection = () => {
           onClick={() => setShowChangelog(true)}
           className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer"
         >
-          v0.9.0.104 beta
+          v{APP_VERSION}{APP_BETA ? " beta" : ""}
         </button>
       </div>
 

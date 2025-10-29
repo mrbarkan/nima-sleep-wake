@@ -8,9 +8,11 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-const WELCOME_KEY = "flowday-welcome-shown";
+import { APP_VERSION, STORAGE_KEYS } from "@/config/constants";
+
+const WELCOME_KEY = STORAGE_KEYS.WELCOME_MODAL_SHOWN;
 const LAST_UPDATE_KEY = "flowday-last-update";
-const CURRENT_VERSION = "0.9.0.104";
+const CURRENT_VERSION = APP_VERSION;
 
 interface WelcomeModalProps {
   isLoggedIn?: boolean;

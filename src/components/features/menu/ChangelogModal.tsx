@@ -19,6 +19,17 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
+      "Criação de serviços especializados (sleep, caffeine, notifications)",
+      "Separação completa de lógica de negócio em camada de serviços",
+      "Implementação de hooks customizados para cálculos complexos",
+      "Sistema de tipos centralizado e bem estruturado",
+      "Arquitetura modular e escalável finalizada",
+    ],
+  },
+  {
+    version: "0.9.0.105",
+    date: "2025-01-30",
+    changes: [
       "Refatoração completa da arquitetura do código",
       "Criação de camada de serviços para operações de backend",
       "Reorganização de componentes por domínio (layout, features, common)",

@@ -2,7 +2,7 @@
  * Application-wide constants and configuration
  */
 
-export const APP_VERSION = "0.9.0.105";
+export const APP_VERSION = "0.9.0.106";
 export const APP_NAME = "Nima";
 export const APP_BETA = true;
 

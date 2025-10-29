@@ -16,6 +16,8 @@ export const STORAGE_KEYS = {
   TODO_DATA: "sleepflow-todo-data",
   USER_IDENTIFIER: "user_identifier",
   WELCOME_MODAL_SHOWN: "welcome-modal-shown",
+  SCHEDULED_NOTIFICATIONS: "scheduled-notifications",
+  RECURRING_REMINDER_INTERVAL: "recurring-reminder-interval",
 } as const;
 
 // Sleep calculation constants

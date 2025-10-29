@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { BarChart3, Heart, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ArticleStats {
   id: string;

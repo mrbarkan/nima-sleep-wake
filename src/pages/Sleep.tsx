@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,81 +5,20 @@ import { Label } from "@/components/ui/label";
 import { Moon, Clock, Sparkles, Sunrise, Sunset } from "lucide-react";
 import InfoPopup from "@/components/common/InfoPopup";
 import { NotificationToggle } from "@/components/features/notifications/NotificationToggle";
+import { useSleepCalculator } from "@/hooks/useSleepCalculator";
 
 const Sleep = () => {
-  const [mode, setMode] = useState<"wake" | "sleep">(() => {
-    const saved = localStorage.getItem("sleep-mode");
-    return (saved as "wake" | "sleep") || "wake";
-  });
-  const [time, setTime] = useState(() => {
-    return localStorage.getItem("sleep-time") || "";
-  });
-  const [calculatedTimes, setCalculatedTimes] = useState<string[]>(() => {
-    const saved = localStorage.getItem("sleep-calculatedTimes");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [selectedTime, setSelectedTime] = useState("");
-
-  useEffect(() => {
-    localStorage.setItem("sleep-mode", mode);
-  }, [mode]);
-
-  useEffect(() => {
-    localStorage.setItem("sleep-time", time);
-  }, [time]);
-
-  useEffect(() => {
-    localStorage.setItem("sleep-calculatedTimes", JSON.stringify(calculatedTimes));
-  }, [calculatedTimes]);
-
-  const calculateTimes = () => {
-    if (!time) return;
-
-    const [hours, minutes] = time.split(":").map(Number);
-    const referenceDate = new Date();
-    referenceDate.setHours(hours, minutes, 0);
-
-    const times: string[] = [];
-    const cycleMinutes = 90;
-    const fallAsleepTime = 15;
-
-    if (mode === "wake") {
-      // Calcula horários para dormir baseado na hora de acordar
-      for (let cycles = 6; cycles >= 1; cycles--) {
-        const sleepTime = new Date(referenceDate);
-        sleepTime.setMinutes(sleepTime.getMinutes() - (cycles * cycleMinutes + fallAsleepTime));
-        
-        const timeString = sleepTime.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        times.push(timeString);
-      }
-    } else {
-      // Calcula horários para acordar baseado na hora de dormir
-      const bedTime = new Date(referenceDate);
-      bedTime.setMinutes(bedTime.getMinutes() + fallAsleepTime);
-      
-      for (let cycles = 6; cycles >= 1; cycles--) {
-        const wakeTime = new Date(bedTime);
-        wakeTime.setMinutes(wakeTime.getMinutes() + (cycles * cycleMinutes));
-        
-        const timeString = wakeTime.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
-        times.push(timeString);
-      }
-    }
-
-    setCalculatedTimes(times);
-  };
-
-  const getCycleLabel = (index: number) => {
-    const cycles = 6 - index;
-    const hours = (cycles * 1.5).toFixed(1);
-    return `${cycles} ciclos (${hours}h)`;
-  };
+  const {
+    mode,
+    time,
+    calculatedTimes,
+    selectedTime,
+    setTime,
+    setSelectedTime,
+    calculateTimes,
+    getCycleLabel,
+    changeMode,
+  } = useSleepCalculator();
 
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
@@ -118,10 +56,7 @@ const Sleep = () => {
             <Button
               variant={mode === "wake" ? "default" : "ghost"}
               className="flex-1"
-              onClick={() => {
-                setMode("wake");
-                setCalculatedTimes([]);
-              }}
+              onClick={() => changeMode("wake")}
             >
               <Sunrise className="mr-2 h-4 w-4" />
               Acordar
@@ -129,10 +64,7 @@ const Sleep = () => {
             <Button
               variant={mode === "sleep" ? "default" : "ghost"}
               className="flex-1"
-              onClick={() => {
-                setMode("sleep");
-                setCalculatedTimes([]);
-              }}
+              onClick={() => changeMode("sleep")}
             >
               <Sunset className="mr-2 h-4 w-4" />
               Dormir

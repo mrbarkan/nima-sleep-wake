@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,74 +10,17 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-
-interface CaffeineSchedule {
-  time: string;
-  source: string;
-  description: string;
-}
+import { useCaffeineScheduler } from "@/hooks/useCaffeineScheduler";
 
 const Caffeine = () => {
-  const [wakeTime, setWakeTime] = useState(() => {
-    return localStorage.getItem("caffeine-wakeTime") || "";
-  });
-  const [schedule, setSchedule] = useState<CaffeineSchedule[]>(() => {
-    const saved = localStorage.getItem("caffeine-schedule");
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [openNotifications, setOpenNotifications] = useState<{ [key: number]: boolean }>({});
-
-  useEffect(() => {
-    localStorage.setItem("caffeine-wakeTime", wakeTime);
-  }, [wakeTime]);
-
-  useEffect(() => {
-    localStorage.setItem("caffeine-schedule", JSON.stringify(schedule));
-  }, [schedule]);
-
-  const caffeineRotation = [
-    { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
-    { source: "Chá verde", description: "Efeito moderado e prolongado", duration: 3 },
-    { source: "Chá preto", description: "Alternativa ao café", duration: 3 },
-    { source: "Café", description: "Reforço vespertino", duration: 5 },
-  ];
-
-  const calculateSchedule = () => {
-    if (!wakeTime) return;
-
-    const [hours, minutes] = wakeTime.split(":").map(Number);
-    const wakeDate = new Date();
-    wakeDate.setHours(hours, minutes, 0);
-
-    const scheduleItems: CaffeineSchedule[] = [];
-    
-    // Primeira dose: 30-60 min após acordar
-    const firstDose = new Date(wakeDate);
-    firstDose.setMinutes(firstDose.getMinutes() + 45);
-
-    // Adiciona doses espaçadas
-    const intervals = [0, 180, 240, 300]; // 0, 3h, 4h, 5h depois da primeira dose
-    
-    intervals.forEach((interval, index) => {
-      const doseTime = new Date(firstDose);
-      doseTime.setMinutes(doseTime.getMinutes() + interval);
-      
-      // Não sugerir cafeína após 15h
-      if (doseTime.getHours() < 15) {
-        const rotation = caffeineRotation[index % caffeineRotation.length];
-        scheduleItems.push({
-          time: doseTime.toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          source: rotation.source,
-          description: rotation.description,
-        });
-      }
-    });
-
-    setSchedule(scheduleItems);
-  };
+  const {
+    wakeTime,
+    schedule,
+    openNotifications,
+    setWakeTime,
+    setOpenNotifications,
+    calculateSchedule,
+  } = useCaffeineScheduler();
 
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">

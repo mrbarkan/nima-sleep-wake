@@ -19,6 +19,17 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
+      "Botão de teste de notificação corrigido para exibir notificação imediata",
+      "Sistema de persistência de notificações agendadas implementado",
+      "Restauração automática de notificações após recarregar página",
+      "Restauração automática de lembretes recorrentes configurados",
+      "Melhorias na confiabilidade do serviço de notificações",
+    ],
+  },
+  {
+    version: "0.9.0.106",
+    date: "2025-01-30",
+    changes: [
       "Sistema de tipos TypeScript centralizado (sleep, caffeine, todo, auth, notifications)",
       "Implementação do AuthContext para gerenciamento de autenticação",
       "Hooks customizados: useSleepCalculator e useCaffeineScheduler",

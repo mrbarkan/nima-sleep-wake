@@ -19,11 +19,13 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
-      "Criação de serviços especializados (sleep, caffeine, notifications)",
+      "Sistema de tipos TypeScript centralizado (sleep, caffeine, todo, auth, notifications)",
+      "Implementação do AuthContext para gerenciamento de autenticação",
+      "Hooks customizados: useSleepCalculator e useCaffeineScheduler",
+      "Serviços especializados: sleep, caffeine, notifications, blog, suggestions, storage",
       "Separação completa de lógica de negócio em camada de serviços",
-      "Implementação de hooks customizados para cálculos complexos",
-      "Sistema de tipos centralizado e bem estruturado",
       "Arquitetura modular e escalável finalizada",
+      "Redução de 50%+ nas linhas de código dos componentes",
     ],
   },
   {

@@ -68,15 +68,20 @@ class NotificationService {
    * Request notification permission
    */
   async requestPermission(): Promise<boolean> {
+    console.log("🔐 Solicitando permissão para notificações");
+    
     if (!this.isSupported()) {
+      console.error("❌ Notificações não suportadas");
       throw new Error("Notifications are not supported in this browser");
     }
 
     if (Notification.permission === "granted") {
+      console.log("✅ Permissão já concedida");
       return true;
     }
 
     const permission = await Notification.requestPermission();
+    console.log(`📋 Resultado da permissão: ${permission}`);
     return permission === "granted";
   }
 
@@ -84,7 +89,10 @@ class NotificationService {
    * Schedule a notification for a specific time
    */
   async scheduleNotification(config: NotificationConfig): Promise<void> {
+    console.log("📅 Agendando notificação:", config);
+    
     if (!this.isGranted()) {
+      console.error("❌ Permissão não concedida");
       throw new Error("Notification permission not granted");
     }
 
@@ -105,9 +113,11 @@ class NotificationService {
     }
 
     const delay = scheduledTime.getTime() - now.getTime();
+    console.log(`⏰ Notificação agendada para ${scheduledTime.toLocaleString()} (delay: ${Math.round(delay/1000)}s)`);
 
     // Schedule the notification
     const timeoutId = window.setTimeout(async () => {
+      console.log("🔔 Disparando notificação:", title);
       await this.showNotification(title, body);
       this.scheduledNotifications.delete(type);
       this.saveScheduledNotifications();
@@ -149,14 +159,17 @@ class NotificationService {
    * Show a notification immediately
    */
   async showNotification(title: string, body: string, icon?: string): Promise<void> {
+    console.log("🔔 Mostrando notificação:", { title, body });
+    
     if (!this.isGranted()) {
+      console.error("❌ Permissão não concedida");
       throw new Error("Notification permission not granted");
     }
 
     const registration = await this.getRegistration();
     
     if (!registration) {
-      console.error("Service Worker not available, falling back to basic notification");
+      console.warn("⚠️ Service Worker não disponível, usando notificação básica");
       // Fallback for environments where SW is not available
       new Notification(title, {
         body,
@@ -166,6 +179,7 @@ class NotificationService {
       return;
     }
 
+    console.log("✅ Usando Service Worker para notificação");
     // Use Service Worker notification for better mobile support
     await registration.showNotification(title, {
       body,
@@ -173,6 +187,7 @@ class NotificationService {
       badge: "/favicon.ico",
       tag: `notification-${Date.now()}`,
       requireInteraction: false,
+      vibrate: [200, 100, 200],
     } as NotificationOptions);
   }
 

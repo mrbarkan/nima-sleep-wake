@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 
 const WELCOME_KEY = "flowday-welcome-shown";
 const LAST_UPDATE_KEY = "flowday-last-update";
-const CURRENT_VERSION = "1.1.2"; // Atualize isso quando houver mudanças importantes
+const CURRENT_VERSION = "1.1.2";
 
 interface WelcomeModalProps {
   isLoggedIn?: boolean;

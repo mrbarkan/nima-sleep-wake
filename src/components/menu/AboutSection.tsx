@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Instagram, Linkedin, Globe, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ChangelogModal } from "./ChangelogModal";
 
 export const AboutSection = () => {
+  const [showChangelog, setShowChangelog] = useState(false);
+
   return (
     <div className="px-2 py-3 space-y-3">
       <div className="text-sm space-y-2">
@@ -54,8 +58,15 @@ export const AboutSection = () => {
       </div>
 
       <div className="pt-2 text-center">
-        <p className="text-[10px] text-muted-foreground/60">v0.9.0.102 beta</p>
+        <button 
+          onClick={() => setShowChangelog(true)}
+          className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer"
+        >
+          v1.1.2 beta
+        </button>
       </div>
+
+      <ChangelogModal open={showChangelog} onOpenChange={setShowChangelog} />
     </div>
   );
 };

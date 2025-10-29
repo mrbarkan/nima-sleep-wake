@@ -62,7 +62,7 @@ export const AboutSection = () => {
           onClick={() => setShowChangelog(true)}
           className="text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors cursor-pointer"
         >
-          v1.1.2 beta
+          v0.9.0.104 beta
         </button>
       </div>
 

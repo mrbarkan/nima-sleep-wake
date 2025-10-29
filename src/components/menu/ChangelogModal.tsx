@@ -15,7 +15,7 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
-    version: "1.1.2",
+    version: "0.9.0.104",
     date: "2025-01-29",
     changes: [
       "Calculadora de sono: ordem corrigida no modo 'hora que estou indo dormir'",
@@ -24,7 +24,7 @@ const changelog = [
     ],
   },
   {
-    version: "1.1.1",
+    version: "0.9.0.103",
     date: "2025-01-28",
     changes: [
       "Notificações Android corrigidas com Service Worker",
@@ -34,7 +34,7 @@ const changelog = [
     ],
   },
   {
-    version: "1.0.0",
+    version: "0.9.0.100",
     date: "2025-01-20",
     changes: [
       "Lançamento inicial do Nima",

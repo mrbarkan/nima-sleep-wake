@@ -22,6 +22,7 @@ const changelog = [
       "Drag and drop super otimizado - animações fluídas com hardware acceleration",
       "Botão de arquivar mais discreto e com label no desktop",
       "Performance melhorada no mobile ao arrastar tarefas",
+      "Corrigido z-index do modal de login no desktop",
     ],
   },
   {

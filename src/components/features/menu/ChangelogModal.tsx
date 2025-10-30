@@ -16,6 +16,15 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.10.1",
+    date: "2025-01-30",
+    changes: [
+      "Corrigido erro de validação ao salvar tarefas",
+      "Corrigida inconsistência no nome do método Eat That Frog",
+      "Melhorias na estabilidade da sincronização",
+    ],
+  },
+  {
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [

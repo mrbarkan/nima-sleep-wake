@@ -49,6 +49,7 @@ const taskSchema = z.object({
   id: z.string().max(50),
   text: z.string().trim().min(1).max(500),
   completed: z.boolean(),
+  archived: z.boolean().optional(),
   priority: z.number().optional(),
   category: z.string().max(100).optional(),
 });

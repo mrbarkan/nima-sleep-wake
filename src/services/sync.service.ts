@@ -265,7 +265,7 @@ class SyncService {
       console.log('Starting data migration from localStorage to backend...');
 
       // Migrate tasks from all methods
-      const methods = ['ivy-lee', '1-3-5', 'eat-that-frog', 'eisenhower'];
+      const methods = ['ivy-lee', '1-3-5', 'eat-frog', 'eisenhower'];
       const allTasks: any[] = [];
       
       methods.forEach((method, methodIndex) => {

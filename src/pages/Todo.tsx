@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ListTodo, Trash2, Plus, Info, GripVertical, Archive, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { syncService } from "@/services/sync.service";
 import {
   Dialog,
   DialogContent,
@@ -61,6 +63,7 @@ interface Task {
   id: string;
   text: string;
   completed: boolean;
+  archived?: boolean;
   priority?: number;
   category?: "urgent-important" | "urgent-not" | "not-urgent-important" | "not-urgent-not";
 }
@@ -191,6 +194,7 @@ const SortableTaskItem = ({ task, index, toggleTask, deleteTask, method, totalTa
 const STORAGE_KEY = "sleepflow-todo-data";
 
 const Todo = () => {
+  const { user } = useAuth();
   const [method, setMethod] = useState("ivy-lee");
   const [tasks, setTasks] = useState<Task[]>([]);
   const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
@@ -198,30 +202,77 @@ const Todo = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [showArchived, setShowArchived] = useState(false);
 
-  // Carregar dados do localStorage ao montar o componente
+  // Load data from backend when user logs in
   useEffect(() => {
-    try {
-      const savedData = localStorage.getItem(STORAGE_KEY);
-      if (savedData) {
-        const parsed = JSON.parse(savedData);
-        const validated = todoDataSchema.parse(parsed);
-        setMethod(validated.method);
-        setTasks(validated.tasks as Task[]);
-        setArchivedTasks((validated.archivedTasks as Task[]) || []);
+    const loadData = async () => {
+      if (!user) {
+        // Load from localStorage for non-logged users
+        try {
+          const savedData = localStorage.getItem(STORAGE_KEY);
+          if (savedData) {
+            const parsed = JSON.parse(savedData);
+            const validated = todoDataSchema.parse(parsed);
+            setMethod(validated.method);
+            setTasks(validated.tasks as Task[]);
+            setArchivedTasks((validated.archivedTasks as Task[]) || []);
+          }
+        } catch (error) {
+          console.error("Erro ao carregar tarefas:", error);
+          localStorage.removeItem(STORAGE_KEY);
+        } finally {
+          setIsLoaded(true);
+        }
+        return;
       }
-    } catch (error) {
-      console.error("Erro ao carregar tarefas:", error);
-      // Se houver erro de validação, limpa os dados corrompidos
-      localStorage.removeItem(STORAGE_KEY);
-    } finally {
-      setIsLoaded(true);
-    }
-  }, []);
 
-  // Salvar dados no localStorage quando mudarem
-  useEffect(() => {
-    if (!isLoaded) return; // Não salvar durante o carregamento inicial
+      // For logged users, try to load from backend
+      try {
+        // First, attempt data migration
+        await syncService.migrateLocalStorageData();
+        
+        // Then load from backend
+        const backendTasks = await syncService.loadTasks();
+        
+        if (backendTasks && backendTasks.length > 0) {
+          // Separate active and archived tasks
+          const active = backendTasks.filter((t: Task) => !t.archived);
+          const archived = backendTasks.filter((t: Task) => t.archived);
+          setTasks(active);
+          setArchivedTasks(archived);
+        } else {
+          // If no backend data, load from localStorage
+          const savedData = localStorage.getItem(STORAGE_KEY);
+          if (savedData) {
+            const parsed = JSON.parse(savedData);
+            const validated = todoDataSchema.parse(parsed);
+            setMethod(validated.method);
+            setTasks(validated.tasks as Task[]);
+            setArchivedTasks((validated.archivedTasks as Task[]) || []);
+          }
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    loadData();
+  }, [user]);
+
+  // Sync data to backend when it changes (for logged users)
+  const syncToBackend = useCallback(async () => {
+    if (!user || !isLoaded) return;
     
+    const allTasks = [...tasks, ...archivedTasks.map(t => ({ ...t, archived: true }))];
+    await syncService.syncTasks(allTasks, 'todo');
+  }, [user, tasks, archivedTasks, isLoaded]);
+
+  // Save to localStorage (for non-logged users) and sync to backend (for logged users)
+  useEffect(() => {
+    if (!isLoaded) return;
+    
+    // Always save to localStorage for offline-first approach
     try {
       const dataToSave = { method, tasks, archivedTasks };
       const validated = todoDataSchema.parse(dataToSave);
@@ -230,7 +281,21 @@ const Todo = () => {
       console.error("Erro ao salvar tarefas:", error);
       toast.error("Erro ao salvar tarefas");
     }
-  }, [method, tasks, archivedTasks, isLoaded]);
+
+    // Sync to backend if user is logged in
+    syncToBackend();
+  }, [method, tasks, archivedTasks, isLoaded, syncToBackend]);
+
+  // Periodic sync (every 30 seconds)
+  useEffect(() => {
+    if (!user || !isLoaded) return;
+
+    const interval = setInterval(() => {
+      syncToBackend();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [user, isLoaded, syncToBackend]);
 
   const methodInfo = {
     "ivy-lee": {

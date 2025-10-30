@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { UserMenu } from "@/components/features/user/UserMenu";
+import { SyncIndicator } from "./SyncIndicator";
 
 const Header = () => {
   return (
@@ -10,7 +11,10 @@ const Header = () => {
             <h1 className="text-xl md:text-2xl font-bold">Nima</h1>
             <Badge variant="outline" className="text-xs">Beta</Badge>
           </div>
-          <UserMenu />
+          <div className="flex items-center gap-3">
+            <SyncIndicator />
+            <UserMenu />
+          </div>
         </div>
       </div>
     </header>

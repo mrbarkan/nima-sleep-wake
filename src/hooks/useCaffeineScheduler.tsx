@@ -3,10 +3,12 @@
  * Extracts business logic from Caffeine component
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { CaffeineSchedule, CaffeineRotation } from "@/types/caffeine.types";
 import { storageService } from "@/services/storage.service";
+import { syncService } from "@/services/sync.service";
 import { STORAGE_KEYS, CAFFEINE_CONFIG } from "@/config/constants";
+import { useAuth } from "@/contexts/AuthContext";
 
 const caffeineRotation: CaffeineRotation[] = [
   { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
@@ -16,6 +18,7 @@ const caffeineRotation: CaffeineRotation[] = [
 ];
 
 export function useCaffeineScheduler() {
+  const { user } = useAuth();
   const [wakeTime, setWakeTime] = useState(() => {
     return storageService.getItem<string>(STORAGE_KEYS.CAFFEINE_WAKE_TIME) || "";
   });
@@ -25,16 +28,53 @@ export function useCaffeineScheduler() {
   });
   
   const [openNotifications, setOpenNotifications] = useState<{ [key: number]: boolean }>({});
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load data from backend when user logs in
+  useEffect(() => {
+    const loadData = async () => {
+      if (!user) {
+        setIsLoaded(true);
+        return;
+      }
+
+      try {
+        const settings = await syncService.loadCaffeineSettings();
+        if (settings) {
+          setWakeTime(settings.wakeTime);
+          setSchedule(settings.schedule || []);
+        }
+      } catch (error) {
+        console.error('Error loading caffeine settings:', error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    loadData();
+  }, [user]);
+
+  // Sync to backend
+  const syncToBackend = useCallback(async () => {
+    if (!user || !isLoaded) return;
+    
+    await syncService.syncCaffeineSettings({
+      wakeTime,
+      schedule,
+    });
+  }, [user, wakeTime, schedule, isLoaded]);
 
   // Persist wake time
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.CAFFEINE_WAKE_TIME, wakeTime);
-  }, [wakeTime]);
+    if (isLoaded) syncToBackend();
+  }, [wakeTime, isLoaded, syncToBackend]);
 
   // Persist schedule
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.CAFFEINE_SCHEDULE, schedule);
-  }, [schedule]);
+    if (isLoaded) syncToBackend();
+  }, [schedule, isLoaded, syncToBackend]);
 
   const calculateSchedule = () => {
     if (!wakeTime) return;

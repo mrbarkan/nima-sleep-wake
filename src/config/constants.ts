@@ -2,7 +2,7 @@
  * Application-wide constants and configuration
  */
 
-export const APP_VERSION = "0.9.1.2";
+export const APP_VERSION = "0.10.0";
 export const APP_NAME = "Nima";
 export const APP_BETA = true;
 
@@ -18,6 +18,7 @@ export const STORAGE_KEYS = {
   WELCOME_MODAL_SHOWN: "welcome-modal-shown",
   SCHEDULED_NOTIFICATIONS: "scheduled-notifications",
   RECURRING_REMINDER_INTERVAL: "recurring-reminder-interval",
+  SYNC_MIGRATION_DONE: "sync-migration-done",
 } as const;
 
 // Sleep calculation constants

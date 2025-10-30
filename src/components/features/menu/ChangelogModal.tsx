@@ -19,6 +19,22 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
+      "🔄 Sincronização multi-dispositivo implementada!",
+      "📱 Dados sincronizam automaticamente entre desktop e mobile",
+      "☁️ Backend integrado para persistência na nuvem",
+      "📊 Sincronização de tarefas (Todo), preferências de sono e configurações de cafeína",
+      "🔐 Sistema seguro com RLS policies para proteção de dados",
+      "💾 Estratégia offline-first: dados salvos localmente primeiro, depois sincronizados",
+      "🔄 Sincronização periódica automática a cada 30 segundos",
+      "📤 Migração automática de dados do localStorage para o backend",
+      "👁️ Indicador visual de status de sincronização no header",
+      "⚡ Performance otimizada com polling inteligente",
+    ],
+  },
+  {
+    version: "0.9.1.2",
+    date: "2025-01-30",
+    changes: [
       "Drag and drop super otimizado - animações fluídas com hardware acceleration",
       "Botão de arquivar mais discreto e com label no desktop",
       "Performance melhorada no mobile ao arrastar tarefas",

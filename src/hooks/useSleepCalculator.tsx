@@ -3,12 +3,15 @@
  * Extracts business logic from Sleep component
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SleepMode } from "@/types/sleep.types";
 import { storageService } from "@/services/storage.service";
+import { syncService } from "@/services/sync.service";
 import { STORAGE_KEYS, SLEEP_CONSTANTS } from "@/config/constants";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function useSleepCalculator() {
+  const { user } = useAuth();
   const [mode, setMode] = useState<SleepMode>(() => {
     return storageService.getItem<SleepMode>(STORAGE_KEYS.SLEEP_MODE) || "wake";
   });
@@ -22,21 +25,63 @@ export function useSleepCalculator() {
   });
   
   const [selectedTime, setSelectedTime] = useState("");
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Load data from backend when user logs in
+  useEffect(() => {
+    const loadData = async () => {
+      if (!user) {
+        setIsLoaded(true);
+        return;
+      }
+
+      try {
+        const preferences = await syncService.loadSleepPreferences();
+        if (preferences) {
+          setMode(preferences.mode);
+          setTime(preferences.time);
+          setCalculatedTimes(preferences.calculatedTimes || []);
+          setSelectedTime(preferences.selectedTime || "");
+        }
+      } catch (error) {
+        console.error('Error loading sleep preferences:', error);
+      } finally {
+        setIsLoaded(true);
+      }
+    };
+
+    loadData();
+  }, [user]);
+
+  // Sync to backend
+  const syncToBackend = useCallback(async () => {
+    if (!user || !isLoaded) return;
+    
+    await syncService.syncSleepPreferences({
+      mode,
+      time,
+      calculatedTimes,
+      selectedTime,
+    });
+  }, [user, mode, time, calculatedTimes, selectedTime, isLoaded]);
 
   // Persist mode
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.SLEEP_MODE, mode);
-  }, [mode]);
+    if (isLoaded) syncToBackend();
+  }, [mode, isLoaded, syncToBackend]);
 
   // Persist time
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.SLEEP_TIME, time);
-  }, [time]);
+    if (isLoaded) syncToBackend();
+  }, [time, isLoaded, syncToBackend]);
 
   // Persist calculated times
   useEffect(() => {
     storageService.setItem(STORAGE_KEYS.SLEEP_CALCULATED_TIMES, calculatedTimes);
-  }, [calculatedTimes]);
+    if (isLoaded) syncToBackend();
+  }, [calculatedTimes, isLoaded, syncToBackend]);
 
   const calculateTimes = () => {
     if (!time) return;

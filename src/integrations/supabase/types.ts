@@ -100,6 +100,57 @@ export type Database = {
         }
         Relationships: []
       }
+      user_caffeine_settings: {
+        Row: {
+          id: string
+          schedule: Json
+          updated_at: string
+          user_id: string
+          wake_time: string
+        }
+        Insert: {
+          id?: string
+          schedule?: Json
+          updated_at?: string
+          user_id: string
+          wake_time: string
+        }
+        Update: {
+          id?: string
+          schedule?: Json
+          updated_at?: string
+          user_id?: string
+          wake_time?: string
+        }
+        Relationships: []
+      }
+      user_preferences: {
+        Row: {
+          id: string
+          notifications_enabled: boolean
+          preferences: Json
+          theme: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          notifications_enabled?: boolean
+          preferences?: Json
+          theme?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          notifications_enabled?: boolean
+          preferences?: Json
+          theme?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -117,6 +168,75 @@ export type Database = {
           created_at?: string
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_sleep_preferences: {
+        Row: {
+          calculated_times: Json | null
+          id: string
+          mode: string
+          selected_time: string | null
+          time: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calculated_times?: Json | null
+          id?: string
+          mode?: string
+          selected_time?: string | null
+          time?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calculated_times?: Json | null
+          id?: string
+          mode?: string
+          selected_time?: string | null
+          time?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_tasks: {
+        Row: {
+          archived: boolean
+          category: string | null
+          completed: boolean
+          created_at: string
+          id: string
+          position: number
+          task_id: string
+          text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          archived?: boolean
+          category?: string | null
+          completed?: boolean
+          created_at?: string
+          id?: string
+          position?: number
+          task_id: string
+          text: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          archived?: boolean
+          category?: string | null
+          completed?: boolean
+          created_at?: string
+          id?: string
+          position?: number
+          task_id?: string
+          text?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

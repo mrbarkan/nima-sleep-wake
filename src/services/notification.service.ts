@@ -10,11 +10,48 @@ class NotificationService {
   private scheduledNotifications: Map<string, { timeoutId: number; config: NotificationConfig }> = new Map();
   private recurringInterval: number | null = null;
   private registration: ServiceWorkerRegistration | null = null;
+  private isReady: boolean = false;
+  private readyPromise: Promise<void>;
 
   constructor() {
-    this.initServiceWorker();
-    this.restoreScheduledNotifications();
-    this.restoreRecurringReminder();
+    // Initialize asynchronously
+    this.readyPromise = this.initialize();
+  }
+
+  /**
+   * Initialize the service - must be called and awaited before using
+   */
+  private async initialize(): Promise<void> {
+    console.log("🚀 Iniciando NotificationService...");
+    
+    try {
+      // First, initialize Service Worker and wait for it
+      await this.initServiceWorker();
+      console.log("✅ Service Worker inicializado");
+      
+      // Only restore after SW is ready
+      await this.restoreScheduledNotifications();
+      console.log("✅ Notificações agendadas restauradas");
+      
+      await this.restoreRecurringReminder();
+      console.log("✅ Lembretes recorrentes restaurados");
+      
+      this.isReady = true;
+      console.log("✅ NotificationService pronto");
+    } catch (error) {
+      console.error("❌ Erro ao inicializar NotificationService:", error);
+      this.isReady = true; // Mark as ready even on error to prevent blocking
+    }
+  }
+
+  /**
+   * Ensure service is ready before operations
+   */
+  private async ensureReady(): Promise<void> {
+    if (!this.isReady) {
+      console.log("⏳ Aguardando inicialização do NotificationService...");
+      await this.readyPromise;
+    }
   }
 
   /**
@@ -24,10 +61,12 @@ class NotificationService {
     if ("serviceWorker" in navigator) {
       try {
         this.registration = await navigator.serviceWorker.register("/sw.js");
-        console.log("Service Worker registered successfully");
+        console.log("✅ Service Worker registrado com sucesso");
       } catch (error) {
-        console.error("Service Worker registration failed:", error);
+        console.error("❌ Falha ao registrar Service Worker:", error);
       }
+    } else {
+      console.warn("⚠️ Service Worker não disponível neste navegador");
     }
   }
 
@@ -91,6 +130,7 @@ class NotificationService {
    * Schedule a notification for a specific time
    */
   async scheduleNotification(config: NotificationConfig): Promise<void> {
+    await this.ensureReady();
     console.log("📅 Agendando notificação:", config);
     
     if (!this.isGranted()) {
@@ -161,6 +201,7 @@ class NotificationService {
    * Show a notification immediately
    */
   async showNotification(title: string, body: string, icon?: string): Promise<void> {
+    await this.ensureReady();
     console.log("🔔 Mostrando notificação:", { title, body });
     
     if (!this.isGranted()) {
@@ -196,8 +237,12 @@ class NotificationService {
   /**
    * Schedule recurring reminder
    */
-  scheduleRecurringReminder(intervalMinutes: number, title: string, body: string): void {
+  async scheduleRecurringReminder(intervalMinutes: number, title: string, body: string): Promise<void> {
+    await this.ensureReady();
+    console.log("🔄 Agendando lembrete recorrente:", intervalMinutes, "minutos");
+    
     if (!this.isGranted()) {
+      console.error("❌ Permissão não concedida para lembretes recorrentes");
       throw new Error("Notification permission not granted");
     }
 
@@ -206,11 +251,13 @@ class NotificationService {
 
     // Set up new recurring reminder
     this.recurringInterval = window.setInterval(async () => {
+      console.log("⏰ Disparando lembrete recorrente");
       await this.showNotification(title, body);
     }, intervalMinutes * 60 * 1000);
 
     // Store interval setting
     storageService.setItem(STORAGE_KEYS.RECURRING_REMINDER_INTERVAL, intervalMinutes);
+    console.log("✅ Lembrete recorrente agendado com sucesso");
   }
 
   /**
@@ -253,41 +300,71 @@ class NotificationService {
   /**
    * Restore scheduled notifications from localStorage
    */
-  private restoreScheduledNotifications(): void {
-    const stored = storageService.getItem<ScheduledNotification[]>(
-      STORAGE_KEYS.SCHEDULED_NOTIFICATIONS
-    );
+  private async restoreScheduledNotifications(): Promise<void> {
+    try {
+      const stored = storageService.getItem<ScheduledNotification[]>(
+        STORAGE_KEYS.SCHEDULED_NOTIFICATIONS
+      );
 
-    if (!stored || stored.length === 0) return;
+      if (!stored || stored.length === 0) {
+        console.log("ℹ️ Nenhuma notificação agendada para restaurar");
+        return;
+      }
 
-    console.log("🔄 Restaurando notificações agendadas:", stored);
+      console.log("🔄 Restaurando notificações agendadas:", stored);
 
-    stored.forEach((notification) => {
-      // Re-schedule each notification
-      this.scheduleNotification({
-        type: notification.type,
-        time: notification.time,
-        title: notification.title,
-        body: notification.body,
-      }).catch((error) => {
-        console.error("Erro ao restaurar notificação:", error);
-      });
-    });
+      // Check permission before restoring
+      if (!this.isGranted()) {
+        console.warn("⚠️ Permissão não concedida, ignorando restauração de notificações");
+        return;
+      }
+
+      for (const notification of stored) {
+        try {
+          // Re-schedule each notification (without awaiting ensureReady since we're already in init)
+          await this.scheduleNotification({
+            type: notification.type,
+            time: notification.time,
+            title: notification.title,
+            body: notification.body,
+          });
+        } catch (error) {
+          console.error("❌ Erro ao restaurar notificação:", notification, error);
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erro ao restaurar notificações agendadas:", error);
+    }
   }
 
   /**
    * Restore recurring reminder from localStorage
    */
-  private restoreRecurringReminder(): void {
-    const interval = this.getRecurringReminderInterval();
-    
-    if (interval && this.isGranted()) {
-      console.log("🔄 Restaurando lembrete recorrente:", interval);
-      this.scheduleRecurringReminder(
+  private async restoreRecurringReminder(): Promise<void> {
+    try {
+      const interval = this.getRecurringReminderInterval();
+      
+      if (!interval) {
+        console.log("ℹ️ Nenhum lembrete recorrente para restaurar");
+        return;
+      }
+
+      console.log("🔄 Tentando restaurar lembrete recorrente:", interval, "minutos");
+      
+      // Check permission AFTER service worker is ready
+      if (!this.isGranted()) {
+        console.warn("⚠️ Permissão não concedida, ignorando restauração de lembrete recorrente");
+        return;
+      }
+
+      await this.scheduleRecurringReminder(
         interval,
         "Lembrete de Tarefas",
         "Hora de checar sua lista de tarefas! 📝"
       );
+      console.log("✅ Lembrete recorrente restaurado com sucesso");
+    } catch (error) {
+      console.error("❌ Erro ao restaurar lembrete recorrente:", error);
     }
   }
 

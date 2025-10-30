@@ -19,6 +19,17 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
+      "Corrigido sistema de notificações recorrentes que não estava funcionando após reload",
+      "Implementada inicialização assíncrona do serviço de notificações",
+      "Service Worker agora aguarda registro completo antes de restaurar notificações",
+      "Melhorado tratamento de erros e logs de debug para notificações",
+      "Sistema de verificação de prontidão do serviço implementado",
+    ],
+  },
+  {
+    version: "0.9.0.108",
+    date: "2025-01-30",
+    changes: [
       "Sistema de arquivamento de tarefas concluídas implementado",
       "Botão para arquivar todas as tarefas concluídas de uma vez",
       "Modal de tarefas arquivadas com visualização completa",

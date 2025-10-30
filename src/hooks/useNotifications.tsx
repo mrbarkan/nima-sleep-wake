@@ -12,15 +12,32 @@ export type { NotificationType };
 
 export const useNotifications = () => {
   const [permission, setPermission] = useState<NotificationPermission>({
-    granted: notificationService.isGranted(),
+    granted: false,
     supported: notificationService.isSupported(),
   });
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    setPermission({
-      granted: notificationService.isGranted(),
-      supported: notificationService.isSupported(),
-    });
+    // Wait for notification service to be ready
+    const initService = async () => {
+      try {
+        // The service initializes itself, we just need to wait a bit
+        // for the async initialization to complete
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        setPermission({
+          granted: notificationService.isGranted(),
+          supported: notificationService.isSupported(),
+        });
+        setIsReady(true);
+        console.log("✅ useNotifications pronto");
+      } catch (error) {
+        console.error("❌ Erro ao inicializar useNotifications:", error);
+        setIsReady(true); // Set ready even on error to prevent blocking UI
+      }
+    };
+
+    initService();
   }, []);
 
   const requestPermission = async (): Promise<boolean> => {
@@ -120,7 +137,7 @@ export const useNotifications = () => {
     return notificationService.getScheduledNotifications(type);
   };
 
-  const scheduleRecurringReminder = (intervalMinutes: number) => {
+  const scheduleRecurringReminder = async (intervalMinutes: number) => {
     if (!permission.granted) {
       toast({
         variant: "destructive",
@@ -131,7 +148,7 @@ export const useNotifications = () => {
     }
 
     try {
-      notificationService.scheduleRecurringReminder(
+      await notificationService.scheduleRecurringReminder(
         intervalMinutes,
         "Lembrete de Tarefas",
         "Hora de checar sua lista de tarefas! 📝"

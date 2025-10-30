@@ -4,8 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ListTodo, Trash2, Plus, Info, GripVertical } from "lucide-react";
+import { ListTodo, Trash2, Plus, Info, GripVertical, Archive, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { z } from "zod";
 import InfoPopup from "@/components/common/InfoPopup";
 import {
@@ -45,6 +54,7 @@ const taskSchema = z.object({
 const todoDataSchema = z.object({
   method: z.enum(["ivy-lee", "1-3-5", "eat-frog", "eisenhower"]),
   tasks: z.array(taskSchema).max(20),
+  archivedTasks: z.array(taskSchema).max(100).optional(),
 });
 
 interface Task {
@@ -176,8 +186,10 @@ const STORAGE_KEY = "sleepflow-todo-data";
 const Todo = () => {
   const [method, setMethod] = useState("ivy-lee");
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [archivedTasks, setArchivedTasks] = useState<Task[]>([]);
   const [newTask, setNewTask] = useState("");
   const [isLoaded, setIsLoaded] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
 
   // Carregar dados do localStorage ao montar o componente
   useEffect(() => {
@@ -188,6 +200,7 @@ const Todo = () => {
         const validated = todoDataSchema.parse(parsed);
         setMethod(validated.method);
         setTasks(validated.tasks as Task[]);
+        setArchivedTasks((validated.archivedTasks as Task[]) || []);
       }
     } catch (error) {
       console.error("Erro ao carregar tarefas:", error);
@@ -203,14 +216,14 @@ const Todo = () => {
     if (!isLoaded) return; // Não salvar durante o carregamento inicial
     
     try {
-      const dataToSave = { method, tasks };
+      const dataToSave = { method, tasks, archivedTasks };
       const validated = todoDataSchema.parse(dataToSave);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(validated));
     } catch (error) {
       console.error("Erro ao salvar tarefas:", error);
       toast.error("Erro ao salvar tarefas");
     }
-  }, [method, tasks, isLoaded]);
+  }, [method, tasks, archivedTasks, isLoaded]);
 
   const methodInfo = {
     "ivy-lee": {
@@ -283,6 +296,37 @@ const Todo = () => {
     setTasks(tasks.map(task => 
       task.id === id ? { ...task, category } : task
     ));
+  };
+
+  const archiveCompletedTasks = () => {
+    const completedTasks = tasks.filter(task => task.completed);
+    if (completedTasks.length === 0) {
+      toast.error("Nenhuma tarefa concluída para arquivar");
+      return;
+    }
+    
+    setArchivedTasks([...archivedTasks, ...completedTasks]);
+    setTasks(tasks.filter(task => !task.completed));
+    toast.success(`${completedTasks.length} tarefa(s) arquivada(s)`);
+  };
+
+  const deleteArchivedTask = (id: string) => {
+    setArchivedTasks(archivedTasks.filter(task => task.id !== id));
+    toast("Tarefa removida definitivamente");
+  };
+
+  const restoreArchivedTask = (id: string) => {
+    const taskToRestore = archivedTasks.find(task => task.id === id);
+    if (!taskToRestore) return;
+
+    if (tasks.length >= currentMethod.maxTasks) {
+      toast.error(`Máximo de ${currentMethod.maxTasks} tarefas atingido. Remova uma tarefa antes de restaurar.`);
+      return;
+    }
+
+    setTasks([...tasks, { ...taskToRestore, completed: false }]);
+    setArchivedTasks(archivedTasks.filter(task => task.id !== id));
+    toast.success("Tarefa restaurada");
   };
 
   const sensors = useSensors(
@@ -370,8 +414,84 @@ const Todo = () => {
               <Plus className="h-4 w-4" />
             </Button>
           </div>
-          <div className="text-xs text-muted-foreground mt-2">
-            {tasks.length} de {currentMethod.maxTasks} tarefas
+          <div className="flex items-center justify-between mt-3">
+            <div className="text-xs text-muted-foreground">
+              {tasks.length} de {currentMethod.maxTasks} tarefas
+            </div>
+            <div className="flex gap-2">
+              {tasks.some(task => task.completed) && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={archiveCompletedTasks}
+                  className="text-xs"
+                >
+                  <Archive className="h-3 w-3 mr-1" />
+                  Arquivar Concluídas
+                </Button>
+              )}
+              <Dialog open={showArchived} onOpenChange={setShowArchived}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="text-xs">
+                    <Archive className="h-3 w-3 mr-1" />
+                    Arquivadas ({archivedTasks.length})
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[80vh]">
+                  <DialogHeader>
+                    <DialogTitle>Tarefas Arquivadas</DialogTitle>
+                    <DialogDescription>
+                      Gerencie suas tarefas arquivadas. Você pode restaurá-las ou deletá-las permanentemente.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <ScrollArea className="h-[400px] pr-4">
+                    {archivedTasks.length === 0 ? (
+                      <div className="text-center text-muted-foreground py-8">
+                        <Archive className="h-12 w-12 mx-auto mb-2 opacity-50" />
+                        <p>Nenhuma tarefa arquivada</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {archivedTasks.map((task) => (
+                          <Card key={task.id} className="p-4">
+                            <div className="flex items-start gap-3">
+                              <div className="flex-1 min-w-0">
+                                <div className="line-through text-muted-foreground">
+                                  {task.text}
+                                </div>
+                                {task.category && (
+                                  <div className="text-xs text-muted-foreground mt-1">
+                                    Categoria: {task.category}
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex gap-1 flex-shrink-0">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => restoreArchivedTask(task.id)}
+                                  title="Restaurar tarefa"
+                                >
+                                  <RotateCcw className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => deleteArchivedTask(task.id)}
+                                  title="Deletar permanentemente"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </Card>
+                        ))}
+                      </div>
+                    )}
+                  </ScrollArea>
+                </DialogContent>
+              </Dialog>
+            </div>
           </div>
         </Card>
 

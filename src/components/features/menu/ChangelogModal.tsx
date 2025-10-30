@@ -19,6 +19,20 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
+      "Sistema de arquivamento de tarefas concluídas implementado",
+      "Botão para arquivar todas as tarefas concluídas de uma vez",
+      "Modal de tarefas arquivadas com visualização completa",
+      "Opção de restaurar tarefas arquivadas (desmarca como concluída)",
+      "Opção de deletar permanentemente tarefas arquivadas",
+      "Contador de tarefas arquivadas no botão de acesso",
+      "Persistência de tarefas arquivadas no localStorage",
+      "Limite de 100 tarefas arquivadas para otimização",
+    ],
+  },
+  {
+    version: "0.9.0.107",
+    date: "2025-01-30",
+    changes: [
       "Botão de teste de notificação corrigido para exibir notificação imediata",
       "Sistema de persistência de notificações agendadas implementado",
       "Restauração automática de notificações após recarregar página",

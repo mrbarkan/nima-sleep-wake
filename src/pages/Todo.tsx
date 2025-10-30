@@ -83,12 +83,19 @@ const SortableTaskItem = ({ task, index, toggleTask, deleteTask, method, totalTa
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: task.id });
+  } = useSortable({ 
+    id: task.id,
+    transition: {
+      duration: 200,
+      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+    },
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition,
+    transition: transition || 'transform 200ms cubic-bezier(0.25, 1, 0.5, 1)',
     opacity: isDragging ? 0.5 : 1,
+    willChange: 'transform',
   };
 
   // Calculate color based on method and priority
@@ -118,9 +125,9 @@ const SortableTaskItem = ({ task, index, toggleTask, deleteTask, method, totalTa
     <Card
       ref={setNodeRef}
       style={style}
-      className={`p-4 transition-all ${
+      className={`p-4 ${
         task.completed ? "opacity-60" : ""
-      } ${isDragging ? "cursor-grabbing" : ""}`}
+      } ${isDragging ? "cursor-grabbing shadow-lg scale-105" : ""}`}
     >
       <div className="flex items-center gap-3">
         <div 
@@ -332,7 +339,8 @@ const Todo = () => {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Precisa mover 8px antes de ativar o drag
+        distance: 5,
+        tolerance: 5,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -418,12 +426,14 @@ const Todo = () => {
             <div className="flex gap-2">
               {tasks.some(task => task.completed) && (
                 <Button
-                  variant="outline"
-                  size="icon"
+                  variant="ghost"
+                  size="sm"
                   onClick={archiveCompletedTasks}
-                  title="Arquivar tarefas concluídas"
+                  title="Arquivar concluídas"
+                  className="text-muted-foreground hover:text-foreground text-xs gap-1.5"
                 >
-                  <Archive className="h-4 w-4" />
+                  <Archive className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Arquivar</span>
                 </Button>
               )}
               <Dialog open={showArchived} onOpenChange={setShowArchived}>

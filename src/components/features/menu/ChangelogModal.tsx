@@ -19,10 +19,9 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
-      "Explicações dos métodos de to-do movidas para ícone de informação",
-      "Drag and drop otimizado no mobile - scroll agora funciona perfeitamente",
-      "Botão de arquivar transformado em ícone para economizar espaço",
-      "Interface de to-do mais limpa e responsiva",
+      "Drag and drop super otimizado - animações fluídas com hardware acceleration",
+      "Botão de arquivar mais discreto e com label no desktop",
+      "Performance melhorada no mobile ao arrastar tarefas",
     ],
   },
   {

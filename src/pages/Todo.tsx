@@ -120,7 +120,7 @@ const SortableTaskItem = ({ task, index, toggleTask, deleteTask, method, totalTa
       style={style}
       className={`p-4 transition-all ${
         task.completed ? "opacity-60" : ""
-      } ${isDragging ? "cursor-grabbing" : ""} touch-none`}
+      } ${isDragging ? "cursor-grabbing" : ""}`}
     >
       <div className="flex items-center gap-3">
         <div 
@@ -330,7 +330,11 @@ const Todo = () => {
   };
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Precisa mover 8px antes de ativar o drag
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -387,20 +391,13 @@ const Todo = () => {
           <TabsTrigger value="eisenhower" className="text-xs md:text-sm">Eisenhower</TabsTrigger>
         </TabsList>
 
-        <Card className="p-6 mb-6 bg-accent/5 border-accent/20">
-          <div className="flex gap-3">
-            <Info className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-medium mb-1">{currentMethod.name}</h3>
-              <p className="text-sm text-muted-foreground mb-2">
-                {currentMethod.description}
-              </p>
-              <p className="text-xs text-muted-foreground italic">
-                💡 {currentMethod.tip}
-              </p>
-            </div>
-          </div>
-        </Card>
+        <div className="mb-6 flex items-center gap-2">
+          <h3 className="font-medium">{currentMethod.name}</h3>
+          <InfoPopup
+            title={currentMethod.name}
+            content={`${currentMethod.description}\n\n💡 ${currentMethod.tip}`}
+          />
+        </div>
 
         <Card className="p-6 mb-4">
           <div className="flex gap-2">
@@ -422,12 +419,11 @@ const Todo = () => {
               {tasks.some(task => task.completed) && (
                 <Button
                   variant="outline"
-                  size="sm"
+                  size="icon"
                   onClick={archiveCompletedTasks}
-                  className="text-xs"
+                  title="Arquivar tarefas concluídas"
                 >
-                  <Archive className="h-3 w-3 mr-1" />
-                  Arquivar Concluídas
+                  <Archive className="h-4 w-4" />
                 </Button>
               )}
               <Dialog open={showArchived} onOpenChange={setShowArchived}>

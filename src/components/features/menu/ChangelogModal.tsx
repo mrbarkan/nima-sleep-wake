@@ -19,6 +19,16 @@ const changelog = [
     version: APP_VERSION,
     date: "2025-01-30",
     changes: [
+      "Explicações dos métodos de to-do movidas para ícone de informação",
+      "Drag and drop otimizado no mobile - scroll agora funciona perfeitamente",
+      "Botão de arquivar transformado em ícone para economizar espaço",
+      "Interface de to-do mais limpa e responsiva",
+    ],
+  },
+  {
+    version: "0.9.0.109",
+    date: "2025-01-30",
+    changes: [
       "Corrigido sistema de notificações recorrentes que não estava funcionando após reload",
       "Implementada inicialização assíncrona do serviço de notificações",
       "Service Worker agora aguarda registro completo antes de restaurar notificações",

@@ -275,11 +275,20 @@ const Todo = () => {
     
     // Always save to localStorage for offline-first approach
     try {
-      const dataToSave = { method, tasks, archivedTasks };
+      const dataToSave = { 
+        method, 
+        tasks: tasks.map(t => ({ ...t, archived: false })),
+        archivedTasks: archivedTasks.map(t => ({ ...t, archived: true }))
+      };
       const validated = todoDataSchema.parse(dataToSave);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(validated));
     } catch (error) {
-      console.error("Erro ao salvar tarefas:", error);
+      if (error instanceof z.ZodError) {
+        console.error("Erro de validação Zod:", error.errors);
+        console.error("Dados que falharam:", JSON.stringify({ method, tasks, archivedTasks }, null, 2));
+      } else {
+        console.error("Erro ao salvar tarefas:", error);
+      }
       toast.error("Erro ao salvar tarefas");
     }
 
@@ -397,7 +406,7 @@ const Todo = () => {
       return;
     }
 
-    setTasks([...tasks, { ...taskToRestore, completed: false }]);
+    setTasks([...tasks, { ...taskToRestore, completed: false, archived: false }]);
     setArchivedTasks(archivedTasks.filter(task => task.id !== id));
     toast.success("Tarefa restaurada");
   };

@@ -16,6 +16,15 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.10.2",
+    date: "2025-01-30",
+    changes: [
+      "Corrigido erro de validação ao salvar tarefas (propriedade archived)",
+      "Melhorado logging de erros para facilitar debugging",
+      "Garantida consistência de estado entre tarefas ativas e arquivadas",
+    ],
+  },
+  {
     version: "0.10.1",
     date: "2025-01-30",
     changes: [

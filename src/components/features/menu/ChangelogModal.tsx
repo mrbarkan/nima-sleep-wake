@@ -16,6 +16,20 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.11.0",
+    date: "2025-01-30",
+    changes: [
+      "🏗️ Refatoração completa do módulo Todo (Fase 1)",
+      "Criada camada de schemas (src/schemas/todo.schemas.ts) para validações",
+      "Criado TodoService com toda lógica de negócio centralizada",
+      "Implementado hook customizado useTodoManager para gestão de estado",
+      "Componentes modulares: TaskItem, TaskList, ArchivedTasksModal, TaskMethodInfo",
+      "Redução de 615 → 135 linhas no Todo.tsx (78% menos código)",
+      "Arquitetura limpa com separação de responsabilidades",
+      "Melhor testabilidade e manutenibilidade do código",
+    ],
+  },
+  {
     version: "0.10.2",
     date: "2025-01-30",
     changes: [

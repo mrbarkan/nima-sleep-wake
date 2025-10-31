@@ -9,3 +9,4 @@ export * from "./sleep.service";
 export * from "./caffeine.service";
 export * from "./notification.service";
 export * from "./sync.service";
+export * from "./todo.service";

@@ -2,7 +2,7 @@
  * Application-wide constants and configuration
  */
 
-export const APP_VERSION = "0.12.0";
+export const APP_VERSION = "0.13.0";
 export const APP_NAME = "Nima";
 export const APP_BETA = true;
 
@@ -11,6 +11,7 @@ export const STORAGE_KEYS = {
   SLEEP_MODE: "sleep-mode",
   SLEEP_TIME: "sleep-time",
   SLEEP_CALCULATED_TIMES: "sleep-calculatedTimes",
+  SLEEP_SELECTED_TIME: "sleep-selected-time",
   CAFFEINE_WAKE_TIME: "caffeine-wakeTime",
   CAFFEINE_SCHEDULE: "caffeine-schedule",
   TODO_DATA: "sleepflow-todo-data",

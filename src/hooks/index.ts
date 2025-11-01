@@ -2,6 +2,7 @@
  * Custom hooks exports
  */
 
+export { usePersistence, useMultiPersistence } from "./usePersistence";
 export { useTodoManager } from "./useTodoManager";
 export { useSleepCalculator } from "./useSleepCalculator";
 export { useCaffeineScheduler } from "./useCaffeineScheduler";

@@ -1,99 +1,62 @@
 /**
  * Custom hook for sleep cycle calculations
- * Extracts business logic from Sleep component
+ * Refactored to use generic persistence hook
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useCallback } from "react";
 import { SleepMode } from "@/types/sleep.types";
-import { storageService } from "@/services/storage.service";
 import { syncService } from "@/services/sync.service";
 import { STORAGE_KEYS, SLEEP_CONSTANTS } from "@/config/constants";
-import { useAuth } from "@/contexts/AuthContext";
+import { useMultiPersistence } from "./usePersistence";
+
+interface SleepState {
+  mode: SleepMode;
+  time: string;
+  calculatedTimes: string[];
+  selectedTime: string;
+}
 
 export function useSleepCalculator() {
-  const { user } = useAuth();
-  const [mode, setMode] = useState<SleepMode>(() => {
-    return storageService.getItem<SleepMode>(STORAGE_KEYS.SLEEP_MODE) || "wake";
+  // Use generic persistence hook for state management
+  const { state, updateField, isLoaded } = useMultiPersistence<SleepState>({
+    storageKeys: {
+      mode: STORAGE_KEYS.SLEEP_MODE,
+      time: STORAGE_KEYS.SLEEP_TIME,
+      calculatedTimes: STORAGE_KEYS.SLEEP_CALCULATED_TIMES,
+      selectedTime: STORAGE_KEYS.SLEEP_SELECTED_TIME,
+    },
+    initialValues: {
+      mode: "wake",
+      time: "",
+      calculatedTimes: [],
+      selectedTime: "",
+    },
+    loadFromBackend: async () => {
+      const preferences = await syncService.loadSleepPreferences();
+      return preferences ? {
+        mode: preferences.mode,
+        time: preferences.time,
+        calculatedTimes: preferences.calculatedTimes || [],
+        selectedTime: preferences.selectedTime || "",
+      } : null;
+    },
+    syncToBackend: async (data) => {
+      await syncService.syncSleepPreferences(data);
+    },
   });
-  
-  const [time, setTime] = useState(() => {
-    return storageService.getItem<string>(STORAGE_KEYS.SLEEP_TIME) || "";
-  });
-  
-  const [calculatedTimes, setCalculatedTimes] = useState<string[]>(() => {
-    return storageService.getItem<string[]>(STORAGE_KEYS.SLEEP_CALCULATED_TIMES) || [];
-  });
-  
-  const [selectedTime, setSelectedTime] = useState("");
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load data from backend when user logs in
-  useEffect(() => {
-    const loadData = async () => {
-      if (!user) {
-        setIsLoaded(true);
-        return;
-      }
+  // Calculation logic - pure function, no side effects
+  const calculateTimes = useCallback(() => {
+    if (!state.time) return;
 
-      try {
-        const preferences = await syncService.loadSleepPreferences();
-        if (preferences) {
-          setMode(preferences.mode);
-          setTime(preferences.time);
-          setCalculatedTimes(preferences.calculatedTimes || []);
-          setSelectedTime(preferences.selectedTime || "");
-        }
-      } catch (error) {
-        console.error('Error loading sleep preferences:', error);
-      } finally {
-        setIsLoaded(true);
-      }
-    };
-
-    loadData();
-  }, [user]);
-
-  // Sync to backend
-  const syncToBackend = useCallback(async () => {
-    if (!user || !isLoaded) return;
-    
-    await syncService.syncSleepPreferences({
-      mode,
-      time,
-      calculatedTimes,
-      selectedTime,
-    });
-  }, [user, mode, time, calculatedTimes, selectedTime, isLoaded]);
-
-  // Persist mode
-  useEffect(() => {
-    storageService.setItem(STORAGE_KEYS.SLEEP_MODE, mode);
-    if (isLoaded) syncToBackend();
-  }, [mode, isLoaded, syncToBackend]);
-
-  // Persist time
-  useEffect(() => {
-    storageService.setItem(STORAGE_KEYS.SLEEP_TIME, time);
-    if (isLoaded) syncToBackend();
-  }, [time, isLoaded, syncToBackend]);
-
-  // Persist calculated times
-  useEffect(() => {
-    storageService.setItem(STORAGE_KEYS.SLEEP_CALCULATED_TIMES, calculatedTimes);
-    if (isLoaded) syncToBackend();
-  }, [calculatedTimes, isLoaded, syncToBackend]);
-
-  const calculateTimes = () => {
-    if (!time) return;
-
-    const [hours, minutes] = time.split(":").map(Number);
+    const [hours, minutes] = state.time.split(":").map(Number);
     const referenceDate = new Date();
     referenceDate.setHours(hours, minutes, 0);
 
     const times: string[] = [];
     const { CYCLE_MINUTES, FALL_ASLEEP_TIME, MAX_CYCLES } = SLEEP_CONSTANTS;
 
-    if (mode === "wake") {
+    if (state.mode === "wake") {
       // Calculate bedtimes based on wake time
       for (let cycles = MAX_CYCLES; cycles >= 1; cycles--) {
         const sleepTime = new Date(referenceDate);
@@ -120,25 +83,36 @@ export function useSleepCalculator() {
       }
     }
 
-    setCalculatedTimes(times);
-  };
+    updateField("calculatedTimes", times);
+  }, [state.time, state.mode, updateField]);
 
-  const getCycleLabel = (index: number) => {
+  // Helper to generate cycle labels
+  const getCycleLabel = useCallback((index: number) => {
     const cycles = SLEEP_CONSTANTS.MAX_CYCLES - index;
     const hours = (cycles * 1.5).toFixed(1);
     return `${cycles} ciclos (${hours}h)`;
-  };
+  }, []);
 
-  const changeMode = (newMode: SleepMode) => {
-    setMode(newMode);
-    setCalculatedTimes([]);
-  };
+  // Mode change handler - clears calculated times
+  const changeMode = useCallback((newMode: SleepMode) => {
+    updateField("mode", newMode);
+    updateField("calculatedTimes", []);
+  }, [updateField]);
+
+  // Setters using updateField
+  const setTime = useCallback((time: string) => {
+    updateField("time", time);
+  }, [updateField]);
+
+  const setSelectedTime = useCallback((time: string) => {
+    updateField("selectedTime", time);
+  }, [updateField]);
 
   return {
-    mode,
-    time,
-    calculatedTimes,
-    selectedTime,
+    mode: state.mode,
+    time: state.time,
+    calculatedTimes: state.calculatedTimes,
+    selectedTime: state.selectedTime,
     setTime,
     setSelectedTime,
     calculateTimes,

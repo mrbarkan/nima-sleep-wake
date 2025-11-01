@@ -16,6 +16,20 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.13.0",
+    date: "2025-01-30",
+    changes: [
+      "🔧 Refatoração de Hooks - Eliminação de Duplicação (Fase 3)",
+      "Criado hook genérico usePersistence para localStorage + sync",
+      "Criado hook useMultiPersistence para múltiplos valores relacionados",
+      "useSleepCalculator refatorado: separação entre cálculo e persistência",
+      "useCaffeineScheduler refatorado: lógica de negócio isolada",
+      "Eliminação de ~100 linhas duplicadas entre hooks",
+      "Pattern reutilizável para futuros recursos com persistência",
+      "Melhor separação de responsabilidades (SRP)",
+    ],
+  },
+  {
     version: "0.12.0",
     date: "2025-01-30",
     changes: [

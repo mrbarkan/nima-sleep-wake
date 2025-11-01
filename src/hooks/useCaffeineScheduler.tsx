@@ -1,14 +1,13 @@
 /**
  * Custom hook for caffeine scheduling
- * Extracts business logic from Caffeine component
+ * Refactored to use generic persistence hook
  */
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { CaffeineSchedule, CaffeineRotation } from "@/types/caffeine.types";
-import { storageService } from "@/services/storage.service";
 import { syncService } from "@/services/sync.service";
 import { STORAGE_KEYS, CAFFEINE_CONFIG } from "@/config/constants";
-import { useAuth } from "@/contexts/AuthContext";
+import { useMultiPersistence } from "./usePersistence";
 
 const caffeineRotation: CaffeineRotation[] = [
   { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
@@ -17,69 +16,42 @@ const caffeineRotation: CaffeineRotation[] = [
   { source: "Café", description: "Reforço vespertino", duration: 5 },
 ];
 
+interface CaffeineState {
+  wakeTime: string;
+  schedule: CaffeineSchedule[];
+}
+
 export function useCaffeineScheduler() {
-  const { user } = useAuth();
-  const [wakeTime, setWakeTime] = useState(() => {
-    return storageService.getItem<string>(STORAGE_KEYS.CAFFEINE_WAKE_TIME) || "";
+  // Use generic persistence hook for state management
+  const { state, updateField, isLoaded } = useMultiPersistence<CaffeineState>({
+    storageKeys: {
+      wakeTime: STORAGE_KEYS.CAFFEINE_WAKE_TIME,
+      schedule: STORAGE_KEYS.CAFFEINE_SCHEDULE,
+    },
+    initialValues: {
+      wakeTime: "",
+      schedule: [],
+    },
+    loadFromBackend: async () => {
+      const settings = await syncService.loadCaffeineSettings();
+      return settings ? {
+        wakeTime: settings.wakeTime,
+        schedule: settings.schedule || [],
+      } : null;
+    },
+    syncToBackend: async (data) => {
+      await syncService.syncCaffeineSettings(data);
+    },
   });
-  
-  const [schedule, setSchedule] = useState<CaffeineSchedule[]>(() => {
-    return storageService.getItem<CaffeineSchedule[]>(STORAGE_KEYS.CAFFEINE_SCHEDULE) || [];
-  });
-  
+
+  // Local UI state - not persisted
   const [openNotifications, setOpenNotifications] = useState<{ [key: number]: boolean }>({});
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load data from backend when user logs in
-  useEffect(() => {
-    const loadData = async () => {
-      if (!user) {
-        setIsLoaded(true);
-        return;
-      }
+  // Calculation logic - pure function, no side effects
+  const calculateSchedule = useCallback(() => {
+    if (!state.wakeTime) return;
 
-      try {
-        const settings = await syncService.loadCaffeineSettings();
-        if (settings) {
-          setWakeTime(settings.wakeTime);
-          setSchedule(settings.schedule || []);
-        }
-      } catch (error) {
-        console.error('Error loading caffeine settings:', error);
-      } finally {
-        setIsLoaded(true);
-      }
-    };
-
-    loadData();
-  }, [user]);
-
-  // Sync to backend
-  const syncToBackend = useCallback(async () => {
-    if (!user || !isLoaded) return;
-    
-    await syncService.syncCaffeineSettings({
-      wakeTime,
-      schedule,
-    });
-  }, [user, wakeTime, schedule, isLoaded]);
-
-  // Persist wake time
-  useEffect(() => {
-    storageService.setItem(STORAGE_KEYS.CAFFEINE_WAKE_TIME, wakeTime);
-    if (isLoaded) syncToBackend();
-  }, [wakeTime, isLoaded, syncToBackend]);
-
-  // Persist schedule
-  useEffect(() => {
-    storageService.setItem(STORAGE_KEYS.CAFFEINE_SCHEDULE, schedule);
-    if (isLoaded) syncToBackend();
-  }, [schedule, isLoaded, syncToBackend]);
-
-  const calculateSchedule = () => {
-    if (!wakeTime) return;
-
-    const [hours, minutes] = wakeTime.split(":").map(Number);
+    const [hours, minutes] = state.wakeTime.split(":").map(Number);
     const wakeDate = new Date();
     wakeDate.setHours(hours, minutes, 0);
 
@@ -108,12 +80,17 @@ export function useCaffeineScheduler() {
       }
     });
 
-    setSchedule(scheduleItems);
-  };
+    updateField("schedule", scheduleItems);
+  }, [state.wakeTime, updateField]);
+
+  // Setter using updateField
+  const setWakeTime = useCallback((time: string) => {
+    updateField("wakeTime", time);
+  }, [updateField]);
 
   return {
-    wakeTime,
-    schedule,
+    wakeTime: state.wakeTime,
+    schedule: state.schedule,
     openNotifications,
     setWakeTime,
     setOpenNotifications,

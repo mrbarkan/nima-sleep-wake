@@ -16,6 +16,20 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.12.0",
+    date: "2025-01-30",
+    changes: [
+      "🏗️ Refatoração completa de Sleep, Caffeine e Blog (Fase 2)",
+      "Criadas features folders para cada módulo principal",
+      "Sleep: componentes SleepHeader, SleepTimeInput, SleepResultsList (163→41 linhas)",
+      "Caffeine: componentes CaffeineHeader, CaffeineTimeInput, CaffeineScheduleList (146→36 linhas)",
+      "Blog: componentes BlogHeader, ArticleCard, ArticleList (177→99 linhas)",
+      "Arquitetura consistente com separação clara de responsabilidades",
+      "Melhoria significativa na reutilização de componentes",
+      "Redução de 280+ linhas de código total nas páginas",
+    ],
+  },
+  {
     version: "0.11.0",
     date: "2025-01-30",
     changes: [

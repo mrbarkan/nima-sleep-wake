@@ -130,7 +130,7 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimation}>
         {activeTask ? (
-          <Card className="p-4 shadow-2xl scale-[1.03] backdrop-blur-2xl bg-background/40 border-2 border-primary/40 [&>*]:blur-sm">
+          <Card className="p-4 shadow-2xl scale-[1.03] backdrop-blur-2xl bg-background/40 transition-all duration-300 ease-in-out [&>*]:blur-sm [&>*]:transition-[filter] [&>*]:duration-300 [&>*]:ease-in-out">
             <div className="flex items-center gap-3 opacity-60">
               <GripVertical className="h-5 w-5 text-muted-foreground" />
               <div 

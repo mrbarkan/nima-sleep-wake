@@ -1,5 +1,6 @@
 /**
- * Synchronization service - handles data sync between localStorage and backend
+ * Synchronization service
+ * Handles all sync operations between localStorage and backend (Lovable Cloud)
  */
 
 import { supabase } from "@/integrations/supabase/client";
@@ -18,7 +19,7 @@ class SyncService {
     lastSync: null,
     error: null,
   };
-  
+
   private listeners: Set<(status: SyncStatus) => void> = new Set();
 
   /**
@@ -30,10 +31,10 @@ class SyncService {
   }
 
   /**
-   * Notify all listeners of status change
+   * Notify all listeners of status changes
    */
   private notifyListeners() {
-    this.listeners.forEach(callback => callback(this.syncStatus));
+    this.listeners.forEach(callback => callback({ ...this.syncStatus }));
   }
 
   /**
@@ -62,44 +63,52 @@ class SyncService {
   /**
    * Sync tasks to backend
    */
-  async syncTasks(tasks: any[], method: 'todo') {
+  async syncTasks(tasks: any[], method: 'todo'): Promise<void> {
     if (!await this.isAuthenticated()) return;
 
     this.updateStatus({ syncing: true, error: null });
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      if (!user) throw new Error("Usuário não autenticado");
 
-      // Delete all existing tasks for this user
+      // Delete existing tasks for this user
       await supabase
-        .from('user_tasks')
+        .from("user_tasks")
         .delete()
-        .eq('user_id', user.id);
+        .eq("user_id", user.id);
 
-      // Insert all tasks
+      // Insert new tasks
       if (tasks.length > 0) {
-        const tasksToInsert = tasks.map((task, index) => ({
+        const tasksToInsert = tasks.map((task: any, index: number) => ({
           user_id: user.id,
           task_id: task.id,
-          text: task.text,
-          completed: task.completed,
+          text: task.title,
+          completed: task.completed || false,
           archived: task.archived || false,
           category: task.category || null,
-          position: index,
+          position: task.priority || index,
         }));
 
         const { error } = await supabase
-          .from('user_tasks')
+          .from("user_tasks")
           .insert(tasksToInsert);
 
         if (error) throw error;
       }
 
-      this.updateStatus({ syncing: false, lastSync: new Date(), error: null });
-    } catch (error: any) {
-      console.error('Error syncing tasks:', error);
-      this.updateStatus({ syncing: false, error: error.message });
+      this.updateStatus({ 
+        syncing: false, 
+        lastSync: new Date(),
+        error: null 
+      });
+    } catch (error) {
+      console.error("Erro ao sincronizar tarefas:", error);
+      this.updateStatus({ 
+        syncing: false, 
+        error: error instanceof Error ? error.message : "Erro desconhecido" 
+      });
+      throw error;
     }
   }
 
@@ -114,22 +123,26 @@ class SyncService {
       if (!user) return null;
 
       const { data, error } = await supabase
-        .from('user_tasks')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('position', { ascending: true });
+        .from("user_tasks")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("position", { ascending: true });
 
       if (error) throw error;
 
-      return data?.map(task => ({
+      if (!data) return null;
+
+      // Transform backend data to app format
+      return data.map((task: any) => ({
         id: task.task_id,
-        text: task.text,
+        title: task.text,
         completed: task.completed,
         archived: task.archived,
         category: task.category,
-      })) || [];
+        priority: task.position,
+      }));
     } catch (error) {
-      console.error('Error loading tasks:', error);
+      console.error("Erro ao carregar tarefas:", error);
       return null;
     }
   }
@@ -137,26 +150,30 @@ class SyncService {
   /**
    * Sync sleep preferences to backend
    */
-  async syncSleepPreferences(preferences: any) {
+  async syncSleepPreferences(preferences: any): Promise<void> {
     if (!await this.isAuthenticated()) return;
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      if (!user) throw new Error("Usuário não autenticado");
 
       const { error } = await supabase
-        .from('user_sleep_preferences')
+        .from("user_sleep_preferences")
         .upsert({
           user_id: user.id,
           mode: preferences.mode,
           time: preferences.time,
-          calculated_times: preferences.calculatedTimes,
-          selected_time: preferences.selectedTime,
+          calculated_times: preferences.calculatedTimes || [],
+          selected_time: preferences.selectedTime || "",
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: "user_id"
         });
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error syncing sleep preferences:', error);
+      console.error("Erro ao sincronizar preferências de sono:", error);
+      throw error;
     }
   }
 
@@ -171,23 +188,26 @@ class SyncService {
       if (!user) return null;
 
       const { data, error } = await supabase
-        .from('user_sleep_preferences')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+        .from("user_sleep_preferences")
+        .select("mode, time, calculated_times, selected_time")
+        .eq("user_id", user.id)
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === "PGRST116") return null; // No data found
+        throw error;
+      }
 
       if (!data) return null;
 
       return {
-        mode: data.mode,
-        time: data.time,
-        calculatedTimes: data.calculated_times,
-        selectedTime: data.selected_time,
+        mode: data.mode || "wake",
+        time: data.time || "",
+        calculatedTimes: data.calculated_times || [],
+        selectedTime: data.selected_time || "",
       };
     } catch (error) {
-      console.error('Error loading sleep preferences:', error);
+      console.error("Erro ao carregar preferências de sono:", error);
       return null;
     }
   }
@@ -195,24 +215,28 @@ class SyncService {
   /**
    * Sync caffeine settings to backend
    */
-  async syncCaffeineSettings(settings: any) {
+  async syncCaffeineSettings(settings: any): Promise<void> {
     if (!await this.isAuthenticated()) return;
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("User not authenticated");
+      if (!user) throw new Error("Usuário não autenticado");
 
       const { error } = await supabase
-        .from('user_caffeine_settings')
+        .from("user_caffeine_settings")
         .upsert({
           user_id: user.id,
           wake_time: settings.wakeTime,
-          schedule: settings.schedule,
+          schedule: settings.schedule || [],
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: "user_id"
         });
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error syncing caffeine settings:', error);
+      console.error("Erro ao sincronizar configurações de cafeína:", error);
+      throw error;
     }
   }
 
@@ -227,94 +251,89 @@ class SyncService {
       if (!user) return null;
 
       const { data, error } = await supabase
-        .from('user_caffeine_settings')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
+        .from("user_caffeine_settings")
+        .select("wake_time, schedule")
+        .eq("user_id", user.id)
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        if (error.code === "PGRST116") return null; // No data found
+        throw error;
+      }
 
       if (!data) return null;
 
       return {
-        wakeTime: data.wake_time,
-        schedule: data.schedule,
+        wakeTime: data.wake_time || "",
+        schedule: data.schedule || [],
       };
     } catch (error) {
-      console.error('Error loading caffeine settings:', error);
+      console.error("Erro ao carregar configurações de cafeína:", error);
       return null;
     }
   }
 
   /**
-   * Migrate existing localStorage data to backend (one-time operation)
+   * Migrate localStorage data to backend (one-time operation)
    */
-  async migrateLocalStorageData() {
+  async migrateLocalStorageData(): Promise<void> {
     if (!await this.isAuthenticated()) return;
 
+    // Check if migration was already done
+    const migrationDone = storageService.getItem<boolean>(STORAGE_KEYS.SYNC_MIGRATION_DONE);
+    if (migrationDone) return;
+
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      console.log("Iniciando migração de dados do localStorage...");
 
-      // Check if migration has already been done
-      const migrationKey = `${STORAGE_KEYS.SYNC_MIGRATION_DONE}_${user.id}`;
-      const migrationDone = storageService.getItem<boolean>(migrationKey);
-      
-      if (migrationDone) return;
-
-      console.log('Starting data migration from localStorage to backend...');
-
-      // Migrate tasks from all methods
-      const methods = ['ivy-lee', '1-3-5', 'eat-frog', 'eisenhower'];
-      const allTasks: any[] = [];
-      
-      methods.forEach((method, methodIndex) => {
-        const tasks = storageService.getItem<any[]>(`${STORAGE_KEYS.TODO_DATA}_${method}`);
-        if (tasks && Array.isArray(tasks)) {
-          tasks.forEach((task, taskIndex) => {
-            allTasks.push({
-              ...task,
-              position: methodIndex * 1000 + taskIndex, // Ensure unique positions
-              method,
-            });
-          });
+      // Migrate tasks
+      const todoDataStr = storageService.getItem(STORAGE_KEYS.TODO_DATA);
+      if (todoDataStr) {
+        const todoData = typeof todoDataStr === 'string' ? JSON.parse(todoDataStr) : todoDataStr;
+        const tasks = todoData.tasks || [];
+        const archivedTasks = todoData.archivedTasks || [];
+        const allTasks = [...tasks, ...archivedTasks.map((t: any) => ({ ...t, archived: true }))];
+        
+        if (allTasks.length > 0) {
+          await this.syncTasks(allTasks, 'todo');
+          console.log("Tarefas migradas com sucesso");
         }
-      });
-
-      if (allTasks.length > 0) {
-        await this.syncTasks(allTasks, 'todo');
       }
 
       // Migrate sleep preferences
-      const sleepMode = storageService.getItem<string>(STORAGE_KEYS.SLEEP_MODE);
-      const sleepTime = storageService.getItem<string>(STORAGE_KEYS.SLEEP_TIME);
-      const sleepCalculatedTimes = storageService.getItem<string[]>(STORAGE_KEYS.SLEEP_CALCULATED_TIMES);
-      
+      const sleepMode = storageService.getItem(STORAGE_KEYS.SLEEP_MODE);
+      const sleepTime = storageService.getItem(STORAGE_KEYS.SLEEP_TIME);
+      const sleepCalculatedTimes = storageService.getItem(STORAGE_KEYS.SLEEP_CALCULATED_TIMES);
+      const sleepSelectedTime = storageService.getItem(STORAGE_KEYS.SLEEP_SELECTED_TIME);
+
       if (sleepMode || sleepTime) {
         await this.syncSleepPreferences({
-          mode: sleepMode || 'wake',
-          time: sleepTime || '07:00',
+          mode: sleepMode || "wake",
+          time: sleepTime || "",
           calculatedTimes: sleepCalculatedTimes || [],
-          selectedTime: null,
+          selectedTime: sleepSelectedTime || "",
         });
+        console.log("Preferências de sono migradas com sucesso");
       }
 
       // Migrate caffeine settings
-      const caffeineWakeTime = storageService.getItem<string>(STORAGE_KEYS.CAFFEINE_WAKE_TIME);
-      const caffeineSchedule = storageService.getItem<any[]>(STORAGE_KEYS.CAFFEINE_SCHEDULE);
-      
+      const caffeineWakeTime = storageService.getItem(STORAGE_KEYS.CAFFEINE_WAKE_TIME);
+      const caffeineSchedule = storageService.getItem(STORAGE_KEYS.CAFFEINE_SCHEDULE);
+
       if (caffeineWakeTime) {
         await this.syncCaffeineSettings({
           wakeTime: caffeineWakeTime,
           schedule: caffeineSchedule || [],
         });
+        console.log("Configurações de cafeína migradas com sucesso");
       }
 
-      // Mark migration as complete
-      storageService.setItem(migrationKey, true);
-      console.log('Data migration completed successfully!');
+      // Mark migration as done
+      storageService.setItem(STORAGE_KEYS.SYNC_MIGRATION_DONE, true);
+      console.log("Migração concluída com sucesso");
     } catch (error) {
-      console.error('Error during data migration:', error);
+      console.error("Erro durante migração:", error);
+      // Don't throw - allow app to continue even if migration fails
     }
   }
 }

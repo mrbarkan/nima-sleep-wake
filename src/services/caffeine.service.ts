@@ -1,9 +1,10 @@
 /**
- * Caffeine service - handles caffeine scheduling calculations
+ * Caffeine scheduling service
+ * Contains all business logic for caffeine consumption scheduling
  */
 
-import { CaffeineSchedule, CaffeineRotation } from "@/types/caffeine.types";
 import { CAFFEINE_CONFIG } from "@/config/constants";
+import { CaffeineSchedule, CaffeineRotation } from "@/types/caffeine.types";
 
 const CAFFEINE_ROTATION: CaffeineRotation[] = [
   { source: "Café", description: "Efeito rápido (30-45 min)", duration: 5 },
@@ -14,34 +15,29 @@ const CAFFEINE_ROTATION: CaffeineRotation[] = [
 
 class CaffeineService {
   /**
-   * Calculate caffeine schedule based on wake time
+   * Calculates caffeine schedule based on wake time
    */
   calculateSchedule(wakeTime: string): CaffeineSchedule[] {
-    if (!wakeTime) {
-      throw new Error("Wake time is required for caffeine calculation");
+    if (!wakeTime || !this.isValidTimeFormat(wakeTime)) {
+      return [];
     }
 
     const [hours, minutes] = wakeTime.split(":").map(Number);
-    
-    if (isNaN(hours) || isNaN(minutes)) {
-      throw new Error("Invalid time format");
-    }
-
     const wakeDate = new Date();
     wakeDate.setHours(hours, minutes, 0, 0);
 
     const scheduleItems: CaffeineSchedule[] = [];
-
-    // First dose: 30-60 min after waking
+    
+    // First dose: configured minutes after waking
     const firstDose = new Date(wakeDate);
     firstDose.setMinutes(firstDose.getMinutes() + CAFFEINE_CONFIG.FIRST_DOSE_DELAY);
 
-    // Add doses at intervals
+    // Add doses at configured intervals
     CAFFEINE_CONFIG.INTERVALS.forEach((interval, index) => {
       const doseTime = new Date(firstDose);
       doseTime.setMinutes(doseTime.getMinutes() + interval);
-
-      // Don't suggest caffeine after max hour (3 PM)
+      
+      // Don't suggest caffeine after max hour (default 3 PM)
       if (doseTime.getHours() < CAFFEINE_CONFIG.MAX_HOUR) {
         const rotation = CAFFEINE_ROTATION[index % CAFFEINE_ROTATION.length];
         scheduleItems.push({
@@ -59,14 +55,14 @@ class CaffeineService {
   }
 
   /**
-   * Get caffeine rotation data
+   * Gets the caffeine rotation data
    */
   getCaffeineRotation(): CaffeineRotation[] {
     return [...CAFFEINE_ROTATION];
   }
 
   /**
-   * Validate time format
+   * Validates time format (HH:MM)
    */
   isValidTimeFormat(time: string): boolean {
     const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -74,9 +70,11 @@ class CaffeineService {
   }
 
   /**
-   * Check if a given time is within safe caffeine consumption window
+   * Checks if a given time is within safe caffeine consumption window
    */
   isWithinSafeWindow(time: string): boolean {
+    if (!this.isValidTimeFormat(time)) return false;
+    
     const [hours] = time.split(":").map(Number);
     return hours < CAFFEINE_CONFIG.MAX_HOUR;
   }

@@ -16,6 +16,20 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.0",
+    date: "2025-01-30",
+    changes: [
+      "🏢 Consolidação de Services - Camada de Negócio (Fase 4)",
+      "Criado sleep.service.ts com toda lógica de cálculo de sono",
+      "Criado caffeine.service.ts com lógica de agendamento de cafeína",
+      "Criado sync.service.ts centralizando sincronização com backend",
+      "Hooks refatorados para delegar lógica aos services",
+      "Separação clara: UI nos hooks, lógica de negócio nos services",
+      "Código mais testável, reutilizável e manutenível",
+      "Arquitetura limpa consolidada em todos os módulos",
+    ],
+  },
+  {
     version: "0.13.0",
     date: "2025-01-30",
     changes: [

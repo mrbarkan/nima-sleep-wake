@@ -1,12 +1,13 @@
 /**
  * Custom hook for sleep cycle calculations
- * Refactored to use generic persistence hook
+ * Refactored to use services and generic persistence
  */
 
 import { useCallback } from "react";
 import { SleepMode } from "@/types/sleep.types";
 import { syncService } from "@/services/sync.service";
-import { STORAGE_KEYS, SLEEP_CONSTANTS } from "@/config/constants";
+import { sleepService } from "@/services/sleep.service";
+import { STORAGE_KEYS } from "@/config/constants";
 import { useMultiPersistence } from "./usePersistence";
 
 interface SleepState {
@@ -45,52 +46,23 @@ export function useSleepCalculator() {
     },
   });
 
-  // Calculation logic - pure function, no side effects
+  // Calculation logic - delegated to service
   const calculateTimes = useCallback(() => {
     if (!state.time) return;
 
-    const [hours, minutes] = state.time.split(":").map(Number);
-    const referenceDate = new Date();
-    referenceDate.setHours(hours, minutes, 0);
+    const sleepTimes = sleepService.calculateSleepTimes({
+      time: state.time,
+      mode: state.mode,
+    });
 
-    const times: string[] = [];
-    const { CYCLE_MINUTES, FALL_ASLEEP_TIME, MAX_CYCLES } = SLEEP_CONSTANTS;
-
-    if (state.mode === "wake") {
-      // Calculate bedtimes based on wake time
-      for (let cycles = MAX_CYCLES; cycles >= 1; cycles--) {
-        const sleepTime = new Date(referenceDate);
-        sleepTime.setMinutes(sleepTime.getMinutes() - (cycles * CYCLE_MINUTES + FALL_ASLEEP_TIME));
-        
-        times.push(sleepTime.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }));
-      }
-    } else {
-      // Calculate wake times based on bedtime
-      const bedTime = new Date(referenceDate);
-      bedTime.setMinutes(bedTime.getMinutes() + FALL_ASLEEP_TIME);
-      
-      for (let cycles = MAX_CYCLES; cycles >= 1; cycles--) {
-        const wakeTime = new Date(bedTime);
-        wakeTime.setMinutes(wakeTime.getMinutes() + (cycles * CYCLE_MINUTES));
-        
-        times.push(wakeTime.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-        }));
-      }
-    }
-
+    const times = sleepTimes.map(st => st.time);
     updateField("calculatedTimes", times);
   }, [state.time, state.mode, updateField]);
 
-  // Helper to generate cycle labels
+  // Helper to generate cycle labels - delegated to service
   const getCycleLabel = useCallback((index: number) => {
-    const cycles = SLEEP_CONSTANTS.MAX_CYCLES - index;
-    const hours = (cycles * 1.5).toFixed(1);
-    return `${cycles} ciclos (${hours}h)`;
+    const cycles = 6 - index; // MAX_CYCLES - index
+    return sleepService.getCycleLabel(cycles);
   }, []);
 
   // Mode change handler - clears calculated times

@@ -2,11 +2,11 @@
  * Central service exports
  */
 
-export * from "./storage.service";
-export * from "./blog.service";
-export * from "./suggestions.service";
-export * from "./sleep.service";
-export * from "./caffeine.service";
-export * from "./notification.service";
-export * from "./sync.service";
-export * from "./todo.service";
+export { storageService } from "./storage.service";
+export { blogService } from "./blog.service";
+export { suggestionsService } from "./suggestions.service";
+export { sleepService } from "./sleep.service";
+export { caffeineService } from "./caffeine.service";
+export { notificationService } from "./notification.service";
+export { syncService } from "./sync.service";
+export { TodoService } from "./todo.service";

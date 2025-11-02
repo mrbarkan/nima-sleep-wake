@@ -83,7 +83,7 @@ class SyncService {
         const tasksToInsert = tasks.map((task: any, index: number) => ({
           user_id: user.id,
           task_id: task.id,
-          text: task.title,
+          text: task.text,
           completed: task.completed || false,
           archived: task.archived || false,
           category: task.category || null,
@@ -135,7 +135,7 @@ class SyncService {
       // Transform backend data to app format
       return data.map((task: any) => ({
         id: task.task_id,
-        title: task.text,
+        text: task.text,
         completed: task.completed,
         archived: task.archived,
         category: task.category,

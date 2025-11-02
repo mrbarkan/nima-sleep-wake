@@ -16,6 +16,17 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.2",
+    date: "2025-11-02",
+    changes: [
+      "🐛 Corrigido: Reordenação de tarefas funcionando corretamente",
+      "🐛 Corrigido: Sincronização de tarefas usando campo correto (text vs title)",
+      "✨ Novo: Modal de status de sincronização ao clicar no ícone da nuvem",
+      "✨ Novo: Botão para tentar sincronizar novamente em caso de erro",
+      "💡 Melhorado: Feedback detalhado sobre erros de sincronização",
+    ],
+  },
+  {
     version: "0.14.1",
     date: "2025-11-02",
     changes: [

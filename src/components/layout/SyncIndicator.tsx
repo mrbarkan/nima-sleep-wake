@@ -2,14 +2,17 @@
  * Sync status indicator component
  */
 
+import { useState } from "react";
 import { Cloud, CloudOff, Loader2 } from "lucide-react";
 import { useSyncStatus } from "@/hooks/useSyncStatus";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
+import { SyncStatusModal } from "@/components/features/sync";
 
 export const SyncIndicator = () => {
   const { user } = useAuth();
   const { syncing, lastSync, error } = useSyncStatus();
+  const [showModal, setShowModal] = useState(false);
 
   if (!user) return null;
 
@@ -31,17 +34,25 @@ export const SyncIndicator = () => {
   };
 
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="flex items-center gap-1">
-            {getIcon()}
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>{getTooltipText()}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <button 
+              onClick={() => setShowModal(true)}
+              className="flex items-center gap-1 hover:opacity-80 transition-opacity"
+              aria-label="Status de sincronização"
+            >
+              {getIcon()}
+            </button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{getTooltipText()}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <SyncStatusModal open={showModal} onOpenChange={setShowModal} />
+    </>
   );
 };

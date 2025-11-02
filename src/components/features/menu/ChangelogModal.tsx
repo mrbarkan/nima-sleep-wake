@@ -16,6 +16,15 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.1",
+    date: "2025-11-02",
+    changes: [
+      "🐛 Corrigido: Calculadora de sono mantém modo selecionado corretamente",
+      "🐛 Corrigido: Modal de notificações agora renderiza acima da navegação (z-index)",
+      "⚡ Melhorado: Hooks de persistência evitam recarregamentos desnecessários",
+    ],
+  },
+  {
     version: "0.14.0",
     date: "2025-01-30",
     changes: [

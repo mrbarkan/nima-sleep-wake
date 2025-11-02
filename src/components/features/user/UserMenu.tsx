@@ -106,8 +106,8 @@ export const UserMenu = () => {
 
   if (showNotifications) {
     return (
-      <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm md:relative md:bg-transparent md:backdrop-blur-none">
-        <div className="fixed inset-x-4 top-20 z-50 md:absolute md:right-0 md:top-0 md:left-auto md:w-96">
+      <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm md:relative md:bg-transparent md:backdrop-blur-none">
+        <div className="fixed inset-x-4 top-20 z-[100] md:absolute md:right-0 md:top-0 md:left-auto md:w-96">
           <div className="bg-card border rounded-lg shadow-lg p-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">Notificações</h2>

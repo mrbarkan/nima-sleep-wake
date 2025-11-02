@@ -36,8 +36,10 @@ export function usePersistence<T>({
   
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from backend when user logs in
+  // Load from backend when user logs in (only once)
   useEffect(() => {
+    if (isLoaded) return; // Evita recarregamentos múltiplos
+
     const loadData = async () => {
       if (!user || !loadFromBackend) {
         setIsLoaded(true);
@@ -57,7 +59,7 @@ export function usePersistence<T>({
     };
 
     loadData();
-  }, [user, storageKey, loadFromBackend]);
+  }, [user, storageKey, loadFromBackend, isLoaded]);
 
   // Persist to localStorage and sync to backend
   useEffect(() => {
@@ -108,8 +110,10 @@ export function useMultiPersistence<T extends Record<string, any>>({
   
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from backend when user logs in
+  // Load from backend when user logs in (only once)
   useEffect(() => {
+    if (isLoaded) return; // Evita recarregamentos múltiplos
+
     const loadData = async () => {
       if (!user || !loadFromBackend) {
         setIsLoaded(true);
@@ -129,7 +133,7 @@ export function useMultiPersistence<T extends Record<string, any>>({
     };
 
     loadData();
-  }, [user, loadFromBackend]);
+  }, [user, loadFromBackend, isLoaded]);
 
   // Persist to localStorage and sync to backend
   useEffect(() => {

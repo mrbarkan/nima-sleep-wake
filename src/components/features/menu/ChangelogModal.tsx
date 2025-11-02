@@ -16,12 +16,12 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
-    version: "0.14.7",
+    version: "0.14.8",
     date: "2025-11-02",
     changes: [
-      "Animação de blur otimizada com transições GPU-accelerated para efeito glassmorphism fluido no drag-and-drop de tarefas",
-      "Implementação de keyframes customizados para transições suaves de blur, scale e opacity",
-      "Otimizações de performance com will-change e backface-visibility para renderização acelerada",
+      "Simplificação da animação drag-and-drop com foco em transição de cor suave e feedback visual minimalista",
+      "Removido efeito de blur para melhorar performance e clareza visual durante o arrasto de tarefas",
+      "Transição suave de opacity no drop com spring physics para feedback natural iOS-style",
     ],
   },
   {

@@ -16,6 +16,16 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.5",
+    date: "2025-11-02",
+    changes: [
+      "✨ Novo: Feedback tátil (vibração) ao arrastar e soltar tarefas no mobile",
+      "🎨 Melhorado: Animações otimizadas estilo iOS com física de mola",
+      "⚡ Melhorado: DragOverlay para performance superior durante drag",
+      "📱 Melhorado: Aceleração de hardware com transform3d",
+    ],
+  },
+  {
     version: "0.14.4",
     date: "2025-11-02",
     changes: [

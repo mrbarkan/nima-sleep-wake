@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -6,6 +7,10 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  defaultDropAnimationSideEffects,
+  DropAnimation,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -16,6 +21,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { TaskItem } from "./TaskItem";
 import { Task, TodoMethod } from "@/schemas/todo.schemas";
+import { haptics } from "@/lib/haptics";
 
 interface TaskListProps {
   tasks: Task[];
@@ -30,6 +36,8 @@ interface TaskListProps {
  * Lista de tarefas com funcionalidade de drag-and-drop
  */
 export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, onReorder }: TaskListProps) => {
+  const [activeId, setActiveId] = useState<string | null>(null);
+  
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -41,10 +49,32 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
     })
   );
 
+  // Custom drop animation with spring physics (iOS-style)
+  const dropAnimation: DropAnimation = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: {
+        active: {
+          opacity: '0.4',
+        },
+      },
+    }),
+    duration: 200,
+    easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)', // Spring bounce effect
+  };
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as string);
+    haptics.light(); // Light haptic feedback on drag start
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    
+    setActiveId(null);
 
     if (!over || active.id === over.id) return;
+
+    haptics.medium(); // Medium haptic feedback on drop
 
     const oldIndex = tasks.findIndex((item) => item.id === active.id);
     const newIndex = tasks.findIndex((item) => item.id === over.id);
@@ -52,8 +82,11 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
     if (oldIndex !== -1 && newIndex !== -1) {
       const newTasks = arrayMove(tasks, oldIndex, newIndex);
       onReorder(newTasks);
+      haptics.success(); // Success haptic feedback after reorder
     }
   };
+
+  const activeTask = tasks.find((task) => task.id === activeId);
 
   if (tasks.length === 0) {
     return (
@@ -67,13 +100,14 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
     <DndContext
       sensors={sensors}
       collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <SortableContext
         items={tasks.map((t) => t.id)}
         strategy={verticalListSortingStrategy}
       >
-        <div className="space-y-2">
+        <div className="space-y-2" style={{ touchAction: 'none' }}>
           {tasks.map((task, index) => (
             <TaskItem
               key={task.id}
@@ -87,6 +121,18 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
           ))}
         </div>
       </SortableContext>
+      <DragOverlay dropAnimation={dropAnimation}>
+        {activeTask && (
+          <Card className="p-4 shadow-2xl scale-[1.03] opacity-95">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-12 rounded-full flex-shrink-0 bg-primary" />
+              <div className="flex-1 min-w-0">
+                <div>{activeTask.text}</div>
+              </div>
+            </div>
+          </Card>
+        )}
+      </DragOverlay>
     </DndContext>
   );
 };

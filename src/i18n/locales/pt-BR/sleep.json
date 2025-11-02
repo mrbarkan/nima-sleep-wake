@@ -1,0 +1,34 @@
+{
+  "title": "Sono",
+  "subtitle": "Ciclos de 90 minutos baseados em ciência",
+  "infoTitle": "Ciclos do Sono",
+  "infoContent": "Um ciclo completo de sono dura aproximadamente 90 minutos. Durante esse tempo, passamos por todas as fases do sono, incluindo REM (movimento rápido dos olhos). Acordar entre ciclos, em vez de durante um ciclo, ajuda você a se sentir mais descansado.",
+  "sources": {
+    "sleepFoundation": "Sleep Foundation - Ciclos do Sono",
+    "nih": "NIH - Fases do Sono"
+  },
+  "modes": {
+    "wake": "Quero acordar às",
+    "sleep": "Vou dormir às"
+  },
+  "inputLabel": "Selecione o horário",
+  "calculateButton": "Calcular horários ideais",
+  "resultsTitle": "Horários ideais para você",
+  "resultsSubtitle": "Baseado em ciclos de 90 minutos",
+  "sleepAt": "Durma às:",
+  "wakeAt": "Acorde às:",
+  "cycleLabel": "{{count}} ciclos ({{hours}}h)",
+  "recommended": "Recomendado",
+  "selectTime": "Selecionar este horário",
+  "selectedTime": "Horário selecionado",
+  "notificationTitle": "Hora de {{action}}!",
+  "notificationBody": "Baseado nos seus ciclos de sono de 90 minutos",
+  "notificationAction": {
+    "sleep": "dormir",
+    "wake": "acordar"
+  },
+  "toast": {
+    "timeSelected": "Horário selecionado: {{time}}",
+    "calculateFirst": "Calcule os horários primeiro"
+  }
+}

@@ -16,6 +16,18 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.15.0",
+    date: "2025-11-02",
+    changes: [
+      "🌍 Sistema de internacionalização completo implementado (i18next + react-i18next)",
+      "🇧🇷🇺🇸 Suporte para Português (Brasil) e Inglês com traduções completas",
+      "🔄 Seletor de idioma no header com detecção automática e persistência",
+      "📱 Todas as páginas, componentes e notificações totalmente traduzidas",
+      "🎯 Arquitetura escalável preparada para adicionar novos idiomas facilmente",
+      "✨ Type-safety completo com autocomplete de chaves de tradução",
+    ],
+  },
+  {
     version: "0.14.8",
     date: "2025-11-02",
     changes: [

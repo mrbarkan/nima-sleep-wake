@@ -1,0 +1,55 @@
+{
+  "appName": "Nima",
+  "beta": "Beta",
+  "navigation": {
+    "sleep": "Sleep",
+    "caffeine": "Caffeine",
+    "todo": "Tasks",
+    "blog": "Blog"
+  },
+  "buttons": {
+    "calculate": "Calculate",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "login": "Login",
+    "logout": "Logout",
+    "signup": "Sign Up",
+    "submit": "Submit"
+  },
+  "labels": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "name": "Name",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort"
+  },
+  "messages": {
+    "loading": "Loading...",
+    "noResults": "No results found",
+    "error": "An error occurred",
+    "success": "Success!",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully"
+  },
+  "errors": {
+    "required": "Required field",
+    "invalidEmail": "Invalid email",
+    "passwordMismatch": "Passwords don't match",
+    "minLength": "Minimum {{count}} characters",
+    "maxLength": "Maximum {{count}} characters"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Page not found",
+    "backHome": "Back to Home"
+  }
+}

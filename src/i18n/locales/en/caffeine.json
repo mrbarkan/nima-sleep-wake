@@ -1,0 +1,32 @@
+{
+  "title": "Caffeine",
+  "subtitle": "Strategic doses throughout the day",
+  "infoTitle": "Caffeine Timing",
+  "infoContent": "Caffeine has a half-life of 5-6 hours in the body. Consuming after 3 PM can interfere with sleep. The ideal time for the first dose is 90-120 minutes after waking, when natural cortisol begins to decline.",
+  "sources": {
+    "sleepFoundation": "Sleep Foundation - Caffeine and Sleep",
+    "huberman": "Huberman Lab - Caffeine Timing"
+  },
+  "wakeTimeLabel": "What time do you wake up?",
+  "calculateButton": "Calculate times",
+  "scheduleTitle": "Your caffeine schedule",
+  "scheduleSubtitle": "Optimized times for sustained energy",
+  "firstDose": "First dose (cortisol peak passed)",
+  "secondDose": "Second dose (maintain energy)",
+  "thirdDose": "Third dose (afternoon boost - optional)",
+  "cutoff": "Last safe time (6h before sleep)",
+  "tips": {
+    "title": "💡 Important tips",
+    "items": {
+      "timing": "**Timing is everything**: Avoid caffeine in the first 90min after waking",
+      "cutoff": "**Cut at 3 PM**: The 5-6h half-life can disrupt your sleep",
+      "hydration": "**Stay hydrated**: Drink water between caffeine doses",
+      "tolerance": "**Tolerance**: Take periodic breaks to maintain effectiveness"
+    }
+  },
+  "notificationTitle": "Caffeine time! ☕",
+  "notificationBody": "{{dose}} - Optimized time for energy",
+  "toast": {
+    "enterWakeTime": "Enter your wake up time"
+  }
+}

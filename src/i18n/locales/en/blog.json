@@ -1,0 +1,22 @@
+{
+  "title": "Blog",
+  "subtitle": "Evidence-based knowledge",
+  "infoTitle": "About the Blog",
+  "infoContent": "Articles about sleep health, nutrition and wellness based on scientific evidence. All articles include reliable sources for you to dive deeper into the topics.",
+  "sources": {
+    "sleepFoundation": "National Sleep Foundation",
+    "nih": "NIH Sleep Research"
+  },
+  "readMore": "Read more",
+  "readArticle": "Read full article",
+  "like": "Like",
+  "liked": "Liked",
+  "share": "Share",
+  "shareSuccess": "Link copied to clipboard!",
+  "shareError": "Error sharing article",
+  "likeError": "Error liking article",
+  "loadError": "Error loading articles",
+  "loading": "Loading articles...",
+  "noArticles": "No articles available at the moment",
+  "likes": "{{count}} like(s)"
+}

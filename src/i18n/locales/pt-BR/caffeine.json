@@ -1,0 +1,32 @@
+{
+  "title": "Cafeína",
+  "subtitle": "Doses estratégicas ao longo do dia",
+  "infoTitle": "Timing da Cafeína",
+  "infoContent": "A cafeína tem meia-vida de 5-6 horas no organismo. Consumir após 15h pode interferir no sono. O momento ideal para a primeira dose é 90-120 minutos após acordar, quando o cortisol natural começa a declinar.",
+  "sources": {
+    "sleepFoundation": "Sleep Foundation - Caffeine and Sleep",
+    "huberman": "Huberman Lab - Caffeine Timing"
+  },
+  "wakeTimeLabel": "Que horas você acorda?",
+  "calculateButton": "Calcular horários",
+  "scheduleTitle": "Seu cronograma de cafeína",
+  "scheduleSubtitle": "Horários otimizados para energia sustentada",
+  "firstDose": "Primeira dose (pico de cortisol passou)",
+  "secondDose": "Segunda dose (manter energia)",
+  "thirdDose": "Terceira dose (boost tarde - opcional)",
+  "cutoff": "Último horário seguro (6h antes de dormir)",
+  "tips": {
+    "title": "💡 Dicas importantes",
+    "items": {
+      "timing": "**Timing é tudo**: Evite cafeína nas primeiras 90min após acordar",
+      "cutoff": "**Corte às 15h**: A meia-vida de 5-6h pode atrapalhar seu sono",
+      "hydration": "**Hidrate-se**: Beba água entre as doses de cafeína",
+      "tolerance": "**Tolerância**: Faça pausas periódicas para manter eficácia"
+    }
+  },
+  "notificationTitle": "Hora da cafeína! ☕",
+  "notificationBody": "{{dose}} - Horário otimizado para energia",
+  "toast": {
+    "enterWakeTime": "Digite o horário que você acorda"
+  }
+}

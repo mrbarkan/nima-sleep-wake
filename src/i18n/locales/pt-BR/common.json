@@ -1,0 +1,55 @@
+{
+  "appName": "Nima",
+  "beta": "Beta",
+  "navigation": {
+    "sleep": "Sono",
+    "caffeine": "Cafeína",
+    "todo": "Tarefas",
+    "blog": "Blog"
+  },
+  "buttons": {
+    "calculate": "Calcular",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "finish": "Finalizar",
+    "login": "Entrar",
+    "logout": "Sair",
+    "signup": "Cadastrar",
+    "submit": "Enviar"
+  },
+  "labels": {
+    "email": "E-mail",
+    "password": "Senha",
+    "confirmPassword": "Confirmar senha",
+    "name": "Nome",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar"
+  },
+  "messages": {
+    "loading": "Carregando...",
+    "noResults": "Nenhum resultado encontrado",
+    "error": "Ocorreu um erro",
+    "success": "Sucesso!",
+    "saved": "Salvo com sucesso",
+    "deleted": "Excluído com sucesso"
+  },
+  "errors": {
+    "required": "Campo obrigatório",
+    "invalidEmail": "E-mail inválido",
+    "passwordMismatch": "As senhas não coincidem",
+    "minLength": "Mínimo de {{count}} caracteres",
+    "maxLength": "Máximo de {{count}} caracteres"
+  },
+  "notFound": {
+    "title": "404",
+    "message": "Página não encontrada",
+    "backHome": "Voltar ao Início"
+  }
+}

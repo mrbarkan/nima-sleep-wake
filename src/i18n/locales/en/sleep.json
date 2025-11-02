@@ -1,0 +1,34 @@
+{
+  "title": "Sleep",
+  "subtitle": "90-minute cycles based on science",
+  "infoTitle": "Sleep Cycles",
+  "infoContent": "A complete sleep cycle lasts approximately 90 minutes. During this time, we go through all sleep stages, including REM (rapid eye movement). Waking up between cycles, rather than during one, helps you feel more rested.",
+  "sources": {
+    "sleepFoundation": "Sleep Foundation - Sleep Cycles",
+    "nih": "NIH - Sleep Stages"
+  },
+  "modes": {
+    "wake": "I want to wake up at",
+    "sleep": "I'm going to sleep at"
+  },
+  "inputLabel": "Select time",
+  "calculateButton": "Calculate ideal times",
+  "resultsTitle": "Ideal times for you",
+  "resultsSubtitle": "Based on 90-minute cycles",
+  "sleepAt": "Sleep at:",
+  "wakeAt": "Wake at:",
+  "cycleLabel": "{{count}} cycles ({{hours}}h)",
+  "recommended": "Recommended",
+  "selectTime": "Select this time",
+  "selectedTime": "Selected time",
+  "notificationTitle": "Time to {{action}}!",
+  "notificationBody": "Based on your 90-minute sleep cycles",
+  "notificationAction": {
+    "sleep": "sleep",
+    "wake": "wake up"
+  },
+  "toast": {
+    "timeSelected": "Time selected: {{time}}",
+    "calculateFirst": "Calculate times first"
+  }
+}

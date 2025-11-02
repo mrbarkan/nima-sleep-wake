@@ -1,0 +1,66 @@
+{
+  "title": "Tasks",
+  "subtitle": "Choose your productivity method",
+  "inputPlaceholder": "Add new task...",
+  "addButton": "Add",
+  "emptyState": "No tasks here. Add one to get started! 🎯",
+  "completed": "Completed",
+  "archived": "Archived",
+  "delete": "Delete",
+  "restore": "Restore",
+  "archiveCompleted": "Archive completed",
+  "viewArchived": "View archived",
+  "methods": {
+    "label": "Method",
+    "ivyLee": {
+      "name": "Ivy Lee",
+      "description": "6 most important tasks of the day",
+      "tip": "List only 6 tasks. Do them in priority order.",
+      "maxTasks": "Maximum 6 tasks"
+    },
+    "135": {
+      "name": "1-3-5",
+      "description": "1 big, 3 medium, 5 small",
+      "tip": "1 big task, 3 medium and 5 small per day.",
+      "categories": {
+        "big": "Big",
+        "medium": "Medium",
+        "small": "Small"
+      }
+    },
+    "frog": {
+      "name": "Eat That Frog",
+      "description": "Hardest task first",
+      "tip": "Identify and do your hardest task early in the morning.",
+      "categories": {
+        "frog": "🐸 Frog",
+        "normal": "Normal"
+      }
+    },
+    "eisenhower": {
+      "name": "Eisenhower",
+      "description": "Urgency and importance matrix",
+      "tip": "Organize by urgency and importance. Focus on what's important.",
+      "categories": {
+        "urgentImportant": "Urgent + Important",
+        "notUrgentImportant": "Important",
+        "urgentNotImportant": "Urgent",
+        "notUrgentNotImportant": "Neither urgent nor important"
+      }
+    }
+  },
+  "archivedModal": {
+    "title": "Archived tasks",
+    "empty": "No archived tasks",
+    "deleteConfirm": "Are you sure you want to permanently delete?"
+  },
+  "toast": {
+    "taskAdded": "Task added",
+    "taskCompleted": "Task completed",
+    "taskDeleted": "Task deleted",
+    "taskRestored": "Task restored",
+    "tasksArchived": "{{count}} task(s) archived",
+    "maxTasksReached": "Maximum tasks reached for this method",
+    "categoryFull": "This category is full"
+  }
+}

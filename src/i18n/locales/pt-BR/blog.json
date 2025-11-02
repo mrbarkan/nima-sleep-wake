@@ -1,0 +1,22 @@
+{
+  "title": "Blog",
+  "subtitle": "Conhecimento baseado em evidências",
+  "infoTitle": "Sobre o Blog",
+  "infoContent": "Artigos sobre saúde do sono, nutrição e bem-estar baseados em evidências científicas. Todos os artigos incluem fontes confiáveis para você se aprofundar nos temas.",
+  "sources": {
+    "sleepFoundation": "National Sleep Foundation",
+    "nih": "NIH Sleep Research"
+  },
+  "readMore": "Ler mais",
+  "readArticle": "Ler artigo completo",
+  "like": "Curtir",
+  "liked": "Curtido",
+  "share": "Compartilhar",
+  "shareSuccess": "Link copiado para a área de transferência!",
+  "shareError": "Erro ao compartilhar artigo",
+  "likeError": "Erro ao curtir artigo",
+  "loadError": "Erro ao carregar artigos",
+  "loading": "Carregando artigos...",
+  "noArticles": "Nenhum artigo disponível no momento",
+  "likes": "{{count}} curtida(s)"
+}

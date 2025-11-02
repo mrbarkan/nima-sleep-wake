@@ -1,12 +1,15 @@
 import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Moon, Coffee, ListTodo, BookOpen } from "lucide-react";
 
 const Navigation = () => {
+  const { t } = useTranslation('common');
+
   const navItems = [
-    { to: "/", icon: Moon, label: "Sono", colorClass: "text-[hsl(var(--icon-sleep))]" },
-    { to: "/caffeine", icon: Coffee, label: "Cafeína", colorClass: "text-[hsl(var(--icon-caffeine))]" },
-    { to: "/todo", icon: ListTodo, label: "To-Do", colorClass: "text-[hsl(var(--icon-todo))]" },
-    { to: "/relax", icon: BookOpen, label: "Blog", colorClass: "text-[hsl(var(--icon-blog))]" },
+    { to: "/", icon: Moon, label: t('navigation.sleep'), colorClass: "text-[hsl(var(--icon-sleep))]" },
+    { to: "/caffeine", icon: Coffee, label: t('navigation.caffeine'), colorClass: "text-[hsl(var(--icon-caffeine))]" },
+    { to: "/todo", icon: ListTodo, label: t('navigation.todo'), colorClass: "text-[hsl(var(--icon-todo))]" },
+    { to: "/relax", icon: BookOpen, label: t('navigation.blog'), colorClass: "text-[hsl(var(--icon-blog))]" },
   ];
 
   return (

@@ -16,6 +16,13 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.3",
+    date: "2025-11-02",
+    changes: [
+      "🐛 Corrigido: Drag and drop de tarefas com sensores otimizados",
+    ],
+  },
+  {
     version: "0.14.2",
     date: "2025-11-02",
     changes: [

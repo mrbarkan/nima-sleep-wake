@@ -33,8 +33,7 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5,
-        tolerance: 5,
+        distance: 8,
       },
     }),
     useSensor(KeyboardSensor, {

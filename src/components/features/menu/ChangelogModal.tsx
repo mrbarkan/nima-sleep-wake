@@ -16,6 +16,14 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.4",
+    date: "2025-11-02",
+    changes: [
+      "✨ Melhorado: Animações de drag and drop mais suaves estilo iOS",
+      "🎨 Melhorado: Transições mais naturais ao soltar tarefas no mobile",
+    ],
+  },
+  {
     version: "0.14.3",
     date: "2025-11-02",
     changes: [

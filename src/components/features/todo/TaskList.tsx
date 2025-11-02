@@ -44,9 +44,12 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (over && active.id !== over.id) {
-      const oldIndex = tasks.findIndex((item) => item.id === active.id);
-      const newIndex = tasks.findIndex((item) => item.id === over.id);
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = tasks.findIndex((item) => item.id === active.id);
+    const newIndex = tasks.findIndex((item) => item.id === over.id);
+    
+    if (oldIndex !== -1 && newIndex !== -1) {
       const newTasks = arrayMove(tasks, oldIndex, newIndex);
       onReorder(newTasks);
     }

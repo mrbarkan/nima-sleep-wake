@@ -37,16 +37,16 @@ export const TaskItem = ({ task, index, method, onToggle, onDelete, onCategoryCh
   } = useSortable({ 
     id: task.id,
     transition: {
-      duration: 200,
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+      duration: 250,
+      easing: 'cubic-bezier(0.25, 0.8, 0.25, 1)',
     },
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: transition || 'transform 200ms cubic-bezier(0.25, 1, 0.5, 1)',
-    opacity: isDragging ? 0.5 : 1,
-    willChange: 'transform',
+    transition: isDragging ? 'none' : (transition || 'transform 250ms cubic-bezier(0.25, 0.8, 0.25, 1)'),
+    opacity: isDragging ? 0.95 : 1,
+    zIndex: isDragging ? 999 : 'auto',
   };
 
   const taskColor = TodoService.getTaskColor(method, index, task.category);
@@ -55,7 +55,7 @@ export const TaskItem = ({ task, index, method, onToggle, onDelete, onCategoryCh
     <Card
       ref={setNodeRef}
       style={style}
-      className={`p-4 ${task.completed ? "opacity-60" : ""} ${isDragging ? "cursor-grabbing shadow-lg scale-105" : ""}`}
+      className={`p-4 ${task.completed ? "opacity-60" : ""} ${isDragging ? "cursor-grabbing shadow-2xl scale-[1.02]" : ""} transition-shadow`}
     >
       <div className="flex items-center gap-3">
         <div 

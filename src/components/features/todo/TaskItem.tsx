@@ -63,7 +63,7 @@ export const TaskItem = ({ task, index, method, onToggle, onDelete, onCategoryCh
           <GripVertical className="h-5 w-5 text-muted-foreground" />
         </div>
         <div 
-          className="w-1 h-12 rounded-full transition-colors flex-shrink-0"
+          className="w-1 h-12 rounded-full transition-colors duration-300 ease-out flex-shrink-0"
           style={{ backgroundColor: taskColor }}
         />
         <Checkbox

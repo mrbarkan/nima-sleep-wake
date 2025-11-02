@@ -16,6 +16,15 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.6",
+    date: "2025-11-02",
+    changes: [
+      "✨ Novo: Efeito glassmorphism (blur) estilo iOS durante drag de tarefas",
+      "🎨 Melhorado: Mantém todos os elementos visíveis durante o drag com efeito blur",
+      "⚡ Melhorado: Transição suave de cor quando tarefa muda de posição (fade 300ms)",
+    ],
+  },
+  {
     version: "0.14.5",
     date: "2025-11-02",
     changes: [

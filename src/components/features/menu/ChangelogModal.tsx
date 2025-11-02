@@ -16,6 +16,15 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.14.7",
+    date: "2025-11-02",
+    changes: [
+      "Animação de blur otimizada com transições GPU-accelerated para efeito glassmorphism fluido no drag-and-drop de tarefas",
+      "Implementação de keyframes customizados para transições suaves de blur, scale e opacity",
+      "Otimizações de performance com will-change e backface-visibility para renderização acelerada",
+    ],
+  },
+  {
     version: "0.14.6",
     date: "2025-11-02",
     changes: [

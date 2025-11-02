@@ -54,14 +54,7 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
 
   // Custom drop animation with spring physics (iOS-style)
   const dropAnimation: DropAnimation = {
-    sideEffects: defaultDropAnimationSideEffects({
-      styles: {
-        active: {
-          opacity: '0.4',
-        },
-      },
-    }),
-    duration: 200,
+    duration: 250,
     easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)', // Spring bounce effect
   };
 
@@ -130,8 +123,8 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimation}>
         {activeTask ? (
-          <Card className="p-4 shadow-2xl scale-[1.03] backdrop-blur-2xl bg-background/40 transition-all duration-300 ease-in-out [&>*]:blur-sm [&>*]:transition-[filter] [&>*]:duration-300 [&>*]:ease-in-out">
-            <div className="flex items-center gap-3 opacity-60">
+          <Card className="p-4 shadow-2xl backdrop-blur-2xl bg-background/40 will-change-[filter,transform,opacity] [backface-visibility:hidden] animate-drag-blur-in">
+            <div className="flex items-center gap-3">
               <GripVertical className="h-5 w-5 text-muted-foreground" />
               <div 
                 className="w-1 h-12 rounded-full transition-colors flex-shrink-0" 

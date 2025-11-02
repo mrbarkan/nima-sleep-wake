@@ -130,9 +130,9 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
       </SortableContext>
       <DragOverlay dropAnimation={dropAnimation}>
         {activeTask ? (
-          <Card className="p-4 shadow-2xl scale-[1.03] backdrop-blur-md bg-background/80 border-2 border-primary/20">
+          <Card className="p-4 shadow-2xl scale-[1.03] backdrop-blur-xl bg-background/60 border-2 border-primary/30 [&>*]:blur-[0.5px]">
             <div className="flex items-center gap-3">
-              <GripVertical className="h-5 w-5 text-muted-foreground" />
+              <GripVertical className="h-5 w-5 text-muted-foreground/70" />
               <div 
                 className="w-1 h-12 rounded-full transition-colors flex-shrink-0" 
                 style={{ backgroundColor: activeTaskColor }} 
@@ -140,13 +140,14 @@ export const TaskList = ({ tasks, method, onToggle, onDelete, onCategoryChange, 
               <Checkbox
                 checked={activeTask.completed}
                 disabled
+                className="opacity-70"
               />
               <div className="flex-1 min-w-0">
-                <div className={activeTask.completed ? "line-through text-muted-foreground" : ""}>
+                <div className={activeTask.completed ? "line-through text-muted-foreground/70" : "text-foreground/70"}>
                   {activeTask.text}
                 </div>
               </div>
-              <Trash2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <Trash2 className="h-4 w-4 text-muted-foreground/70 flex-shrink-0" />
             </div>
           </Card>
         ) : null}

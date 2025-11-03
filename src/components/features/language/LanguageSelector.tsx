@@ -3,13 +3,12 @@
  */
 
 import { useTranslation } from 'react-i18next';
-import { Languages } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue,
 } from '@/components/ui/select';
 import { SUPPORTED_LANGUAGES } from '@/i18n/types';
 
@@ -21,11 +20,14 @@ export const LanguageSelector = () => {
     document.documentElement.lang = languageCode;
   };
 
+  const currentLang = SUPPORTED_LANGUAGES.find(lang => lang.code === i18n.language);
+  const displayCode = currentLang?.code === 'pt-BR' ? 'PT' : currentLang?.code.toUpperCase();
+
   return (
     <Select value={i18n.language} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-[140px] gap-2">
-        <Languages className="h-4 w-4" />
-        <SelectValue />
+      <SelectTrigger className="w-[70px] gap-1 text-sm font-medium">
+        <span>{displayCode}</span>
+        <ChevronDown className="h-3 w-3 opacity-50" />
       </SelectTrigger>
       <SelectContent>
         {SUPPORTED_LANGUAGES.map((lang) => (

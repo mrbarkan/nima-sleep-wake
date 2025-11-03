@@ -25,9 +25,9 @@ export const LanguageSelector = () => {
 
   return (
     <Select value={i18n.language} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-[70px] gap-1 text-sm font-medium">
+      <SelectTrigger className="w-[85px] gap-1.5 text-sm font-medium">
         <span>{displayCode}</span>
-        <ChevronDown className="h-3 w-3 opacity-50" />
+        <ChevronDown className="h-4 w-4 opacity-50" />
       </SelectTrigger>
       <SelectContent>
         {SUPPORTED_LANGUAGES.map((lang) => (

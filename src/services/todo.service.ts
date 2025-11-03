@@ -102,6 +102,20 @@ export class TodoService {
   }
 
   /**
+   * Sanitiza uma tarefa garantindo campos obrigatórios
+   */
+  static sanitizeTask(task: any): Task {
+    return {
+      id: task.id,
+      text: task.text,
+      completed: task.completed ?? false,
+      archived: task.archived ?? false,
+      priority: task.priority ?? 1,
+      category: task.category || undefined,
+    };
+  }
+
+  /**
    * Cria uma nova tarefa com valores padrão
    */
   static createTask(text: string, priority: number): Task {
@@ -109,6 +123,7 @@ export class TodoService {
       id: Date.now().toString(),
       text: text.trim(),
       completed: false,
+      archived: false,
       priority,
     };
   }

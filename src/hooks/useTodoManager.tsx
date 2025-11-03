@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { syncService } from "@/services/sync.service";
+import { MigrationService } from "@/services/migration.service";
 import { TodoService } from "@/services/todo.service";
 import { Task, TodoMethod, todoDataSchema } from "@/schemas/todo.schemas";
 import { z } from "zod";
@@ -23,6 +24,9 @@ export const useTodoManager = () => {
   // Load data from backend when user logs in
   useEffect(() => {
     const loadData = async () => {
+      // Executar migração one-time antes de carregar dados
+      await MigrationService.migrateTodoData();
+
       if (!user) {
         // Load from localStorage for non-logged users
         try {
@@ -35,7 +39,7 @@ export const useTodoManager = () => {
             setArchivedTasks((validated.archivedTasks as Task[]) || []);
           }
         } catch (error) {
-          console.error("Erro ao carregar tarefas:", error);
+          console.debug("Erro ao carregar tarefas:", error);
           localStorage.removeItem(STORAGE_KEY);
         } finally {
           setIsLoaded(true);
@@ -69,7 +73,7 @@ export const useTodoManager = () => {
           }
         }
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        console.debug("Erro ao carregar dados:", error);
       } finally {
         setIsLoaded(true);
       }

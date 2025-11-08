@@ -8,6 +8,7 @@ import Navigation from "./components/layout/Navigation";
 import Header from "./components/layout/Header";
 import WelcomeModal from "./components/features/user/WelcomeModal";
 import Sleep from "./pages/Sleep";
+import Fasting from "./pages/Fasting";
 import Caffeine from "./pages/Caffeine";
 import Todo from "./pages/Todo";
 import Relax from "./pages/Relax";
@@ -28,9 +29,10 @@ const App = () => (
             <Navigation />
             <main className="flex-1">
               <Routes>
-                <Route path="/" element={<Sleep />} />
-                <Route path="/caffeine" element={<Caffeine />} />
-                <Route path="/todo" element={<Todo />} />
+            <Route path="/" element={<Sleep />} />
+            <Route path="/fasting" element={<Fasting />} />
+            <Route path="/caffeine" element={<Caffeine />} />
+            <Route path="/todo" element={<Todo />} />
                 <Route path="/relax" element={<Relax />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>

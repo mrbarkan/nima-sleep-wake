@@ -3,6 +3,7 @@
   "beta": "Beta",
   "navigation": {
     "sleep": "Sleep",
+    "fasting": "Fasting",
     "caffeine": "Caffeine",
     "todo": "Tasks",
     "blog": "Blog"

@@ -39,9 +39,17 @@ All colors MUST be HSL.
     --radius: 0.25rem;
 
     --icon-sleep: 208 20% 29%;
+    --icon-fasting: 210 40% 50%;
     --icon-caffeine: 27 14% 39%;
     --icon-todo: 8 73% 40%;
     --icon-blog: 23 70% 47%;
+
+    /* Fasting phase colors */
+    --fasting-phase-1: 120 70% 50%;
+    --fasting-phase-2: 180 60% 50%;
+    --fasting-phase-3: 45 90% 55%;
+    --fasting-phase-4: 280 65% 60%;
+    --fasting-phase-5: 330 80% 50%;
 
     /* Todo method colors - Ivy Lee (gradient style) */
     --todo-ivy-1: 8 90% 55%;
@@ -118,9 +126,17 @@ All colors MUST be HSL.
     --sidebar-ring: 180 25% 55%;
 
     --icon-sleep: 208 20% 29%;
+    --icon-fasting: 210 40% 50%;
     --icon-caffeine: 27 14% 39%;
     --icon-todo: 8 73% 40%;
     --icon-blog: 23 70% 47%;
+
+    /* Fasting phase colors */
+    --fasting-phase-1: 120 70% 50%;
+    --fasting-phase-2: 180 60% 50%;
+    --fasting-phase-3: 45 90% 55%;
+    --fasting-phase-4: 280 65% 60%;
+    --fasting-phase-5: 330 80% 50%;
 
     /* Todo method colors - Ivy Lee (gradient style) */
     --todo-ivy-1: 8 90% 55%;

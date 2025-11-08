@@ -60,6 +60,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        fasting: {
+          phase1: "hsl(var(--fasting-phase-1))",
+          phase2: "hsl(var(--fasting-phase-2))",
+          phase3: "hsl(var(--fasting-phase-3))",
+          phase4: "hsl(var(--fasting-phase-4))",
+          phase5: "hsl(var(--fasting-phase-5))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

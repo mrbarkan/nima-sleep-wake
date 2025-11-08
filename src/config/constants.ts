@@ -2,7 +2,7 @@
  * Application-wide constants and configuration
  */
 
-export const APP_VERSION = "0.15.1";
+export const APP_VERSION = "0.16.0";
 export const APP_NAME = "Nima";
 export const APP_BETA = true;
 
@@ -14,6 +14,8 @@ export const STORAGE_KEYS = {
   SLEEP_SELECTED_TIME: "sleep-selected-time",
   CAFFEINE_WAKE_TIME: "caffeine-wakeTime",
   CAFFEINE_SCHEDULE: "caffeine-schedule",
+  FASTING_LAST_MEAL: "fasting-lastMeal",
+  FASTING_TARGET_DURATION: "fasting-targetDuration",
   TODO_DATA: "sleepflow-todo-data",
   USER_IDENTIFIER: "user_identifier",
   WELCOME_MODAL_SHOWN: "welcome-modal-shown",
@@ -50,3 +52,6 @@ export const TODO_LIMITS = {
 
 export const MAX_TASK_LENGTH = 500;
 export const MAX_TASKS_PER_METHOD = 20;
+
+// Fasting durations
+export const FASTING_DURATIONS = [12, 14, 16, 18, 20, 24] as const;

@@ -5,6 +5,7 @@
 export const ROUTES = {
   HOME: "/",
   SLEEP: "/",
+  FASTING: "/fasting",
   CAFFEINE: "/caffeine",
   TODO: "/todo",
   BLOG: "/relax",

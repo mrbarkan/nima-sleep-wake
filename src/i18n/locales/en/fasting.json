@@ -1,0 +1,38 @@
+{
+  "header": {
+    "title": "Intermittent Fasting",
+    "subtitle": "Track your fasting phases"
+  },
+  "infoTitle": "How does it work?",
+  "infoContent": "Intermittent fasting is divided into 5 scientific phases: Anabolic (0-4h), Post-Absorption (4-12h), Ketosis (12-16h), Active Autophagy (16-24h), and Deep Autophagy (24h+). Each phase offers specific benefits for health, metabolism, and cellular regeneration.",
+  "sources": {
+    "autophagy": "Autophagy Research (NIH)",
+    "metabolism": "Metabolic Effects (NEJM)"
+  },
+  "input": {
+    "lastMealLabel": "Last meal",
+    "targetDurationLabel": "Target fasting duration",
+    "durations": {
+      "12": "12 hours (beginner)",
+      "14": "14 hours (moderate)",
+      "16": "16 hours (popular 16:8)",
+      "18": "18 hours (advanced)",
+      "20": "20 hours (warrior)",
+      "24": "24+ hours (OMAD/Extended)"
+    },
+    "calculateButton": "Calculate Fasting"
+  },
+  "timeline": {
+    "currentPhase": "Current Phase",
+    "completed": "Fasting Complete",
+    "progress": "Progress",
+    "timeInPhase": "Time in phase",
+    "nextPhase": "Next phase in",
+    "breakfastTime": "Time to break fast",
+    "phasesTitle": "Fasting Phases",
+    "active": "Active"
+  },
+  "phases": {
+    "benefits": "Benefits"
+  }
+}

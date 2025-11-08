@@ -1,0 +1,38 @@
+{
+  "header": {
+    "title": "Jejum Intermitente",
+    "subtitle": "Acompanhe as fases do seu jejum"
+  },
+  "infoTitle": "Como funciona?",
+  "infoContent": "O jejum intermitente é dividido em 5 fases científicas: Anabólica (0-4h), Pós-Absorção (4-12h), Cetose (12-16h), Autofagia Ativa (16-24h) e Autofagia Profunda (24h+). Cada fase oferece benefícios específicos para saúde, metabolismo e regeneração celular.",
+  "sources": {
+    "autophagy": "Autophagy Research (NIH)",
+    "metabolism": "Metabolic Effects (NEJM)"
+  },
+  "input": {
+    "lastMealLabel": "Última refeição",
+    "targetDurationLabel": "Duração alvo do jejum",
+    "durations": {
+      "12": "12 horas (iniciante)",
+      "14": "14 horas (moderado)",
+      "16": "16 horas (popular 16:8)",
+      "18": "18 horas (avançado)",
+      "20": "20 horas (warrior)",
+      "24": "24+ horas (OMAD/Extended)"
+    },
+    "calculateButton": "Calcular Jejum"
+  },
+  "timeline": {
+    "currentPhase": "Fase Atual",
+    "completed": "Jejum Completo",
+    "progress": "Progresso",
+    "timeInPhase": "Tempo na fase",
+    "nextPhase": "Próxima fase em",
+    "breakfastTime": "Horário para quebrar jejum",
+    "phasesTitle": "Fases do Jejum",
+    "active": "Ativa"
+  },
+  "phases": {
+    "benefits": "Benefícios"
+  }
+}

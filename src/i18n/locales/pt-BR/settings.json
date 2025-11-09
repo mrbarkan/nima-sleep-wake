@@ -1,0 +1,30 @@
+{
+  "header": {
+    "title": "Configurações",
+    "subtitle": "Personalize sua experiência"
+  },
+  "sections": {
+    "integrations": "Integrações",
+    "todoMethods": "Métodos de Tarefas",
+    "notifications": "Notificações"
+  },
+  "integrations": {
+    "info": "Conecte funcionalidades para uma experiência mais integrada. Por exemplo, sincronize seu jejum com horários de sono para otimizar sua rotina.",
+    "sleepWithFasting": {
+      "label": "Sincronizar Sono com Jejum",
+      "description": "Sugere horários de jejum baseados no seu sono"
+    },
+    "sleepWithCaffeine": {
+      "label": "Sincronizar Sono com Cafeína",
+      "description": "Ajusta cronograma de cafeína pelo horário de acordar"
+    },
+    "fastingWithCaffeine": {
+      "label": "Sincronizar Jejum com Cafeína",
+      "description": "Adapta cafeína para não quebrar jejum"
+    }
+  },
+  "todoMethods": {
+    "info": "Escolha quais métodos de produtividade aparecem nas suas tarefas. Oculte os que você não usa para uma interface mais limpa.",
+    "minOneRequired": "Pelo menos um método deve estar visível"
+  }
+}

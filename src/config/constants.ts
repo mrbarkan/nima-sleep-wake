@@ -23,6 +23,7 @@ export const STORAGE_KEYS = {
   RECURRING_REMINDER_INTERVAL: "recurring-reminder-interval",
   SYNC_MIGRATION_DONE: "sync-migration-done",
   TODO_MIGRATION_DONE: "todo-migration-done-v1",
+  APP_SETTINGS: "app-settings-v1",
 } as const;
 
 // Sleep calculation constants

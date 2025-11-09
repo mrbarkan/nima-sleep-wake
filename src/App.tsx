@@ -12,6 +12,7 @@ import Fasting from "./pages/Fasting";
 import Caffeine from "./pages/Caffeine";
 import Todo from "./pages/Todo";
 import Relax from "./pages/Relax";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,12 +30,13 @@ const App = () => (
             <Navigation />
             <main className="flex-1">
               <Routes>
-            <Route path="/" element={<Sleep />} />
-            <Route path="/fasting" element={<Fasting />} />
-            <Route path="/caffeine" element={<Caffeine />} />
-            <Route path="/todo" element={<Todo />} />
-                <Route path="/relax" element={<Relax />} />
-                <Route path="*" element={<NotFound />} />
+          <Route path="/" element={<Sleep />} />
+          <Route path="/fasting" element={<Fasting />} />
+          <Route path="/caffeine" element={<Caffeine />} />
+          <Route path="/todo" element={<Todo />} />
+          <Route path="/relax" element={<Relax />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
           </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MoreVertical, Share2, MessageSquare, Info, LogOut, Moon, Sun, Bell } from "lucide-react";
+import { MoreVertical, Share2, MessageSquare, Info, LogOut, Moon, Sun, Bell, Settings } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -167,6 +167,10 @@ export const UserMenu = () => {
             <DropdownMenuItem onClick={() => setShowNotifications(true)}>
               <Bell className="mr-2 h-4 w-4" />
               Notificações
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/settings")}>
+              <Settings className="mr-2 h-4 w-4" />
+              Configurações
             </DropdownMenuItem>
             <DropdownMenuItem onClick={handleShare}>
               <Share2 className="mr-2 h-4 w-4" />

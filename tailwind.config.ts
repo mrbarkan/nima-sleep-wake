@@ -67,6 +67,14 @@ export default {
           phase4: "hsl(var(--fasting-phase-4))",
           phase5: "hsl(var(--fasting-phase-5))",
         },
+        icon: {
+          sleep: "hsl(var(--icon-sleep))",
+          fasting: "hsl(var(--icon-fasting))",
+          caffeine: "hsl(var(--icon-caffeine))",
+          todo: "hsl(var(--icon-todo))",
+          blog: "hsl(var(--icon-blog))",
+          settings: "hsl(var(--icon-settings))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -70,10 +70,18 @@ const Todo = () => {
 
       <Tabs value={method} onValueChange={handleMethodChange}>
         <TabsList className="grid w-full grid-cols-4 mb-6 h-auto">
-          <TabsTrigger value="ivy-lee" className="text-xs md:text-sm">Ivy Lee</TabsTrigger>
-          <TabsTrigger value="1-3-5" className="text-xs md:text-sm">1-3-5</TabsTrigger>
-          <TabsTrigger value="eat-frog" className="text-xs md:text-sm">Eat Frog</TabsTrigger>
-          <TabsTrigger value="eisenhower" className="text-xs md:text-sm">Eisenhower</TabsTrigger>
+          <TabsTrigger value="ivy-lee" className="text-xs md:text-sm">
+            Ivy Lee
+          </TabsTrigger>
+          <TabsTrigger value="1-3-5" className="text-xs md:text-sm">
+            1-3-5
+          </TabsTrigger>
+          <TabsTrigger value="eat-frog" className="text-xs md:text-sm">
+            Eat Frog
+          </TabsTrigger>
+          <TabsTrigger value="eisenhower" className="text-xs md:text-sm">
+            Eisenhower
+          </TabsTrigger>
         </TabsList>
 
         <TaskMethodInfo method={method} />

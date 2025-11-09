@@ -11,3 +11,4 @@ export { caffeineService } from "./caffeine.service";
 export { notificationService } from "./notification.service";
 export { syncService } from "./sync.service";
 export { TodoService } from "./todo.service";
+export { settingsService } from "./settings.service";

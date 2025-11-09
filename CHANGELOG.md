@@ -5,7 +5,7 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [0.16.0] - 2025-11-08
+## [0.16.0] - 2025-01-09
 
 ### Adicionado
 - ✨ **Módulo de Jejum Intermitente**
@@ -16,39 +16,63 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
   - Seletor de duração de jejum (12h, 14h, 16h, 18h, 20h, 24h+)
   - Cálculo automático do horário ideal para quebrar o jejum
   
+- ⚙️ **Sistema de Configurações**
+  - Nova página de Settings acessível pelo menu do usuário
+  - Controle de integrações entre funcionalidades:
+    - Sincronizar Sono com Jejum
+    - Sincronizar Sono com Cafeína
+    - Sincronizar Jejum com Cafeína
+  - Filtro de métodos de tarefas visíveis
+  - Pelo menos um método de tarefa deve estar visível
+  - Configurações persistidas localmente com validação
+  
 - 🎨 **Sistema de design atualizado**
   - Nova cor de ícone para módulo de jejum (`--icon-fasting`)
+  - Nova cor de ícone para configurações (`--icon-settings`)
   - 5 novas cores de fase do jejum no design system
   - Cores temáticas integradas ao Tailwind config
+  - Seção `icon` adicionada ao Tailwind para melhor organização
   
 - 🌍 **Internacionalização expandida**
   - Traduções completas PT-BR e EN para módulo de jejum
-  - Novo namespace i18n: `fasting.json`
+  - Traduções completas PT-BR e EN para configurações
+  - Novos namespaces i18n: `fasting.json` e `settings.json`
   
 - 🧭 **Navegação atualizada**
   - Novo item "Jejum" no menu de navegação
-  - Rota `/fasting` adicionada ao sistema de rotas
-  - Ícone Clock representando a funcionalidade
+  - Novo item "Configurações" no menu do usuário
+  - Rotas `/fasting` e `/settings` adicionadas
+  - Ícone Clock para jejum e Settings para configurações
 
 ### Técnico
 - Novo: `src/types/fasting.types.ts` - Definições de tipos TypeScript para jejum
+- Novo: `src/types/settings.types.ts` - Definições de tipos para configurações
 - Novo: `src/services/fasting.service.ts` - Serviço de cálculo de fases e timeline
-- Novo: `src/hooks/useFastingCalculator.tsx` - Hook de gerenciamento de estado
-- Novo: `src/pages/Fasting.tsx` - Página principal do módulo
+- Novo: `src/services/settings.service.ts` - Serviço de persistência de configurações
+- Novo: `src/hooks/useFastingCalculator.tsx` - Hook de gerenciamento de jejum
+- Novo: `src/hooks/useSettings.tsx` - Hook de gerenciamento de configurações
+- Novo: `src/pages/Fasting.tsx` - Página principal do módulo de jejum
+- Novo: `src/pages/Settings.tsx` - Página de configurações
 - Novo: `src/components/features/fasting/` - Componentes reutilizáveis:
   - `FastingHeader.tsx` - Cabeçalho com informações
   - `FastingTimeInput.tsx` - Inputs de última refeição e duração
   - `FastingTimeline.tsx` - Visualização de progresso e fases
   - `FastingPhaseCard.tsx` - Card detalhado de cada fase
-- Atualizado: `src/config/constants.ts` - Novas chaves de storage e constantes
-- Atualizado: `src/config/routes.ts` - Rota de jejum adicionada
-- Atualizado: `src/components/layout/Navigation.tsx` - Item de navegação
+- Novo: `src/components/features/settings/` - Componentes de configurações:
+  - `SettingsHeader.tsx` - Cabeçalho da página
+  - `IntegrationSettings.tsx` - Configurações de integrações
+  - `TodoMethodSettings.tsx` - Filtro de métodos de tarefas
+- Atualizado: `src/config/constants.ts` - Nova chave `APP_SETTINGS` no STORAGE_KEYS
+- Atualizado: `src/config/routes.ts` - Rotas `/fasting` e `/settings`
+- Atualizado: `src/components/layout/Navigation.tsx` - Item de jejum
+- Atualizado: `src/components/features/user/UserMenu.tsx` - Link para configurações
 - Atualizado: Design system (`index.css`, `tailwind.config.ts`)
-- Atualizado: Exports centralizados (`src/types/index.ts`, `src/services/index.ts`)
+- Atualizado: Exports centralizados (`src/types/index.ts`, `src/services/index.ts`, `src/hooks/index.ts`)
 
 ### Observações
-- Esta é a Fase 1 da implementação: módulo básico sem integrações com Sono/Cafeína
-- Fases futuras incluirão: Sistema de Configurações e Integrações Avançadas
+- Fase 1 (Jejum Básico) e Fase 2 (Sistema de Configurações) completadas
+- Fase 3 (Integrações Avançadas) será implementada futuramente
+- Configurações de integrações estão prontas, mas a lógica de integração será implementada na Fase 3
 
 ## [0.15.1] - 2025-11-03
 

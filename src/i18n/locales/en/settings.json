@@ -1,0 +1,30 @@
+{
+  "header": {
+    "title": "Settings",
+    "subtitle": "Customize your experience"
+  },
+  "sections": {
+    "integrations": "Integrations",
+    "todoMethods": "Task Methods",
+    "notifications": "Notifications"
+  },
+  "integrations": {
+    "info": "Connect features for a more integrated experience. For example, sync your fasting with sleep schedules to optimize your routine.",
+    "sleepWithFasting": {
+      "label": "Sync Sleep with Fasting",
+      "description": "Suggests fasting times based on your sleep"
+    },
+    "sleepWithCaffeine": {
+      "label": "Sync Sleep with Caffeine",
+      "description": "Adjusts caffeine schedule by wake time"
+    },
+    "fastingWithCaffeine": {
+      "label": "Sync Fasting with Caffeine",
+      "description": "Adapts caffeine to not break fasting"
+    }
+  },
+  "todoMethods": {
+    "info": "Choose which productivity methods appear in your tasks. Hide the ones you don't use for a cleaner interface.",
+    "minOneRequired": "At least one method must be visible"
+  }
+}

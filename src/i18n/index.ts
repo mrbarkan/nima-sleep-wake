@@ -14,6 +14,8 @@ import caffeinePtBR from './locales/pt-BR/caffeine.json';
 import todoPtBR from './locales/pt-BR/todo.json';
 import blogPtBR from './locales/pt-BR/blog.json';
 import authPtBR from './locales/pt-BR/auth.json';
+import fastingPtBR from './locales/pt-BR/fasting.json';
+import settingsPtBR from './locales/pt-BR/settings.json';
 
 import commonEN from './locales/en/common.json';
 import sleepEN from './locales/en/sleep.json';
@@ -21,6 +23,8 @@ import caffeineEN from './locales/en/caffeine.json';
 import todoEN from './locales/en/todo.json';
 import blogEN from './locales/en/blog.json';
 import authEN from './locales/en/auth.json';
+import fastingEN from './locales/en/fasting.json';
+import settingsEN from './locales/en/settings.json';
 
 import { DEFAULT_LANGUAGE } from './types';
 
@@ -32,6 +36,8 @@ const resources = {
     todo: todoPtBR,
     blog: blogPtBR,
     auth: authPtBR,
+    fasting: fastingPtBR,
+    settings: settingsPtBR,
   },
   en: {
     common: commonEN,
@@ -40,6 +46,8 @@ const resources = {
     todo: todoEN,
     blog: blogEN,
     auth: authEN,
+    fasting: fastingEN,
+    settings: settingsEN,
   },
 };
 
@@ -50,7 +58,7 @@ i18n
     resources,
     fallbackLng: DEFAULT_LANGUAGE,
     defaultNS: 'common',
-    ns: ['common', 'sleep', 'caffeine', 'todo', 'blog', 'auth'],
+    ns: ['common', 'sleep', 'caffeine', 'todo', 'blog', 'auth', 'fasting', 'settings'],
     
     interpolation: {
       escapeValue: false, // React already escapes

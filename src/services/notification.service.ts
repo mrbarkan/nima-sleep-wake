@@ -1,7 +1,9 @@
 /**
- * Notification service - handles browser notification scheduling
+ * Notification service - handles both native (Capacitor) and web notifications
  */
 
+import { Capacitor } from '@capacitor/core';
+import { LocalNotifications } from '@capacitor/local-notifications';
 import { NotificationType, ScheduledNotification, NotificationConfig } from "@/types/notification.types";
 import { storageService } from "./storage.service";
 import { STORAGE_KEYS } from "@/config/constants";
@@ -95,13 +97,22 @@ class NotificationService {
    * Check if notifications are supported
    */
   isSupported(): boolean {
+    // Native Capacitor always supports notifications
+    if (Capacitor.isNativePlatform()) {
+      return true;
+    }
+    // Web fallback
     return "Notification" in window && "serviceWorker" in navigator;
   }
 
   /**
    * Check if notification permission is granted
    */
-  isGranted(): boolean {
+  async isGranted(): Promise<boolean> {
+    if (Capacitor.isNativePlatform()) {
+      const permission = await LocalNotifications.checkPermissions();
+      return permission.display === 'granted';
+    }
     return this.isSupported() && Notification.permission === "granted";
   }
 
@@ -116,13 +127,22 @@ class NotificationService {
       throw new Error("Notifications are not supported in this browser");
     }
 
+    // Native Capacitor
+    if (Capacitor.isNativePlatform()) {
+      const permission = await LocalNotifications.requestPermissions();
+      const granted = permission.display === 'granted';
+      console.log(`📋 Resultado da permissão (Capacitor): ${granted}`);
+      return granted;
+    }
+
+    // Web fallback
     if (Notification.permission === "granted") {
       console.log("✅ Permissão já concedida");
       return true;
     }
 
     const permission = await Notification.requestPermission();
-    console.log(`📋 Resultado da permissão: ${permission}`);
+    console.log(`📋 Resultado da permissão (Web): ${permission}`);
     return permission === "granted";
   }
 
@@ -133,7 +153,8 @@ class NotificationService {
     await this.ensureReady();
     console.log("📅 Agendando notificação:", config);
     
-    if (!this.isGranted()) {
+    const granted = await this.isGranted();
+    if (!granted) {
       console.error("❌ Permissão não concedida");
       throw new Error("Notification permission not granted");
     }
@@ -157,7 +178,36 @@ class NotificationService {
     const delay = scheduledTime.getTime() - now.getTime();
     console.log(`⏰ Notificação agendada para ${scheduledTime.toLocaleString()} (delay: ${Math.round(delay/1000)}s)`);
 
-    // Schedule the notification
+    // Native Capacitor scheduling
+    if (Capacitor.isNativePlatform()) {
+      const notificationId = this.getNotificationId(type);
+      
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: notificationId,
+            title,
+            body,
+            schedule: { at: scheduledTime },
+            sound: 'beep.wav',
+            smallIcon: 'ic_stat_icon_config_sample',
+            iconColor: '#488AFF',
+          }
+        ]
+      });
+
+      console.log(`✅ Notificação nativa agendada com ID ${notificationId}`);
+      
+      // Store metadata for tracking
+      this.scheduledNotifications.set(type, { 
+        timeoutId: notificationId, 
+        config 
+      });
+      this.saveScheduledNotifications();
+      return;
+    }
+
+    // Web fallback - use setTimeout
     const timeoutId = window.setTimeout(async () => {
       console.log("🔔 Disparando notificação:", title);
       await this.showNotification(title, body);
@@ -171,15 +221,38 @@ class NotificationService {
   }
 
   /**
+   * Generate consistent notification ID from type
+   */
+  private getNotificationId(type: NotificationType): number {
+    // Convert type string to consistent numeric ID
+    let hash = 0;
+    for (let i = 0; i < type.length; i++) {
+      const char = type.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return Math.abs(hash);
+  }
+
+  /**
    * Cancel a scheduled notification
    */
-  cancelNotification(type: NotificationType): void {
+  async cancelNotification(type: NotificationType): Promise<void> {
     const scheduled = this.scheduledNotifications.get(type);
-    if (scheduled) {
+    if (!scheduled) return;
+
+    // Native Capacitor
+    if (Capacitor.isNativePlatform()) {
+      const notificationId = this.getNotificationId(type);
+      await LocalNotifications.cancel({ notifications: [{ id: notificationId }] });
+      console.log(`🗑️ Notificação nativa cancelada (ID ${notificationId})`);
+    } else {
+      // Web fallback
       window.clearTimeout(scheduled.timeoutId);
-      this.scheduledNotifications.delete(type);
-      this.saveScheduledNotifications();
     }
+
+    this.scheduledNotifications.delete(type);
+    this.saveScheduledNotifications();
   }
 
   /**
@@ -204,16 +277,36 @@ class NotificationService {
     await this.ensureReady();
     console.log("🔔 Mostrando notificação:", { title, body });
     
-    if (!this.isGranted()) {
+    const granted = await this.isGranted();
+    if (!granted) {
       console.error("❌ Permissão não concedida");
       throw new Error("Notification permission not granted");
     }
 
+    // Native Capacitor
+    if (Capacitor.isNativePlatform()) {
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: Date.now(),
+            title,
+            body,
+            schedule: { at: new Date(Date.now() + 1000) }, // 1 second from now
+            sound: 'beep.wav',
+            smallIcon: 'ic_stat_icon_config_sample',
+            iconColor: '#488AFF',
+          }
+        ]
+      });
+      console.log("✅ Notificação nativa disparada");
+      return;
+    }
+
+    // Web fallback
     const registration = await this.getRegistration();
     
     if (!registration) {
       console.warn("⚠️ Service Worker não disponível, usando notificação básica");
-      // Fallback for environments where SW is not available
       new Notification(title, {
         body,
         icon: icon || "/favicon.ico",
@@ -223,7 +316,6 @@ class NotificationService {
     }
 
     console.log("✅ Usando Service Worker para notificação");
-    // Use Service Worker notification for better mobile support
     await registration.showNotification(title, {
       body,
       icon: icon || "/favicon.ico",
@@ -241,15 +333,17 @@ class NotificationService {
     await this.ensureReady();
     console.log("🔄 Agendando lembrete recorrente:", intervalMinutes, "minutos");
     
-    if (!this.isGranted()) {
+    const granted = await this.isGranted();
+    if (!granted) {
       console.error("❌ Permissão não concedida para lembretes recorrentes");
       throw new Error("Notification permission not granted");
     }
 
     // Cancel existing recurring reminder
-    this.cancelRecurringReminder();
+    await this.cancelRecurringReminder();
 
-    // Set up new recurring reminder
+    // Note: Capacitor LocalNotifications doesn't support true recurring notifications
+    // So we use setInterval for both native and web
     this.recurringInterval = window.setInterval(async () => {
       console.log("⏰ Disparando lembrete recorrente");
       await this.showNotification(title, body);
@@ -263,7 +357,7 @@ class NotificationService {
   /**
    * Cancel recurring reminder
    */
-  cancelRecurringReminder(): void {
+  async cancelRecurringReminder(): Promise<void> {
     if (this.recurringInterval) {
       window.clearInterval(this.recurringInterval);
       this.recurringInterval = null;

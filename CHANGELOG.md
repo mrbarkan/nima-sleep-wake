@@ -5,6 +5,53 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.20.0] - 2025-01-23
+
+### Adicionado
+- 📱 **Migração para Capacitor**: Suporte completo para aplicativos nativos Android e iOS
+- 🔔 **Notificações Nativas 100% Confiáveis**: 
+  - LocalNotifications do Capacitor substituindo Web Notifications API em dispositivos móveis
+  - Notificações agendadas funcionam de forma confiável em Android e iOS
+  - Mantida compatibilidade com PWA para navegadores web
+  - Sistema híbrido detecta automaticamente plataforma (nativa vs web)
+
+### Melhorado
+- Arquitetura de notificações refatorada para suportar múltiplas plataformas
+- `notification.service.ts` agora detecta se está rodando em Capacitor ou navegador
+- Métodos `isGranted()` e `requestPermission()` adaptados para ambas plataformas
+- Agendamento de notificações usa `LocalNotifications.schedule()` em apps nativos
+- Cancelamento de notificações unificado entre plataformas
+
+### Técnico
+- Novo: `capacitor.config.ts` - Configuração do Capacitor
+- Atualizado: `src/services/notification.service.ts`
+  - Importado: `Capacitor`, `LocalNotifications` do `@capacitor/core`
+  - Novo método: `getNotificationId()` - Gera IDs consistentes para notificações nativas
+  - Modificado: `scheduleNotification()`, `cancelNotification()`, `showNotification()`
+  - Modificado: `isSupported()`, `isGranted()`, `requestPermission()` com suporte a Capacitor
+- Atualizado: `src/hooks/useNotifications.tsx`
+  - `isGranted()` agora é assíncrona devido à API do Capacitor
+- Dependências adicionadas:
+  - `@capacitor/core@latest`
+  - `@capacitor/cli@latest`
+  - `@capacitor/android@latest`
+  - `@capacitor/ios@latest`
+  - `@capacitor/local-notifications@latest`
+
+### Instruções de Deploy
+Para testar em dispositivos físicos ou emuladores:
+1. Transferir projeto para repositório Github via "Export to Github"
+2. Git pull do projeto
+3. Executar `npm install`
+4. Executar `npx cap init` (se necessário)
+5. Adicionar plataforma: `npx cap add android` e/ou `npx cap add ios`
+6. Atualizar dependências: `npx cap update android` ou `npx cap update ios`
+7. Build do projeto: `npm run build`
+8. Sincronizar: `npx cap sync`
+9. Rodar: `npx cap run android` ou `npx cap run ios`
+
+**Nota**: iOS requer Mac com Xcode instalado.
+
 ## [0.19.0] - 2025-01-23
 
 ### Adicionado

@@ -25,8 +25,9 @@ export const useNotifications = () => {
         // for the async initialization to complete
         await new Promise(resolve => setTimeout(resolve, 100));
         
+        const granted = await notificationService.isGranted();
         setPermission({
-          granted: notificationService.isGranted(),
+          granted,
           supported: notificationService.isSupported(),
         });
         setIsReady(true);

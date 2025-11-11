@@ -48,14 +48,31 @@ export function useCaffeineScheduler() {
   // Apply fasting filter when integration is enabled
   useEffect(() => {
     if (settings.integrations.fastingWithCaffeine && state.schedule.length > 0) {
-      const lastMealTime = localStorage.getItem(STORAGE_KEYS.FASTING_LAST_MEAL);
-      const targetDuration = localStorage.getItem(STORAGE_KEYS.FASTING_TARGET_DURATION);
+      const fastingCalculation = localStorage.getItem(STORAGE_KEYS.FASTING_CALCULATION);
       
-      // Simple check: if fasting is active (within target duration)
-      const isFasting = lastMealTime && targetDuration;
+      if (fastingCalculation) {
+        try {
+          const calculation = JSON.parse(fastingCalculation);
+          const breakfastTime = calculation?.breakfastTime;
+          
+          if (breakfastTime) {
+            const now = new Date();
+            const [breakHours, breakMinutes] = breakfastTime.split(":").map(Number);
+            const breakfastDate = new Date();
+            breakfastDate.setHours(breakHours, breakMinutes, 0, 0);
+            
+            // If current time is before breakfast time, filter to black coffee only
+            const isFasting = now < breakfastDate;
+            const filtered = caffeineService.filterForFasting(state.schedule, isFasting);
+            setFilteredSchedule(filtered);
+            return;
+          }
+        } catch (e) {
+          console.error("Error parsing fasting calculation:", e);
+        }
+      }
       
-      const filtered = caffeineService.filterForFasting(state.schedule, !!isFasting);
-      setFilteredSchedule(filtered);
+      setFilteredSchedule(state.schedule);
     } else {
       setFilteredSchedule(state.schedule);
     }

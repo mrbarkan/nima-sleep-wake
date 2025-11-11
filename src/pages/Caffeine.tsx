@@ -1,5 +1,7 @@
 import { useCaffeineScheduler } from "@/hooks/useCaffeineScheduler";
 import { CaffeineHeader, CaffeineTimeInput, CaffeineScheduleList } from "@/components/features/caffeine";
+import { useEffect, useState } from "react";
+import { STORAGE_KEYS } from "@/config/constants";
 
 const Caffeine = () => {
   const {
@@ -12,13 +14,34 @@ const Caffeine = () => {
     integrationActive,
   } = useCaffeineScheduler();
 
+  const [fastingInfo, setFastingInfo] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (integrationActive) {
+      const fastingCalculation = localStorage.getItem(STORAGE_KEYS.FASTING_CALCULATION);
+      if (fastingCalculation) {
+        try {
+          const calculation = JSON.parse(fastingCalculation);
+          const breakfastTime = calculation?.breakfastTime;
+          if (breakfastTime) {
+            setFastingInfo(`🥗 Jejum ativo até ${breakfastTime}. Todas opções liberadas após esse horário.`);
+            return;
+          }
+        } catch (e) {
+          console.error("Error parsing fasting calculation:", e);
+        }
+      }
+    }
+    setFastingInfo(null);
+  }, [integrationActive]);
+
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <CaffeineHeader />
       
-      {integrationActive && (
+      {integrationActive && fastingInfo && (
         <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-lg text-sm">
-          ☕ Modo Jejum: Apenas café preto compatível com jejum intermitente
+          {fastingInfo}
         </div>
       )}
 

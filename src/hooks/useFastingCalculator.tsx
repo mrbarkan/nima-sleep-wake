@@ -17,14 +17,17 @@ export const useFastingCalculator = () => {
   const { state, updateField } = useMultiPersistence<{
     lastMealTime: string;
     targetDuration: number;
+    calculation: FastingCalculation | null;
   }>({
     storageKeys: {
       lastMealTime: STORAGE_KEYS.FASTING_LAST_MEAL,
       targetDuration: STORAGE_KEYS.FASTING_TARGET_DURATION,
+      calculation: STORAGE_KEYS.FASTING_CALCULATION,
     },
     initialValues: {
       lastMealTime: "12:00",
       targetDuration: 16,
+      calculation: null,
     },
     loadFromBackend: async () => {
       const data = await syncService.loadFastingData();
@@ -35,21 +38,30 @@ export const useFastingCalculator = () => {
     },
   });
 
-  const [calculation, setCalculation] = useState<FastingCalculation | null>(
-    null
-  );
   const [integrationSuggestion, setIntegrationSuggestion] = useState<string | null>(null);
+  const [showSuggestionPopup, setShowSuggestionPopup] = useState(false);
+  const [suggestedTime, setSuggestedTime] = useState<string | null>(null);
 
   // Apply integrations when enabled
   useEffect(() => {
     if (settings.integrations.sleepWithFasting) {
-      const sleepTime = localStorage.getItem(STORAGE_KEYS.SLEEP_TIME);
-      if (sleepTime) {
-        const suggested = fastingService.suggestLastMealFromSleep(sleepTime);
-        setIntegrationSuggestion(`💡 Sugestão: Última refeição às ${suggested} (2h antes de dormir)`);
+      const selectedTime = localStorage.getItem(STORAGE_KEYS.SLEEP_SELECTED_TIME);
+      const sleepMode = localStorage.getItem(STORAGE_KEYS.SLEEP_MODE) as "sleep" | "wake";
+      
+      if (selectedTime && sleepMode) {
+        const suggested = fastingService.suggestLastMealFromSleep(selectedTime, sleepMode);
+        setSuggestedTime(suggested);
+        
+        if (sleepMode === "sleep") {
+          setIntegrationSuggestion(`😴 Detectamos seu horário de sono. Sugestão: última refeição às ${suggested}`);
+        } else {
+          setIntegrationSuggestion(`😴 Detectamos seu horário de acordar. Sugestão: última refeição às ${suggested}`);
+        }
+        setShowSuggestionPopup(true);
       }
     } else {
       setIntegrationSuggestion(null);
+      setShowSuggestionPopup(false);
     }
   }, [settings.integrations.sleepWithFasting]);
 
@@ -62,12 +74,30 @@ export const useFastingCalculator = () => {
       state.lastMealTime,
       state.targetDuration
     );
-    setCalculation(result);
-  }, [state.lastMealTime, state.targetDuration]);
+    updateField("calculation", result);
+  }, [state.lastMealTime, state.targetDuration, updateField]);
+
+  // Auto-calculate on mount if we have saved data
+  useEffect(() => {
+    if (state.lastMealTime && state.targetDuration && !state.calculation) {
+      calculateTimeline();
+    }
+  }, []);
+
+  // Real-time recalculation every minute
+  useEffect(() => {
+    if (!state.calculation) return;
+
+    const interval = setInterval(() => {
+      calculateTimeline();
+    }, 60000); // 1 minute
+
+    return () => clearInterval(interval);
+  }, [state.calculation, calculateTimeline]);
 
   const resetCalculation = useCallback(() => {
-    setCalculation(null);
-  }, []);
+    updateField("calculation", null);
+  }, [updateField]);
 
   const setLastMealTime = useCallback((time: string) => {
     updateField("lastMealTime", time);
@@ -77,14 +107,28 @@ export const useFastingCalculator = () => {
     updateField("targetDuration", duration);
   }, [updateField]);
 
+  const acceptSuggestion = useCallback(() => {
+    if (suggestedTime) {
+      setLastMealTime(suggestedTime);
+      setShowSuggestionPopup(false);
+    }
+  }, [suggestedTime, setLastMealTime]);
+
+  const ignoreSuggestion = useCallback(() => {
+    setShowSuggestionPopup(false);
+  }, []);
+
   return {
     lastMealTime: state.lastMealTime,
     targetDuration: state.targetDuration,
-    calculation,
+    calculation: state.calculation,
     integrationSuggestion,
+    showSuggestionPopup,
     setLastMealTime,
     setTargetDuration,
     calculateTimeline,
     resetCalculation,
+    acceptSuggestion,
+    ignoreSuggestion,
   };
 };

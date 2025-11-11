@@ -5,6 +5,51 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.18.0] - 2025-01-09
+
+### Corrigido
+- 🔧 **Co-dependências Inteligentes Funcionando**
+  - **Sleep → Fasting**: Agora usa `SLEEP_SELECTED_TIME` (ciclo escolhido) ao invés de `SLEEP_TIME` (hora digitada)
+  - **Sleep Mode Support**: Sugestões adaptadas para modo "sleep" (indo dormir) vs "wake" (acordando)
+  - **Fasting → Caffeine**: Filtro temporal baseado no `breakfastTime` calculado do jejum
+  - Interface de sugestão aprimorada com botões "Aceitar" e "Ignorar"
+  - Popup contextual com ícone 😴 indicando origem da sugestão (Sleep)
+
+- 💾 **Persistência Completa do Jejum**
+  - `calculation` agora persiste em localStorage e backend via `FASTING_CALCULATION`
+  - Auto-recálculo ao abrir o app se houver dados salvos
+  - Atualização em tempo real a cada minuto da timeline de jejum
+  - Estado completo preservado entre sessões (lastMealTime, targetDuration, calculation)
+
+### Melhorado
+- 🎯 **UX das Integrações**
+  - Indicador visual dinâmico na página de Cafeína mostrando até que horas o jejum está ativo
+  - Mensagens contextuais adaptadas ao modo Sleep (indo dormir vs acordando)
+  - Botão X para fechar popup de sugestão
+  - Layout aprimorado com flex e espaçamento adequado
+
+### Técnico
+- Atualizado: `src/config/constants.ts`
+  - Adicionado: `FASTING_CALCULATION` storage key
+- Atualizado: `src/services/fasting.service.ts`
+  - Modificado: `suggestLastMealFromSleep()` agora aceita parâmetro `mode: "sleep" | "wake"`
+  - Lógica: modo "sleep" = 2h antes, modo "wake" = 10h antes (8h sono + 2h)
+- Atualizado: `src/hooks/useFastingCalculator.tsx`
+  - Adicionado: `calculation` ao estado persistido com `useMultiPersistence`
+  - Adicionado: `showSuggestionPopup`, `acceptSuggestion()`, `ignoreSuggestion()`
+  - Implementado: Auto-recálculo no mount se houver dados salvos
+  - Implementado: Recálculo automático a cada 1 minuto via `setInterval`
+  - Usa `SLEEP_SELECTED_TIME` + `SLEEP_MODE` para integração correta
+- Atualizado: `src/hooks/useCaffeineScheduler.tsx`
+  - Filtro agora verifica `breakfastTime` do `FASTING_CALCULATION` parseado
+  - Comparação temporal: antes do café da manhã = só café preto
+- Atualizado: `src/pages/Fasting.tsx`
+  - Novo: Popup de sugestão com UI aprimorada (botões, ícone X)
+  - Importado: `Button` component e `X` icon
+- Atualizado: `src/pages/Caffeine.tsx`
+  - Novo: Estado `fastingInfo` extraído dinamicamente do `FASTING_CALCULATION`
+  - Mensagem contextual mostra até que horas o jejum está ativo
+
 ## [0.17.0] - 2025-01-09
 
 ### Adicionado

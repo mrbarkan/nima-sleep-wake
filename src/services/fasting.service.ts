@@ -67,25 +67,36 @@ class FastingService {
   ];
 
   /**
-   * Suggests last meal time based on sleep schedule (2h before sleep)
+   * Suggests last meal time based on sleep time (2h before sleep) or wake time
    */
-  suggestLastMealFromSleep(sleepTime: string): string {
+  suggestLastMealFromSleep(sleepTime: string, mode: "sleep" | "wake" = "sleep"): string {
     if (!this.isValidTimeFormat(sleepTime)) {
       return "20:00"; // Default fallback
     }
 
     const [hours, minutes] = sleepTime.split(":").map(Number);
-    const sleepDate = new Date();
-    sleepDate.setHours(hours, minutes, 0, 0);
-    
-    // Suggest eating 2 hours before sleep
-    const mealDate = new Date(sleepDate);
-    mealDate.setHours(mealDate.getHours() - 2);
-    
-    return mealDate.toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const targetDate = new Date();
+    targetDate.setHours(hours, minutes, 0, 0);
+
+    if (mode === "sleep") {
+      // Subtract 2 hours for last meal before sleep
+      const mealDate = new Date(targetDate);
+      mealDate.setHours(mealDate.getHours() - 2);
+      
+      return mealDate.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } else {
+      // For wake mode, assume 8h sleep, subtract 10h total (8h sleep + 2h before)
+      const mealDate = new Date(targetDate);
+      mealDate.setHours(mealDate.getHours() - 10);
+      
+      return mealDate.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
   }
 
   /**

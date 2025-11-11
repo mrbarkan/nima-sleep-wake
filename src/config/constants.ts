@@ -2,7 +2,7 @@
  * Application-wide constants and configuration
  */
 
-export const APP_VERSION = "0.17.0";
+export const APP_VERSION = "0.18.0";
 export const APP_NAME = "Nima";
 export const APP_BETA = true;
 
@@ -16,6 +16,7 @@ export const STORAGE_KEYS = {
   CAFFEINE_SCHEDULE: "caffeine-schedule",
   FASTING_LAST_MEAL: "fasting-lastMeal",
   FASTING_TARGET_DURATION: "fasting-targetDuration",
+  FASTING_CALCULATION: "fasting-calculation",
   TODO_DATA: "sleepflow-todo-data",
   USER_IDENTIFIER: "user_identifier",
   WELCOME_MODAL_SHOWN: "welcome-modal-shown",

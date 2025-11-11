@@ -39,6 +39,14 @@ const Todo = () => {
   const [showArchived, setShowArchived] = useState(false);
   const currentMethod = TodoService.getMethodInfo(method);
 
+  // Mapeamento de método para chave i18n
+  const methodToI18nKey: Record<TodoMethod, string> = {
+    "ivy-lee": "ivyLee",
+    "1-3-5": "135",
+    "eat-frog": "frog",
+    "eisenhower": "eisenhower",
+  };
+
   // Filtrar métodos visíveis
   const visibleMethods = (Object.entries(settings.todo.visibleMethods)
     .filter(([_, isVisible]) => isVisible)
@@ -92,7 +100,7 @@ const Todo = () => {
         >
           {visibleMethods.map((methodKey) => (
             <TabsTrigger key={methodKey} value={methodKey} className="text-xs md:text-sm">
-              {t(`methods.${methodKey}.name`)}
+              {t(`methods.${methodToI18nKey[methodKey]}.name`)}
             </TabsTrigger>
           ))}
         </TabsList>

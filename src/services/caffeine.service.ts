@@ -15,6 +15,34 @@ const CAFFEINE_ROTATION: CaffeineRotation[] = [
 
 class CaffeineService {
   /**
+   * Filters caffeine options for fasting compatibility
+   */
+  filterForFasting(
+    schedule: CaffeineSchedule[],
+    isFasting: boolean
+  ): CaffeineSchedule[] {
+    if (!isFasting) {
+      return schedule;
+    }
+
+    // During fasting, only black coffee is allowed
+    return schedule.map((item) => {
+      if (item.source === "Café") {
+        return {
+          ...item,
+          description: "☕ Café preto (compatível com jejum)",
+        };
+      }
+      // Remove tea options during fasting
+      return {
+        ...item,
+        source: "Café",
+        description: "☕ Café preto (compatível com jejum)",
+      };
+    });
+  }
+
+  /**
    * Calculates caffeine schedule based on wake time
    */
   calculateSchedule(wakeTime: string): CaffeineSchedule[] {

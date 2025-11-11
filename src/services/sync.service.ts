@@ -213,6 +213,90 @@ class SyncService {
   }
 
   /**
+   * Syncs fasting data to backend
+   */
+  async syncFastingData(data: any): Promise<void> {
+    this.updateStatus({ syncing: true, error: null });
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      // Check if user has existing fasting data
+      const { data: existing } = await supabase
+        .from("user_fasting_data")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (existing) {
+        // Update existing
+        const { error } = await supabase
+          .from("user_fasting_data")
+          .update({
+            last_meal_time: data.lastMealTime,
+            target_duration: data.targetDuration,
+            updated_at: new Date().toISOString(),
+          })
+          .eq("user_id", user.id);
+
+        if (error) throw error;
+      } else {
+        // Insert new
+        const { error } = await supabase.from("user_fasting_data").insert({
+          user_id: user.id,
+          last_meal_time: data.lastMealTime,
+          target_duration: data.targetDuration,
+        });
+
+        if (error) throw error;
+      }
+
+      this.updateStatus({ syncing: false, lastSync: new Date() });
+    } catch (error) {
+      console.error("Error syncing fasting data:", error);
+      this.updateStatus({
+        syncing: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+      throw error;
+    }
+  }
+
+  /**
+   * Loads fasting data from backend
+   */
+  async loadFastingData(): Promise<any | null> {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) return null;
+
+      const { data, error } = await supabase
+        .from("user_fasting_data")
+        .select("*")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (data) {
+        return {
+          lastMealTime: data.last_meal_time,
+          targetDuration: data.target_duration,
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error loading fasting data:", error);
+      return null;
+    }
+  }
+
+  /**
    * Sync caffeine settings to backend
    */
   async syncCaffeineSettings(settings: any): Promise<void> {

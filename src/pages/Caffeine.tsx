@@ -9,12 +9,19 @@ const Caffeine = () => {
     setWakeTime,
     setOpenNotifications,
     calculateSchedule,
+    integrationActive,
   } = useCaffeineScheduler();
 
   return (
     <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
       <CaffeineHeader />
       
+      {integrationActive && (
+        <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-lg text-sm">
+          ☕ Modo Jejum: Apenas café preto compatível com jejum intermitente
+        </div>
+      )}
+
       <CaffeineTimeInput
         wakeTime={wakeTime}
         onWakeTimeChange={setWakeTime}

@@ -66,6 +66,52 @@ class FastingService {
     },
   ];
 
+  /**
+   * Suggests last meal time based on sleep schedule (2h before sleep)
+   */
+  suggestLastMealFromSleep(sleepTime: string): string {
+    if (!this.isValidTimeFormat(sleepTime)) {
+      return "20:00"; // Default fallback
+    }
+
+    const [hours, minutes] = sleepTime.split(":").map(Number);
+    const sleepDate = new Date();
+    sleepDate.setHours(hours, minutes, 0, 0);
+    
+    // Suggest eating 2 hours before sleep
+    const mealDate = new Date(sleepDate);
+    mealDate.setHours(mealDate.getHours() - 2);
+    
+    return mealDate.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  /**
+   * Calculates break fast time based on wake time and fasting duration
+   */
+  calculateBreakfastFromWake(wakeTime: string, fastingDuration: number): string {
+    if (!this.isValidTimeFormat(wakeTime)) {
+      return "";
+    }
+
+    const [hours, minutes] = wakeTime.split(":").map(Number);
+    const wakeDate = new Date();
+    wakeDate.setHours(hours, minutes, 0, 0);
+    
+    // Calculate when to break fast (wake time + remaining fasting hours)
+    const breakfastDate = new Date(wakeDate);
+    // Assuming 8h of sleep, so fasting continues after waking
+    const remainingFastingHours = Math.max(0, fastingDuration - 8);
+    breakfastDate.setHours(breakfastDate.getHours() + remainingFastingHours);
+    
+    return breakfastDate.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
   calculateFastingTimeline(
     lastMealTime: string,
     targetDuration: number

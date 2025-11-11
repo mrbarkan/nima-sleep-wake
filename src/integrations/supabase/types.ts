@@ -124,6 +124,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_fasting_data: {
+        Row: {
+          id: string
+          last_meal_time: string
+          target_duration: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          last_meal_time: string
+          target_duration: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          last_meal_time?: string
+          target_duration?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_preferences: {
         Row: {
           id: string

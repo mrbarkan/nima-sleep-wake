@@ -5,6 +5,60 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.17.0] - 2025-01-09
+
+### Adicionado
+- 🔗 **Fase 3: Integrações Avançadas**
+  - Sistema completo de sincronização inteligente entre Sono, Jejum e Cafeína
+  - **Integração Sono ↔ Jejum**:
+    - Sugestão automática de horário da última refeição (2h antes de dormir)
+    - Cálculo de horário ideal para quebrar jejum baseado no horário de acordar
+    - Indicador visual quando integração está ativa
+  - **Integração Jejum ↔ Cafeína**:
+    - Filtro automático para apenas café preto durante jejum
+    - Alerta visual "Modo Jejum" na página de cafeína
+    - Manutenção do cronograma com adaptação das opções
+  - **Integração Sono ↔ Cafeína**:
+    - Sincronização já existente, garantida compatibilidade com novas integrações
+    
+- 💾 **Backend completo para Jejum**
+  - Nova tabela `user_fasting_data` no Supabase
+  - RLS policies para segurança de dados por usuário
+  - Sincronização automática via Lovable Cloud
+  - Métodos `syncFastingData()` e `loadFastingData()` no `syncService`
+  
+- 🎨 **Melhorias de UX**
+  - Sugestões contextuais baseadas em integrações ativas
+  - Indicadores visuais com bordas coloridas
+  - Mensagens explicativas sobre adaptações automáticas
+  
+### Técnico
+- Atualizado: `src/services/fasting.service.ts`
+  - Novo: `suggestLastMealFromSleep()` - Calcula horário de refeição baseado no sono
+  - Novo: `calculateBreakfastFromWake()` - Calcula horário de quebrar jejum
+- Atualizado: `src/services/caffeine.service.ts`
+  - Novo: `filterForFasting()` - Filtra opções de cafeína compatíveis com jejum
+- Atualizado: `src/services/sync.service.ts`
+  - Novo: `syncFastingData()` - Sincroniza dados de jejum com backend
+  - Novo: `loadFastingData()` - Carrega dados de jejum do backend
+- Atualizado: `src/hooks/useFastingCalculator.tsx`
+  - Integração com `useSettings` para detectar integrações ativas
+  - Novo campo `integrationSuggestion` para exibir sugestões
+  - Migrado para `useMultiPersistence` com sync backend
+- Atualizado: `src/hooks/useCaffeineScheduler.tsx`
+  - Integração com `useSettings` para aplicar filtros
+  - Novo estado `filteredSchedule` para opções adaptadas
+  - Novo campo `integrationActive` para indicar modo jejum
+- Atualizado: `src/pages/Fasting.tsx` e `src/pages/Caffeine.tsx`
+  - Indicadores visuais de integrações ativas
+  - Mensagens contextuais para o usuário
+- Migration: Tabela `user_fasting_data` com trigger de updated_at
+
+### Observações
+- Fase 3 completa e funcional
+- Todas as integrações configuráveis via página de Settings
+- Sistema pronto para expansão futura (ex: notificações de jejum)
+
 ## [0.16.0] - 2025-01-09
 
 ### Adicionado
@@ -53,46 +107,17 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Novo: `src/hooks/useSettings.tsx` - Hook de gerenciamento de configurações
 - Novo: `src/pages/Fasting.tsx` - Página principal do módulo de jejum
 - Novo: `src/pages/Settings.tsx` - Página de configurações
-- Novo: `src/components/features/fasting/` - Componentes reutilizáveis:
-  - `FastingHeader.tsx` - Cabeçalho com informações
-  - `FastingTimeInput.tsx` - Inputs de última refeição e duração
-  - `FastingTimeline.tsx` - Visualização de progresso e fases
-  - `FastingPhaseCard.tsx` - Card detalhado de cada fase
-- Novo: `src/components/features/settings/` - Componentes de configurações:
-  - `SettingsHeader.tsx` - Cabeçalho da página
-  - `IntegrationSettings.tsx` - Configurações de integrações
-  - `TodoMethodSettings.tsx` - Filtro de métodos de tarefas
-- Atualizado: `src/config/constants.ts` - Nova chave `APP_SETTINGS` no STORAGE_KEYS
-- Atualizado: `src/config/routes.ts` - Rotas `/fasting` e `/settings`
-- Atualizado: `src/components/layout/Navigation.tsx` - Item de jejum
-- Atualizado: `src/components/features/user/UserMenu.tsx` - Link para configurações
+- Novo: `src/components/features/fasting/` - Componentes reutilizáveis
+- Novo: `src/components/features/settings/` - Componentes de configurações
 - Atualizado: Design system (`index.css`, `tailwind.config.ts`)
-- Atualizado: Exports centralizados (`src/types/index.ts`, `src/services/index.ts`, `src/hooks/index.ts`)
-
-### Observações
-- Fase 1 (Jejum Básico) e Fase 2 (Sistema de Configurações) completadas
-- Fase 3 (Integrações Avançadas) será implementada futuramente
-- Configurações de integrações estão prontas, mas a lógica de integração será implementada na Fase 3
 
 ## [0.15.1] - 2025-11-03
 
 ### Corrigido
 - **Migração automática de dados legados**: Implementado sistema de migração one-time para converter dados de tarefas antigas para o novo formato
 - **Erro ao carregar tarefas**: Removidos toasts de erro desnecessários durante o carregamento de tarefas
-- **Validação de dados**: Schema Zod agora inclui valores padrão para campos `archived` e `priority`, evitando erros de validação com dados antigos
+- **Validação de dados**: Schema Zod agora inclui valores padrão para campos `archived` e `priority`
 - **Compatibilidade retroativa**: Garantida compatibilidade com dados armazenados antes da implementação de i18n
-
-### Adicionado
-- Novo serviço `MigrationService` para gerenciar migrações de dados
-- Flag `TODO_MIGRATION_DONE` para controlar execução única da migração
-- Método `TodoService.sanitizeTask()` para normalização de tarefas com valores padrão
-- Logging de debug estruturado para facilitar diagnóstico de problemas
-
-### Alterado
-- Substituído `console.error` por `console.debug` no carregamento de tarefas para reduzir notificações desnecessárias
-- Campo `archived` agora tem valor padrão `false` no schema
-- Campo `priority` agora tem valor padrão `1` no schema
-- Melhorada lógica de carregamento de dados com tratamento mais robusto de erros
 
 ## [0.15.0] - 2025-11-02
 
@@ -100,8 +125,3 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 - Suporte completo a internacionalização (i18n) com português (pt-BR) e inglês (en)
 - Seletor de idioma no cabeçalho da aplicação
 - Traduções para todas as funcionalidades: tarefas, sono, cafeína e autenticação
-
-### Alterado
-- Interface do usuário adaptada para múltiplos idiomas
-- Mensagens de toast e notificações agora são traduzidas
-- Documentação de métodos de produtividade traduzida

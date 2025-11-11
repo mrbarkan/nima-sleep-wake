@@ -5,6 +5,12 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.18.1] - 2025-01-23
+
+### Corrigido
+- Aviso de jejum na página de Cafeína agora mostra mensagem geral "(sem leite, sem açúcar)" ao invés de repetir em cada item
+- Melhorada legibilidade das restrições de jejum com aviso destacado e lembrete de hidratação
+
 ## [0.18.0] - 2025-01-09
 
 ### Corrigido

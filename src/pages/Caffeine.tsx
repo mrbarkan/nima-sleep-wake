@@ -40,8 +40,14 @@ const Caffeine = () => {
       <CaffeineHeader />
       
       {integrationActive && fastingInfo && (
-        <div className="mb-4 p-3 bg-primary/10 border border-primary/20 rounded-lg text-sm">
-          {fastingInfo}
+        <div className="mb-4 p-4 bg-primary/10 border border-primary/20 rounded-lg space-y-2">
+          <p className="text-sm font-medium">{fastingInfo}</p>
+          <p className="text-sm text-muted-foreground">
+            ⚠️ <strong>Durante o jejum:</strong> Sem leite, sem açúcar
+          </p>
+          <p className="text-xs text-muted-foreground">
+            💧 Lembre-se de beber água com frequência
+          </p>
         </div>
       )}
 

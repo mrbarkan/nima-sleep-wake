@@ -9,7 +9,13 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ### Corrigido
 - Aviso de jejum na página de Cafeína agora mostra mensagem geral "(sem leite, sem açúcar)" ao invés de repetir em cada item
+- Lógica de filtro do jejum corrigida: café preto, chá verde e chá preto são permitidos durante jejum
 - Melhorada legibilidade das restrições de jejum com aviso destacado e lembrete de hidratação
+
+### Melhorado
+- Card de dicas agora inclui lembrete de hidratação destacado com 💧
+- Dica específica sobre bebidas permitidas durante jejum
+- Traduções i18n atualizadas para PT-BR e EN com novas dicas
 
 ## [0.18.0] - 2025-01-09
 

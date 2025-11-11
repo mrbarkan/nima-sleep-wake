@@ -19,9 +19,11 @@
     "title": "💡 Dicas importantes",
     "items": {
       "timing": "**Timing é tudo**: Evite cafeína nas primeiras 90min após acordar",
-      "cutoff": "**Corte às 15h**: A meia-vida de 5-6h pode atrapalhar seu sono",
-      "hydration": "**Hidrate-se**: Beba água entre as doses de cafeína",
-      "tolerance": "**Tolerância**: Faça pausas periódicas para manter eficácia"
+      "cutoff": "Evite cafeína após 15h para não afetar o sono",
+      "halfLife": "A meia-vida da cafeína é de 5-6 horas",
+      "tolerance": "Alternar fontes ajuda a evitar tolerância",
+      "hydration": "Hidrate-se: Beba água com frequência entre as doses",
+      "fasting": "Durante jejum: café preto, chá verde e chá preto são permitidos (sem leite/açúcar)"
     }
   },
   "notificationTitle": "Hora da cafeína! ☕",

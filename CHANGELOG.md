@@ -5,6 +5,17 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.19.0] - 2025-01-23
+
+### Adicionado
+- Filtro dinâmico de métodos de produtividade na página Todo baseado nas configurações do usuário
+- Ajuste automático do método ativo quando o método atual é desativado nas configurações
+
+### Melhorado
+- Tabs de métodos agora renderizam apenas os métodos visíveis selecionados em Configurações
+- Grid de tabs ajusta automaticamente o número de colunas baseado nos métodos visíveis (1-4 colunas)
+- Nomes dos métodos agora usam traduções i18n para consistência
+
 ## [0.18.1] - 2025-01-23
 
 ### Corrigido

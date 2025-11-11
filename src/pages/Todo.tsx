@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { ListTodo, Plus, Archive } from "lucide-react";
 import InfoPopup from "@/components/common/InfoPopup";
-import { useTodoManager } from "@/hooks";
+import { useTodoManager, useSettings } from "@/hooks";
 import { TodoService } from "@/services/todo.service";
 import { TaskList, ArchivedTasksModal, TaskMethodInfo } from "@/components/features/todo";
+import { useTranslation } from "react-i18next";
+import { TodoMethod } from "@/schemas/todo.schemas";
 
 /**
  * Página principal do Todo
  * Gerencia diferentes métodos de produtividade
  */
 const Todo = () => {
+  const { t } = useTranslation("todo");
+  const { settings } = useSettings();
+  
   const {
     method,
     tasks,
@@ -33,6 +38,18 @@ const Todo = () => {
 
   const [showArchived, setShowArchived] = useState(false);
   const currentMethod = TodoService.getMethodInfo(method);
+
+  // Filtrar métodos visíveis
+  const visibleMethods = (Object.entries(settings.todo.visibleMethods)
+    .filter(([_, isVisible]) => isVisible)
+    .map(([method]) => method) as TodoMethod[]);
+
+  // Ajustar método ativo se não estiver visível
+  useEffect(() => {
+    if (!settings.todo.visibleMethods[method] && visibleMethods.length > 0) {
+      setMethod(visibleMethods[0]);
+    }
+  }, [settings.todo.visibleMethods, method, visibleMethods, setMethod]);
 
   const handleMethodChange = (value: string) => {
     setMethod(value as any);
@@ -69,19 +86,15 @@ const Todo = () => {
       </div>
 
       <Tabs value={method} onValueChange={handleMethodChange}>
-        <TabsList className="grid w-full grid-cols-4 mb-6 h-auto">
-          <TabsTrigger value="ivy-lee" className="text-xs md:text-sm">
-            Ivy Lee
-          </TabsTrigger>
-          <TabsTrigger value="1-3-5" className="text-xs md:text-sm">
-            1-3-5
-          </TabsTrigger>
-          <TabsTrigger value="eat-frog" className="text-xs md:text-sm">
-            Eat Frog
-          </TabsTrigger>
-          <TabsTrigger value="eisenhower" className="text-xs md:text-sm">
-            Eisenhower
-          </TabsTrigger>
+        <TabsList 
+          className="grid w-full mb-6 h-auto" 
+          style={{ gridTemplateColumns: `repeat(${visibleMethods.length}, 1fr)` }}
+        >
+          {visibleMethods.map((methodKey) => (
+            <TabsTrigger key={methodKey} value={methodKey} className="text-xs md:text-sm">
+              {t(`methods.${methodKey}.name`)}
+            </TabsTrigger>
+          ))}
         </TabsList>
 
         <TaskMethodInfo method={method} />

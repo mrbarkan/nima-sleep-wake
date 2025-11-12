@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/core';
 
 const config: CapacitorConfig = {
-  appId: 'app.lovable.571d87a94b3d4271a838d57e4af04a18',
+  appId: 'com.mrbarkan.nima',
   appName: 'nima-sleep-wake',
   webDir: 'dist',
   server: {

@@ -5,6 +5,24 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.21.0] - 2025-01-23
+
+### Alterado
+- 📱 **App ID Profissional**: Atualizado de `app.lovable.571d87a94b3d4271a838d57e4af04a18` para `com.mrbarkan.nima`
+  - Utiliza domínio personalizado em notação reversa (reverse domain notation)
+  - Formato compatível com requisitos do Android e iOS
+  - Vinculação profissional ao domínio `nima.mrbarkan.com`
+  - Resolve erro de validação no comando `npx cap add android`
+
+### Técnico
+- Atualizado: `capacitor.config.ts`
+  - `appId: 'com.mrbarkan.nima'` (formato Java package válido)
+  - Mantida configuração de hot-reload para desenvolvimento
+  - Plugins LocalNotifications preservados
+
+### Importante
+⚠️ Este App ID é permanente após publicação nas lojas de aplicativos (Google Play Store / Apple App Store)
+
 ## [0.20.0] - 2025-01-23
 
 ### Adicionado

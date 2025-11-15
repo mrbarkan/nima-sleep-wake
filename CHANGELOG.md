@@ -5,6 +5,24 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.22.0] - 2025-01-23
+
+### Removido
+- 🗑️ **Progressier**: Removidas todas as referências à plataforma PWA externa
+  - Deletado `public/progressier.js`
+  - Removidas tags `<link rel="manifest">` e `<script>` do Progressier no `index.html`
+  - Simplificação do código: app agora usa exclusivamente Capacitor para notificações nativas
+  - Redução do bundle size: sem dependências externas desnecessárias
+
+### Mantido
+- ✅ Service Worker customizado (`public/sw.js`) continua funcional
+- ✅ Sistema de notificações via Capacitor Local Notifications
+- ✅ Todos os componentes e hooks de notificação preservados
+- ✅ Lembretes recorrentes totalmente funcionais
+
+### Motivo
+A migração para Capacitor tornou o Progressier redundante, pois o app agora utiliza notificações nativas do Android/iOS.
+
 ## [0.21.0] - 2025-01-23
 
 ### Alterado

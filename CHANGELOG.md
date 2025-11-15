@@ -5,6 +5,18 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.24.1] - 2025-01-23
+
+### Segurança
+- 🔒 **Proteção contra Spam de Likes**: Adicionada restrição UNIQUE na tabela `article_likes` para prevenir múltiplos likes do mesmo usuário no mesmo artigo
+- ✅ **Validação de Sugestões**: Implementada validação com Zod (min 10, max 2000 caracteres) e constraint no banco de dados
+- 📊 **Contador de Caracteres**: Formulário de sugestões agora exibe contador em tempo real e desabilita envio fora dos limites
+
+### Técnico
+- Constraint: `unique_user_article_like` na tabela `article_likes`
+- Constraint: `suggestion_length_check` na tabela `suggestions`
+- Schema: `suggestionSchema` com validação Zod
+
 ## [0.24.0] - 2025-01-23
 
 ### Adicionado

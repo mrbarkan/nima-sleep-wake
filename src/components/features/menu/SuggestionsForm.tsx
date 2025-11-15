@@ -5,6 +5,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { suggestionsService } from "@/services/suggestions.service";
+import { suggestionSchema } from "@/schemas/suggestion.schemas";
+import { z } from "zod";
 
 interface SuggestionsFormProps {
   onClose: () => void;
@@ -18,15 +20,6 @@ export const SuggestionsForm = ({ onClose }: SuggestionsFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!suggestion.trim()) {
-      toast({
-        variant: "destructive",
-        title: "Campo vazio",
-        description: "Por favor, escreva sua sugestão antes de enviar.",
-      });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -40,11 +33,20 @@ export const SuggestionsForm = ({ onClose }: SuggestionsFormProps) => {
       onClose();
     } catch (error) {
       console.error('Error submitting suggestion:', error);
-      toast({
-        variant: "destructive",
-        title: "Erro ao enviar",
-        description: "Não foi possível enviar sua sugestão. Tente novamente.",
-      });
+      
+      if (error instanceof z.ZodError) {
+        toast({
+          variant: "destructive",
+          title: "Erro de validação",
+          description: error.errors[0].message,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Erro ao enviar",
+          description: "Não foi possível enviar sua sugestão. Tente novamente.",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -69,13 +71,19 @@ export const SuggestionsForm = ({ onClose }: SuggestionsFormProps) => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <Textarea
-              placeholder="Conte-nos sua ideia, sugestão ou feedback..."
-              value={suggestion}
-              onChange={(e) => setSuggestion(e.target.value)}
-              className="min-h-[120px] resize-none"
-              disabled={isLoading}
-            />
+            <div className="space-y-2">
+              <Textarea
+                placeholder="Conte-nos sua ideia, sugestão ou feedback..."
+                value={suggestion}
+                onChange={(e) => setSuggestion(e.target.value)}
+                className="min-h-[120px] resize-none"
+                disabled={isLoading}
+                maxLength={2000}
+              />
+              <p className="text-xs text-muted-foreground text-right">
+                {suggestion.length}/2000 caracteres {suggestion.length < 10 && "(mínimo 10)"}
+              </p>
+            </div>
             <div className="flex gap-2">
               <Button
                 type="button"
@@ -86,7 +94,11 @@ export const SuggestionsForm = ({ onClose }: SuggestionsFormProps) => {
               >
                 Cancelar
               </Button>
-              <Button type="submit" className="flex-1" disabled={isLoading}>
+              <Button 
+                type="submit" 
+                className="flex-1" 
+                disabled={isLoading || suggestion.length < 10 || suggestion.length > 2000}
+              >
                 <Send className="h-4 w-4 mr-2" />
                 {isLoading ? "Enviando..." : "Enviar"}
               </Button>

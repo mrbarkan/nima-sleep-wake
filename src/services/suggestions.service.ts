@@ -3,6 +3,7 @@
  */
 
 import { supabase } from "@/integrations/supabase/client";
+import { suggestionSchema } from "@/schemas/suggestion.schemas";
 
 export interface SuggestionData {
   suggestion: string;
@@ -11,15 +12,17 @@ export interface SuggestionData {
 
 class SuggestionsService {
   /**
-   * Submit a new suggestion
+   * Submit a new suggestion with validation
    */
   async submitSuggestion(suggestion: string): Promise<void> {
+    // Validate input
+    const validatedData = suggestionSchema.parse({ suggestion });
     const { data: { user } } = await supabase.auth.getUser();
     
     const { error } = await supabase
       .from("suggestions")
       .insert({
-        suggestion: suggestion.trim(),
+        suggestion: validatedData.suggestion,
         user_id: user?.id || null,
       });
 

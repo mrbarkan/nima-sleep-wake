@@ -13,19 +13,19 @@ export const IntegrationSettings = () => {
   const { settings, updateIntegrations } = useSettings();
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-lg font-semibold">{t("sections.integrations")}</h2>
+    <Card className="p-4 md:p-6">
+      <div className="flex items-center gap-2 mb-3 md:mb-4">
+        <h2 className="text-base md:text-lg font-semibold">{t("sections.integrations")}</h2>
         <InfoPopup
           title={t("sections.integrations")}
           content={t("integrations.info")}
         />
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         <div className="flex items-center justify-between">
           <Label htmlFor="sleep-fasting" className="flex-1 cursor-pointer">
-            {t("integrations.sleepWithFasting.label")}
+            <span className="text-sm md:text-base">{t("integrations.sleepWithFasting.label")}</span>
             <p className="text-xs text-muted-foreground font-normal">
               {t("integrations.sleepWithFasting.description")}
             </p>
@@ -41,7 +41,7 @@ export const IntegrationSettings = () => {
 
         <div className="flex items-center justify-between">
           <Label htmlFor="sleep-caffeine" className="flex-1 cursor-pointer">
-            {t("integrations.sleepWithCaffeine.label")}
+            <span className="text-sm md:text-base">{t("integrations.sleepWithCaffeine.label")}</span>
             <p className="text-xs text-muted-foreground font-normal">
               {t("integrations.sleepWithCaffeine.description")}
             </p>
@@ -57,7 +57,7 @@ export const IntegrationSettings = () => {
 
         <div className="flex items-center justify-between">
           <Label htmlFor="fasting-caffeine" className="flex-1 cursor-pointer">
-            {t("integrations.fastingWithCaffeine.label")}
+            <span className="text-sm md:text-base">{t("integrations.fastingWithCaffeine.label")}</span>
             <p className="text-xs text-muted-foreground font-normal">
               {t("integrations.fastingWithCaffeine.description")}
             </p>

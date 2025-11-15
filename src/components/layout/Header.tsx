@@ -9,10 +9,10 @@ const Header = () => {
 
   return (
     <header className="border-b border-border bg-card">
-      <div className="container mx-auto px-4 py-3">
+      <div className="container mx-auto px-4 py-2 md:py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl md:text-2xl font-bold">{t('appName')}</h1>
+            <h1 className="text-lg md:text-2xl font-bold">{t('appName')}</h1>
             <Badge variant="outline" className="text-xs">{t('beta')}</Badge>
           </div>
           <div className="flex items-center gap-2 md:gap-3">

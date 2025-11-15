@@ -37,24 +37,24 @@ export const FastingPhaseCard = ({ phase, isActive }: FastingPhaseCardProps) => 
 
   return (
     <Card
-      className={`p-4 transition-all cursor-pointer ${
+      className={`p-3 md:p-4 transition-all cursor-pointer ${
         isActive ? "border-accent bg-accent/5" : ""
       }`}
       onClick={() => setIsExpanded(!isExpanded)}
     >
       <div className="flex items-start justify-between">
-        <div className="flex items-start gap-3 flex-1">
+        <div className="flex items-start gap-2 md:gap-3 flex-1">
           <div
-            className="p-2 rounded-lg"
+            className="p-1.5 md:p-2 rounded-lg"
             style={{ backgroundColor: phase.color, opacity: 0.2 }}
           >
-            <Icon className="h-5 w-5" style={{ color: phase.color }} />
+            <Icon className="h-4 w-4 md:h-5 md:w-5" style={{ color: phase.color }} />
           </div>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="font-semibold">{phase.name}</h3>
+              <h3 className="text-sm md:text-base font-semibold">{phase.name}</h3>
               {isActive && (
-                <span className="text-xs bg-accent text-accent-foreground px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-accent text-accent-foreground px-1.5 py-0.5 rounded-full">
                   {t("timeline.active")}
                 </span>
               )}

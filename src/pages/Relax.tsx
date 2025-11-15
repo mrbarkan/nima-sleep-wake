@@ -84,7 +84,7 @@ const Relax = () => {
   }
 
   return (
-    <div className="container max-w-4xl mx-auto px-4 py-8 pb-24 md:pb-8">
+    <div className="container max-w-4xl mx-auto px-4 py-4 pb-20 md:py-8 md:pb-8">
       <BlogHeader />
       <ArticleList
         articles={articles}

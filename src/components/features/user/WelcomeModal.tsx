@@ -50,12 +50,12 @@ const WelcomeModal = ({ isLoggedIn = false }: WelcomeModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[85vh] m-4 overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {isUpdate ? "Novidades no Nima! 🎉" : "Bem-vindo ao Nima! 👋"}
           </DialogTitle>
-          <DialogDescription className="space-y-3 pt-4">
+          <DialogDescription className="space-y-2 md:space-y-3 pt-3 md:pt-4">
             {isUpdate ? (
               <>
                 <p>Confira as últimas melhorias:</p>

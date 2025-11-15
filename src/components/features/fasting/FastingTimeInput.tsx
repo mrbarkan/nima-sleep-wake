@@ -34,8 +34,8 @@ export const FastingTimeInput = ({
   const { t } = useTranslation("fasting");
 
   return (
-    <Card className="p-6 mb-6">
-      <div className="space-y-4">
+    <Card className="p-4 mb-4 md:p-6 md:mb-6">
+      <div className="space-y-3 md:space-y-4">
         <div>
           <Label htmlFor="lastMeal">{t("input.lastMealLabel")}</Label>
           <Input

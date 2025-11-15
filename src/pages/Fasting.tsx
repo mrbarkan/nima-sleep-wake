@@ -26,11 +26,11 @@ const Fasting = () => {
   } = useFastingCalculator();
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
+    <div className="container max-w-2xl mx-auto px-4 py-4 pb-20 md:py-8 md:pb-8">
       <FastingHeader />
 
       {showSuggestionPopup && integrationSuggestion && (
-        <div className="mb-4 p-4 bg-primary/10 border border-primary/20 rounded-lg">
+        <div className="mb-3 p-3 md:mb-4 md:p-4 bg-primary/10 border border-primary/20 rounded-lg">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
               <p className="text-sm font-medium mb-3">{integrationSuggestion}</p>

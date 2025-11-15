@@ -15,10 +15,10 @@ interface ArticleCardProps {
 
 export const ArticleCard = ({ article, onLike, onShare }: ArticleCardProps) => {
   return (
-    <Card className="p-6">
-      <article className="space-y-4">
+    <Card className="p-4 md:p-6">
+      <article className="space-y-3 md:space-y-4">
         <div>
-          <h2 className="text-2xl font-semibold mb-2">{article.title}</h2>
+          <h2 className="text-xl md:text-2xl font-semibold mb-2">{article.title}</h2>
           {article.excerpt && (
             <p className="text-muted-foreground text-sm">{article.excerpt}</p>
           )}

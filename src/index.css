@@ -176,5 +176,35 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  /* Safe area support for iOS/Android notch and home indicator */
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
+
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .pb-nav-safe {
+    padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+
+  /* Mobile-specific spacing utilities */
+  @media (max-width: 768px) {
+    .mobile-compact-py {
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+    }
+    
+    .mobile-compact-space > * + * {
+      margin-top: 0.75rem;
+    }
+    
+    .mobile-compact-mb {
+      margin-bottom: 1rem;
+    }
   }
 }

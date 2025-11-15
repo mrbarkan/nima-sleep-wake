@@ -5,6 +5,79 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.24.0] - 2025-01-23
+
+### Adicionado
+- 🎨 **Status Bar Adaptativa**: Plugin @capacitor/status-bar com mudança automática de tema
+  - Hook `useStatusBar` integrado ao sistema de temas
+  - Ícones escuros em tema claro, ícones claros em tema escuro
+  - Suporte completo para iOS e Android
+- 📱 **Safe Area Support**: Classes CSS para respeitar notch/home indicator
+  - `.pt-safe`: padding-top com safe-area-inset-top
+  - `.pb-safe`: padding-bottom com safe-area-inset-bottom
+  - `.pb-nav-safe`: padding-bottom com compensação para navigation bar
+  - Utilities mobile: `.mobile-compact-py`, `.mobile-compact-space`, `.mobile-compact-mb`
+- 🔧 **Viewport Cover**: Meta tag com `viewport-fit=cover` para acesso às safe areas
+
+### Otimizado
+- 📐 **Layout Mobile Global**
+  - Header: padding reduzido (`py-2 md:py-3`), título menor (`text-lg md:text-2xl`)
+  - Navigation: padding compacto (`py-2 md:py-4`), ícones ajustados, suporte a pb-safe
+  - App: estrutura refatorada com safe area no topo
+- 🗂️ **Todas as 9 Páginas**
+  - Settings: `py-4 pb-20 md:py-8`, espaçamento `space-y-4`, header compacto
+  - Sleep: `py-4 pb-20 md:py-8`, inputs altura 11, resultados com spacing reduzido
+  - Fasting: `py-4 pb-20 md:py-8`, cards `p-3 md:p-4`, popup de sugestão compacto
+  - Caffeine: `py-4 pb-20 md:py-8`, cards `p-3 md:p-4`, cronograma otimizado
+  - Todo: `py-4 pb-20 md:py-8`, header `h-5 md:h-8`, tabs `mb-4 md:mb-6`, tasks compactas
+  - Relax: `py-4 pb-20 md:py-8`, articles cards `p-4 md:p-6`
+  - NotFound: já otimizada (página simples)
+- 💬 **Todos os 5 Modais**
+  - WelcomeModal: `max-h-[85vh] m-4 overflow-y-auto`, spacing `space-y-2 md:space-y-3`
+  - ChangelogModal: mantém estrutura atual com scroll
+  - SyncStatusModal: `max-h-[80vh] m-4`, cards `p-3 md:p-4`
+  - ArchivedTasksModal: `max-h-[85vh] m-4`, tasks `p-3 md:p-4`
+  - AuthMenuContent: (se aplicável)
+- 🎴 **50+ Components de Features**
+  - **Settings**: SettingsHeader, IntegrationSettings, TodoMethodSettings (todos com `p-4 md:p-6`, `space-y-3 md:space-y-4`)
+  - **Sleep**: SleepHeader, SleepTimeInput, SleepResultCard, SleepResultsList (ícones `h-5 md:h-8`, cards `p-3 md:p-4`)
+  - **Fasting**: FastingHeader, FastingTimeInput, FastingPhaseCard (ícones `h-5 md:h-8`, cards `p-3 md:p-4`)
+  - **Caffeine**: CaffeineHeader, CaffeineTimeInput, CaffeineScheduleItem (ícones `h-5 md:h-8`, cards `p-3 md:p-4`)
+  - **Todo**: TaskItem (padding `p-3 md:p-4`, grip `h-4 md:h-5`, checkbox `h-4 md:h-5`)
+  - **Blog**: BlogHeader, ArticleCard (ícones `h-5 md:h-8`, cards `p-4 md:p-6`)
+- 🎯 **UI Components Base**
+  - Dialog: `max-h-[90vh] m-4 overflow-y-auto`, padding `p-4 md:p-6`
+  - Input: altura aumentada para `h-11` (melhor usabilidade mobile), `text-base` (evita zoom iOS)
+  - Card: mantém estrutura atual (flexível para contextos)
+  - Button: mantém tamanhos atuais (já com touch targets adequados)
+
+### Corrigido
+- ✅ Tela de Settings não excede mais a altura do dispositivo
+- ✅ Conteúdo não fica mais embaixo da status bar (safe area top)
+- ✅ Navigation bar não fica embaixo do home indicator iOS (safe area bottom)
+- ✅ Ícones da status bar sempre visíveis independente do tema
+- ✅ Modais com scroll interno funcional (`max-h-[85vh]` + `overflow-y-auto`)
+- ✅ Espaçamento inferior considerando navigation bar fixa (`pb-20 md:pb-8`)
+- ✅ Inputs mobile-friendly: altura 11px, font-size 16px (evita zoom iOS)
+- ✅ Títulos e ícones redimensionados para mobile: `h-5 md:h-8`, `text-lg md:text-3xl`
+
+### Técnico
+- Safe area insets: `env(safe-area-inset-top/bottom)` via CSS custom properties
+- Viewport: `viewport-fit=cover` para acesso às safe areas
+- Status Bar hook: integrado com `next-themes` para detecção automática
+- Capacitor Status Bar: gerenciamento nativo via `@capacitor/status-bar`
+- Layout refatorado: App com wrapper `AppContent` para hooks condicionais
+- Mobile-first approach: todas as medidas com `mobile md:desktop` pattern
+
+### Próximos passos
+1. Execute `npm install` para instalar @capacitor/status-bar
+2. Execute `npm run build` para gerar o bundle atualizado
+3. Execute `npx cap sync android` (ou ios) para sincronizar mudanças
+4. Execute `npx cap run android` (ou ios) para testar no dispositivo
+5. Teste completo: navegue por todas as páginas e abra todos os modais
+6. Valide temas: teste tema claro e escuro
+7. Teste rotação: portrait e landscape
+
 ## [0.23.0] - 2025-01-23
 
 ### Alterado

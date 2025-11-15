@@ -15,7 +15,7 @@ const Sleep = () => {
   } = useSleepCalculator();
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
+    <div className="container max-w-2xl mx-auto px-4 py-4 pb-20 md:py-8 md:pb-8">
       <SleepHeader />
       
       <SleepTimeInput

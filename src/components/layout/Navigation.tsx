@@ -14,9 +14,9 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 md:static md:border-t-0 md:border-b">
+    <nav className="fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 pb-safe md:static md:border-t-0 md:border-b md:pb-0">
       <div className="container mx-auto px-4">
-        <div className="flex items-center py-3 md:py-4 justify-evenly md:justify-start md:gap-8">
+        <div className="flex items-center py-2 md:py-4 justify-evenly md:justify-start md:gap-8">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -29,7 +29,7 @@ const Navigation = () => {
             >
               {({ isActive }) => (
                 <>
-                  <item.icon className={`h-5 w-5 md:h-4 md:w-4 ${item.colorClass}`} />
+                  <item.icon className={`h-4.5 w-4.5 md:h-4 md:w-4 ${item.colorClass}`} />
                   <span className={`text-xs md:text-sm ${isActive ? "text-foreground font-medium" : "text-muted-foreground"}`}>
                     {item.label}
                   </span>

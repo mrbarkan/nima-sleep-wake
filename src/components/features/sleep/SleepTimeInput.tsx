@@ -26,8 +26,8 @@ export const SleepTimeInput = ({
   onCalculate,
 }: SleepTimeInputProps) => {
   return (
-    <Card className="p-6 mb-6">
-      <div className="space-y-4">
+    <Card className="p-4 mb-4 md:p-6 md:mb-6">
+      <div className="space-y-3 md:space-y-4">
         <SleepModeToggle mode={mode} onModeChange={onModeChange} />
         
         <div className="space-y-2">
@@ -41,7 +41,7 @@ export const SleepTimeInput = ({
             type="time"
             value={time}
             onChange={(e) => onTimeChange(e.target.value)}
-            className="text-lg"
+            className="text-base md:text-lg h-11"
           />
         </div>
         <Button onClick={onCalculate} className="w-full" size="lg">

@@ -54,7 +54,7 @@ export const SyncStatusModal = ({ open, onOpenChange }: SyncStatusModalProps) =>
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md max-h-[80vh] m-4">
         <DialogHeader>
           <DialogTitle>Status de Sincronização</DialogTitle>
           <DialogDescription>
@@ -62,9 +62,9 @@ export const SyncStatusModal = ({ open, onOpenChange }: SyncStatusModalProps) =>
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-3 md:space-y-4">
           {/* Status atual */}
-          <div className="flex items-center gap-3 p-4 rounded-lg border bg-card">
+          <div className="flex items-center gap-3 p-3 md:p-4 rounded-lg border bg-card">
             {syncing ? (
               <>
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />

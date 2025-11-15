@@ -31,15 +31,15 @@ export const SleepResultCard = ({
   return (
     <div className="space-y-2">
       <Card
-        className={`p-4 transition-all hover:shadow-md cursor-pointer ${
+        className={`p-3 md:p-4 transition-all hover:shadow-md cursor-pointer ${
           isHighlighted ? "border-accent bg-accent/5" : ""
         } ${isSelected ? "ring-2 ring-accent" : ""}`}
         onClick={onSelect}
       >
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-2xl font-medium">{time}</div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xl md:text-2xl font-medium">{time}</div>
+            <div className="text-xs md:text-sm text-muted-foreground">
               {cycleLabel}
             </div>
           </div>

@@ -24,8 +24,8 @@ export const SleepResultsList = ({
   if (calculatedTimes.length === 0) return null;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+    <div className="space-y-2.5 md:space-y-3">
+      <div className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
         <Sparkles className="h-4 w-4" />
         <span>
           {mode === "wake" 

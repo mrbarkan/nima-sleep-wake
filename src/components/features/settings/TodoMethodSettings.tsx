@@ -21,16 +21,16 @@ export const TodoMethodSettings = () => {
   };
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <h2 className="text-lg font-semibold">{t("sections.todoMethods")}</h2>
+    <Card className="p-4 md:p-6">
+      <div className="flex items-center gap-2 mb-3 md:mb-4">
+        <h2 className="text-base md:text-lg font-semibold">{t("sections.todoMethods")}</h2>
         <InfoPopup
           title={t("sections.todoMethods")}
           content={t("todoMethods.info")}
         />
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 md:space-y-4">
         {methods.map((method) => {
           const methodInfo = TodoService.getMethodInfo(method);
           const isChecked = settings.todo.visibleMethods[method];
@@ -45,7 +45,7 @@ export const TodoMethodSettings = () => {
                 }
               />
               <Label htmlFor={method} className="flex-1 cursor-pointer">
-                <span className="font-medium">{methodInfo.name}</span>
+                <span className="text-sm md:text-base font-medium">{methodInfo.name}</span>
                 <p className="text-xs text-muted-foreground font-normal">
                   {methodInfo.description}
                 </p>

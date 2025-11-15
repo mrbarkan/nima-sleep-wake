@@ -9,10 +9,10 @@ const Settings = () => {
   const { t } = useTranslation("settings");
 
   return (
-    <div className="container max-w-3xl mx-auto px-4 py-8 pb-24 md:pb-8">
+    <div className="container max-w-3xl mx-auto px-4 py-4 pb-20 md:py-8 md:pb-8">
       <SettingsHeader />
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         <IntegrationSettings />
         <TodoMethodSettings />
       </div>

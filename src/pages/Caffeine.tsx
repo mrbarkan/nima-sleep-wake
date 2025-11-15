@@ -36,11 +36,11 @@ const Caffeine = () => {
   }, [integrationActive]);
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 py-8 pb-24 md:pb-8">
+    <div className="container max-w-2xl mx-auto px-4 py-4 pb-20 md:py-8 md:pb-8">
       <CaffeineHeader />
       
       {integrationActive && fastingInfo && (
-        <div className="mb-4 p-4 bg-primary/10 border border-primary/20 rounded-lg space-y-2">
+        <div className="mb-3 p-3 md:mb-4 md:p-4 bg-primary/10 border border-primary/20 rounded-lg space-y-2">
           <p className="text-sm font-medium">{fastingInfo}</p>
           <p className="text-sm text-muted-foreground">
             ⚠️ <strong>Durante o jejum:</strong> Sem leite, sem açúcar

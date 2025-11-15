@@ -51,27 +51,28 @@ export const TaskItem = ({ task, index, method, onToggle, onDelete, onCategoryCh
     <Card
       ref={setNodeRef}
       style={style}
-      className={`p-4 ${task.completed ? "opacity-60" : ""} transition-all duration-200`}
+      className={`p-3 md:p-4 ${task.completed ? "opacity-60" : ""} transition-all duration-200`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 md:gap-3">
         <div 
           {...attributes} 
           {...listeners} 
           className="cursor-grab active:cursor-grabbing touch-none"
           style={{ touchAction: "none" }}
         >
-          <GripVertical className="h-5 w-5 text-muted-foreground" />
+          <GripVertical className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
         </div>
         <div 
-          className="w-1 h-12 rounded-full transition-colors duration-300 ease-out flex-shrink-0"
+          className="w-1 h-10 md:h-12 rounded-full transition-colors duration-300 ease-out flex-shrink-0"
           style={{ backgroundColor: taskColor }}
         />
         <Checkbox
           checked={task.completed}
           onCheckedChange={() => onToggle(task.id)}
+          className="h-4 w-4 md:h-5 md:w-5"
         />
         <div className="flex-1 min-w-0">
-          <div className={task.completed ? "line-through text-muted-foreground" : ""}>
+          <div className={`text-sm md:text-base ${task.completed ? "line-through text-muted-foreground" : ""}`}>
             {task.text}
           </div>
           {method === "eisenhower" && (

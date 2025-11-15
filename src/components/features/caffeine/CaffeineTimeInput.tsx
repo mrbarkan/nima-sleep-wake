@@ -20,8 +20,8 @@ export const CaffeineTimeInput = ({
   onCalculate,
 }: CaffeineTimeInputProps) => {
   return (
-    <Card className="p-6 mb-6">
-      <div className="space-y-4">
+    <Card className="p-4 mb-4 md:p-6 md:mb-6">
+      <div className="space-y-3 md:space-y-4">
         <div className="space-y-2">
           <Label htmlFor="wake-time-caffeine">Que horas você acorda?</Label>
           <Input
@@ -29,7 +29,7 @@ export const CaffeineTimeInput = ({
             type="time"
             value={wakeTime}
             onChange={(e) => onWakeTimeChange(e.target.value)}
-            className="text-lg"
+            className="text-base md:text-lg h-11"
           />
         </div>
         <Button onClick={onCalculate} className="w-full" size="lg">

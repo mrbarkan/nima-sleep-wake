@@ -26,19 +26,19 @@ export const CaffeineScheduleItem = ({
 }: CaffeineScheduleItemProps) => {
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <Card className="p-4">
+      <Card className="p-3 md:p-4">
         <CollapsibleTrigger asChild>
-          <div className="flex items-start gap-4 cursor-pointer group">
+          <div className="flex items-start gap-3 md:gap-4 cursor-pointer group">
             <div className="flex-shrink-0">
-              <div className="h-12 w-12 rounded-full bg-accent/10 flex items-center justify-center">
-                <Coffee className="h-6 w-6 text-[hsl(var(--icon-caffeine))]" />
+              <div className="h-10 w-10 md:h-12 md:w-12 rounded-full bg-accent/10 flex items-center justify-center">
+                <Coffee className="h-5 w-5 md:h-6 md:w-6 text-[hsl(var(--icon-caffeine))]" />
               </div>
             </div>
             <div className="flex-1">
               <div className="flex justify-between items-start mb-1">
-                <div className="text-xl font-medium">{item.time}</div>
+                <div className="text-lg md:text-xl font-medium">{item.time}</div>
                 <div className="flex items-center gap-2">
-                  <div className="text-sm font-medium text-accent">
+                  <div className="text-xs md:text-sm font-medium text-accent">
                     {item.source}
                   </div>
                   {isOpen ? (

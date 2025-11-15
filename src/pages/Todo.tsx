@@ -64,13 +64,13 @@ const Todo = () => {
   };
 
   return (
-    <div className="container max-w-3xl mx-auto px-4 py-8 pb-24 md:pb-8">
-      <div className="mb-8">
+    <div className="container max-w-3xl mx-auto px-4 py-4 pb-20 md:py-8 md:pb-8">
+      <div className="mb-4 md:mb-8">
         <div className="flex items-center gap-3">
-          <ListTodo className="h-6 w-6 md:h-8 md:w-8 text-[hsl(var(--icon-todo))]" />
+          <ListTodo className="h-5 w-5 md:h-8 md:w-8 text-[hsl(var(--icon-todo))]" />
           <div>
             <div className="flex items-center">
-              <h1 className="text-xl md:text-3xl font-semibold">To-Do</h1>
+              <h1 className="text-lg md:text-3xl font-semibold">To-Do</h1>
               <InfoPopup
                 title="Métodos de Produtividade"
                 content="Cada método tem sua filosofia. O Ivy Lee foca em priorização rigorosa, o 1-3-5 equilibra volume, o Eat Frog destaca a tarefa mais difícil, e o Eisenhower separa urgente do importante."
@@ -95,7 +95,7 @@ const Todo = () => {
 
       <Tabs value={method} onValueChange={handleMethodChange}>
         <TabsList 
-          className="grid w-full mb-6 h-auto" 
+          className="grid w-full mb-4 h-auto md:mb-6" 
           style={{ gridTemplateColumns: `repeat(${visibleMethods.length}, 1fr)` }}
         >
           {visibleMethods.map((methodKey) => (
@@ -107,7 +107,7 @@ const Todo = () => {
 
         <TaskMethodInfo method={method} />
 
-        <Card className="p-6 mb-4">
+        <Card className="p-4 mb-3 md:p-6 md:mb-4">
           <div className="flex gap-2">
             <Input
               placeholder="Nova tarefa..."

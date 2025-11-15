@@ -38,7 +38,7 @@ export const ArchivedTasksModal = ({
           Arquivadas ({archivedTasks.length})
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl max-h-[80vh]">
+      <DialogContent className="max-w-2xl max-h-[85vh] m-4">
         <DialogHeader>
           <DialogTitle>Tarefas Arquivadas</DialogTitle>
           <DialogDescription>
@@ -54,7 +54,7 @@ export const ArchivedTasksModal = ({
           ) : (
             <div className="space-y-2">
               {archivedTasks.map((task) => (
-                <Card key={task.id} className="p-4">
+                <Card key={task.id} className="p-3 md:p-4">
                   <div className="flex items-start gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="line-through text-muted-foreground">

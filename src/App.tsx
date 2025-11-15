@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useStatusBar } from "@/hooks/useStatusBar";
 import Navigation from "./components/layout/Navigation";
 import Header from "./components/layout/Header";
 import WelcomeModal from "./components/features/user/WelcomeModal";
@@ -17,18 +18,14 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <WelcomeModal />
-        <BrowserRouter>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <Navigation />
-            <main className="flex-1">
+const AppContent = () => {
+  useStatusBar();
+  
+  return (
+    <div className="min-h-screen flex flex-col pt-safe">
+      <Header />
+      <Navigation />
+      <main className="flex-1">
               <Routes>
           <Route path="/" element={<Sleep />} />
           <Route path="/fasting" element={<Fasting />} />
@@ -40,6 +37,18 @@ const App = () => (
               </Routes>
             </main>
           </div>
+  );
+};
+
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <WelcomeModal />
+        <BrowserRouter>
+          <AppContent />
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

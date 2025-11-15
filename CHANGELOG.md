@@ -5,6 +5,20 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.23.0] - 2025-01-23
+
+### Alterado
+- 🔧 **Capacitor Config**: Desabilitado hot-reload do servidor Lovable
+  - Removida configuração `server.url` do `capacitor.config.ts`
+  - App agora carrega 100% do bundle nativo (`dist/`)
+  - Elimina erro "Cannot read properties of undefined (reading 'triggerEvent')"
+  - Melhora performance e estabilidade no Android/iOS
+
+### Próximos passos
+1. Execute `npm run build` para gerar o bundle atualizado
+2. Execute `npx cap sync android` para sincronizar com o projeto nativo
+3. Execute `npx cap run android` para testar no emulador/dispositivo
+
 ## [0.22.0] - 2025-01-23
 
 ### Removido

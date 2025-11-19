@@ -16,6 +16,142 @@ interface ChangelogModalProps {
 
 const changelog = [
   {
+    version: "0.24.2",
+    date: "2025-11-19",
+    changes: [
+      "🐛 Corrigido: ChangelogModal sincronizado com CHANGELOG.md",
+      "📝 Adicionadas 9 versões faltantes (v0.16.0 até v0.24.1)",
+      "✨ Histórico completo de atualizações agora disponível no app",
+    ],
+  },
+  {
+    version: "0.24.1",
+    date: "2025-01-23",
+    changes: [
+      "🔒 Proteção contra Spam de Likes em artigos",
+      "✅ Validação de Sugestões (10-2000 caracteres)",
+      "📊 Contador de caracteres em tempo real no formulário",
+      "🛡️ Constraints no banco de dados para segurança",
+    ],
+  },
+  {
+    version: "0.24.0",
+    date: "2025-01-23",
+    changes: [
+      "🎨 Status Bar Adaptativa com @capacitor/status-bar",
+      "📱 Safe Area Support (.pt-safe, .pb-safe, .pb-nav-safe)",
+      "🔧 Viewport Cover (viewport-fit=cover)",
+      "📐 Layout Mobile Global otimizado (header, navigation, app)",
+      "🗂️ Todas as 9 páginas otimizadas para mobile",
+      "💬 Todos os 5 modais com scroll interno funcional",
+      "🎴 50+ componentes de features otimizados",
+      "🎯 UI Components base aprimorados (Dialog, Input, Card)",
+      "✅ Status bar sempre visível independente do tema",
+      "✅ Conteúdo respeitando notch e home indicator",
+    ],
+  },
+  {
+    version: "0.23.0",
+    date: "2025-01-23",
+    changes: [
+      "🔧 Desabilitado hot-reload do servidor Lovable",
+      "📱 App carrega 100% do bundle nativo (dist/)",
+      "⚡ Melhor performance e estabilidade no Android/iOS",
+      "✅ Eliminado erro de triggerEvent",
+    ],
+  },
+  {
+    version: "0.22.0",
+    date: "2025-01-23",
+    changes: [
+      "🗑️ Removida plataforma PWA externa (Progressier)",
+      "🔔 App usa exclusivamente Capacitor para notificações nativas",
+      "📦 Redução do bundle size",
+      "✅ Service Worker customizado mantido",
+      "✅ Sistema de notificações preservado",
+    ],
+  },
+  {
+    version: "0.21.0",
+    date: "2025-01-23",
+    changes: [
+      "📱 App ID profissional: com.mrbarkan.nima",
+      "🔧 Formato compatível com Android e iOS",
+      "🌐 Vinculação ao domínio nima.mrbarkan.com",
+      "✅ Resolve erro de validação do Capacitor",
+    ],
+  },
+  {
+    version: "0.20.0",
+    date: "2025-01-23",
+    changes: [
+      "📱 Migração completa para Capacitor",
+      "🔔 Notificações Nativas 100% confiáveis",
+      "🤖 LocalNotifications substituindo Web Notifications",
+      "🌐 Sistema híbrido (nativo vs web)",
+      "⚙️ Arquitetura refatorada para múltiplas plataformas",
+      "🔧 Detecção automática de plataforma",
+    ],
+  },
+  {
+    version: "0.19.0",
+    date: "2025-01-23",
+    changes: [
+      "🎯 Filtro dinâmico de métodos de produtividade",
+      "⚙️ Ajuste automático do método ativo",
+      "📱 Tabs renderizam apenas métodos visíveis",
+      "📐 Grid de tabs adaptativo (1-4 colunas)",
+      "🌍 Nomes dos métodos com traduções i18n",
+    ],
+  },
+  {
+    version: "0.18.1",
+    date: "2025-01-23",
+    changes: [
+      "✅ Aviso de jejum na página Cafeína melhorado",
+      "☕ Lógica de filtro corrigida (café/chá preto permitidos)",
+      "💧 Card de dicas com lembrete de hidratação",
+      "🌍 Traduções i18n atualizadas",
+    ],
+  },
+  {
+    version: "0.18.0",
+    date: "2025-01-09",
+    changes: [
+      "🔧 Co-dependências Sleep/Fasting/Caffeine funcionando",
+      "💾 Persistência completa do Jejum",
+      "🎯 UX das Integrações melhorada",
+      "😴 Sugestões adaptadas ao modo Sleep",
+      "⏰ Filtro temporal baseado no horário do café da manhã",
+      "🔄 Auto-recálculo ao abrir o app",
+    ],
+  },
+  {
+    version: "0.17.0",
+    date: "2025-01-09",
+    changes: [
+      "🔗 Integrações avançadas entre Sleep/Fasting/Caffeine",
+      "🍽️ Sugestão automática de horário de última refeição",
+      "☕ Filtro de cafeína baseado em jejum",
+      "💾 Backend para dados de jejum com Supabase",
+      "🎯 Sugestões contextuais ao abrir Sleep/Fasting",
+      "🔄 Sistema de sugestões entre módulos",
+    ],
+  },
+  {
+    version: "0.16.0",
+    date: "2025-01-09",
+    changes: [
+      "🍽️ Novo módulo de Jejum Intermitente",
+      "⏱️ Visualização de fases do jejum",
+      "📊 Seleção de duração (12-24h)",
+      "⚙️ Sistema completo de Configurações",
+      "🔗 Integrações entre módulos",
+      "🎨 Design system atualizado",
+      "🌍 Traduções PT-BR e EN para fasting e settings",
+    ],
+  },
+  {
     version: "0.15.0",
     date: "2025-11-02",
     changes: [

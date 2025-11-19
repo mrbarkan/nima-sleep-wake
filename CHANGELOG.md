@@ -5,6 +5,22 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+## [0.24.2] - 2025-11-19
+
+### Corrigido
+- 🐛 **ChangelogModal Sincronizado**: Histórico de versões no modal agora está completo e atualizado
+  - Adicionadas 9 versões faltantes (v0.16.0 até v0.24.1)
+  - Todas as mudanças importantes de `CHANGELOG.md` agora disponíveis no app
+  - Usuários podem ver todo o histórico de atualizações diretamente na interface
+  
+### Técnico
+- Atualizado: `src/components/features/menu/ChangelogModal.tsx`
+  - Array `changelog` expandido com todas as versões de 0.16.0 a 0.24.1
+  - Mantido formato consistente de exibição com emojis e categorização
+  - Ordem cronológica preservada (mais recente primeiro)
+- Atualizado: `src/config/constants.ts`
+  - `APP_VERSION = "0.24.2"`
+
 ## [0.24.1] - 2025-01-23
 
 ### Segurança
